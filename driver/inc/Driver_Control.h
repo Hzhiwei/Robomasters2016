@@ -45,29 +45,19 @@ typedef struct
 }PID_Type;
 
 
-
-//云台Pitch目标角度(编码器线为单位）
-__DRIVER_CONTROL_EXT  uint16_t    EncoderTargetPitch, EncoderTargetYaw;
-//云台Pitch，yaw目标角度（实际值）
-__DRIVER_CONTROL_EXT float ABSTargetPitch, ABSTargetYaw;  
-//拨弹电机目标速度
-__DRIVER_CONTROL_EXT  int16_t    PokeSpeedTarget;
 //云台PID数据
 __DRIVER_CONTROL_EXT PID_Type PitchOPID, YawOPID, PitchIPID, YawIPID;
 //拨弹电机速度PID
-__DRIVER_CONTROL_EXT PID_Type PokePID;
-//枪电机目标速度电流
-__DRIVER_CONTROL_EXT uint16_t GnuSpeedTarget;       
+__DRIVER_CONTROL_EXT PID_Type PokeIPID, PokeOPID;     
+//底盘角度PID
+__DRIVER_CONTROL_EXT PID_Type ChassisIPID, ChassisOPID;     
 
 
 void CloudPID_InitConfig(void);
 int16_t Control_YawPID(void);
 int16_t Control_PitchPID(void);
-int16_t Control_PokePID(void);
-void Control_SetTargetPitch(float TargetPitch, CoordinateMode_Enum mode);
-void Control_SetTargetYaw(float TargetYaw, CoordinateMode_Enum mode);
-void Control_SetTargetPitch(float TargetPitch, CoordinateMode_Enum mode);
-void Control_SetTargetYaw(float TargetYaw, CoordinateMode_Enum mode);
+int16_t Control_PokeIPID(void);
+void Control_ChassisPID(void);
 
 
 #endif

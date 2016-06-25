@@ -5,9 +5,9 @@
 
 #include "Driver_Bell.h"
 #include "Driver_DBUS.h"
-#include "Driver_Motor.h"
 #include "Driver_vision.h"
 #include "Driver_mpu9250.h"
+#include "Driver_CloudMotor.h"
 #include "Driver_SuperGyroscope.h"
 
 #include "Config.h"
@@ -39,10 +39,10 @@ void Task_Monitor(void *Parameters)
         DBUSFrameCounter = 0;
         
         //云台电机帧率统计
-        PitchMotorFrameRate = PitchMotorFrameCounter;
-        PitchMotorFrameCounter = 0;
-        YawMotorFrameRate = YawMotorFrameCounter;
-        YawMotorFrameCounter = 0;
+        CloudParam.Pitch.FrameRate = CloudParam.Pitch.FrameCounter;
+        CloudParam.Pitch.FrameCounter = 0;
+        CloudParam.Yaw.FrameRate = CloudParam.Yaw.FrameCounter;
+        CloudParam.Yaw.FrameCounter = 0;
         
         //底盘陀螺仪数据帧统计
         SuperGyoFrameRate = SuperGyoFrameCounter;
@@ -62,7 +62,7 @@ void Task_Monitor(void *Parameters)
             SysErrorStatus &= 0xFFFE;
         }
         //Pitch云台帧率过低
-        if(PitchMotorFrameRate < 30)
+        if(CloudParam.Pitch.FrameRate < 30)
         {
             SysErrorStatus |= 0x0002;
         }
@@ -71,7 +71,7 @@ void Task_Monitor(void *Parameters)
             SysErrorStatus &= 0xFFFD;
         }
         //Yaw云台帧率过低
-        if(YawMotorFrameRate < 30)
+        if(CloudParam.Yaw.FrameRate < 30)
         {
             SysErrorStatus |= 0x0004;
         }

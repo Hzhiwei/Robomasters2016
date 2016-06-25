@@ -18,29 +18,29 @@ typedef enum
     GunStatus_Stop,                 //枪停止
     GunStatus_Motor,                //仅开启摩擦轮
     GunStatus_Shot,                 //发射
-}GunStatus_TypeDef;
+}GunStatus_Enum;
 
-//云台状态
+//自动模式开关
 typedef enum
 {
-    CloudStatus_Normal,             //正常模式
-    CloudStatus_Auto,               //自动模式
-}CloudStatus_TypeDef;
+    AutoMode_ON,                    //自动模式开
+    AutoMode_OFF,                   //自动模式关
+}AutoMode_Enum;
 
 
 //控制模式
 typedef enum
 {
-    ControlStatus_Protect,          //保护模式，全部停止
-    ControlStatus_RC,               //遥控器控制（增量式）
-    ControlStatus_KM,               //键鼠控制
-}ControlStatus_TypeDef;
+    ControlMode_Protect,          //保护模式，全部停止
+    ControlMode_RC,               //遥控器控制（增量式）
+    ControlMode_KM,               //键鼠控制
+}ControlMode_Enum;
 
 
 //状态量
-__DRIVER_STATUSMACHINE_EXT  CloudStatus_TypeDef         CloudStatus;
-__DRIVER_STATUSMACHINE_EXT  GunStatus_TypeDef           GunStatus;
-__DRIVER_STATUSMACHINE_EXT  ControlStatus_TypeDef       ControlStatus;
+__DRIVER_STATUSMACHINE_EXT  AutoMode_Enum           AutoMode;
+__DRIVER_STATUSMACHINE_EXT  GunStatus_Enum          GunStatus;
+__DRIVER_STATUSMACHINE_EXT  ControlMode_Enum        ControlMode;
 
 
 void StatusMachine_InitConfig(void);

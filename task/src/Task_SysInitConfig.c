@@ -16,10 +16,14 @@
 
 #include "Driver_Bell.h"
 #include "Driver_DBUS.h"
-#include "Driver_Motor.h"
 #include "Driver_Vision.h"
+#include "Driver_Chassis.h"
 #include "Driver_mpu9250.h"
 #include "Driver_Control.h"
+#include "Driver_Steering.h"
+#include "Driver_PokeMotor.h"
+#include "Driver_FricMotor.h"
+#include "Driver_CloudMotor.h"
 #include "Driver_StatusMachine.h"
 #include "Driver_SuperGyroscope.h"
 
@@ -44,14 +48,18 @@ void Task_SysInitConfig(void *Parameters)
     BSP_DMA_InitConfig();
     BSP_NVIC_InitConfig();
     
+    Steering_InitConfig();
+    PokeMotor_InitConfig();
     Bell_InitConfig();
     DBUS_InitConfig();
-    Motor_InitConfig();
+    CloudMotor_InitConfig();
     CloudPID_InitConfig();
     StatusMachine_InitConfig();
     SuperGyo_InitConfig();
     Vision_InitConfig();
     MPU9250_InitConfig();
+    FricMotor_InitConfig();
+    Chassis_InitConfig();
 //    MPU9250DMP_InitConfig(0);
 //    vTaskDelay(1000);
     

@@ -21,9 +21,9 @@ ctrl + shift关闭摩擦轮
   */
 void StatusMachine_InitConfig(void)
 {
-    CloudStatus = CloudStatus_Normal;
+    AutoMode = AutoMode_OFF;
     GunStatus = GunStatus_Stop;
-    ControlStatus = ControlStatus_KM;
+    ControlMode = ControlMode_Protect;
 }
 
 
@@ -31,93 +31,53 @@ void StatusMachine_InitConfig(void)
   * @brief  状态机状态更新
   * @param  void
   * @retval void
-  * @note   枪炮电机同步控制
+  * @note   遥控器左拨码开关1遥控器控制：右1正常，3开摩擦轮，2发射
+            左拨码开关3：保护模式，电机全部关闭
+            左拨码开关2：键盘控制，右拨码开关3打开摩擦轮，鼠标右键自动射击
+            QE自旋
   */
 void StatusMachine_Update(void)
 {
-    static uint8_t GunFricWorking = 0;
-    
-    
-#if BEBUG_MODE
     //帧率过低停机
     if(DBUSFrameRate < 3)
     {
-        ControlStatus = ControlStatus_Protect;
+        ControlMode = ControlMode_Protect;
         
         return;
     }
-#endif
     
-//    //控制模式选择
-//    if(DBUS_ReceiveData.switch_left == 1)
-//    {
-//        //键鼠模式
-//        ControlStatus = ControlStatus_KM;
-//    }
-//    //遥控器控制
-//    else if(DBUS_ReceiveData.switch_left == 2)
-//    {
-//        //遥控模式
-//        ControlStatus = ControlStatus_RC;
-//    }
-//    else
-//    {
-//        //保护模式
-//         ControlStatus = ControlStatus_Protect;
-//    }
-//        
-//    //键鼠控制
-//    if(ControlStatus == ControlStatus_KM)
-//    {
-//        //枪摩擦轮起停
-//        if(DBUS_ReceiveData.mouse.press_left)
-//        {
-//            GunStatus = GunStatus_Motor;
-//        }
-//        
-//        
-//        //枪发射左键枪发射（仅在摩擦轮启动时有效）
-//        if(DBUS_ReceiveData.mouse.press_left)
-//        {
-//            GunStatus = GunStatus_Shot;
-//        }
-//        else
-//        {
-//            if(GunFricWorking)
-//            {
-//                GunStatus = GunStatus_Motor;
-//            }
-//            else
-//            {
-//                GunStatus = GunStatus_Stop;
-//            }
-//        }
-//            
-//        
-//        //云台模式
-//        if(DBUS_ReceiveData.mouse.press_right)
-//        {
-//            CloudStatus = CloudStatus_Auto;
-//        }
-//        else
-//        {
-//            CloudStatus = CloudStatus_Normal;
-//        }
-//    }
-//    else        //遥控器模式
-//    {
-        if(DBUS_ReceiveData.switch_right == 2)
-        {
-            GunStatus = GunStatus_Shot;
-        }
-        else if(DBUS_ReceiveData.switch_right == 3)
+    //遥控器控制
+    if(DBUS_ReceiveData.switch_left == 1)
+    {
+        ControlMode = ControlMode_RC;
+        
+        //摩擦轮
+        if(DBUS_ReceiveData.switch_right == 3)
         {
             GunStatus = GunStatus_Motor;
+        }
+        else if(DBUS_ReceiveData.switch_right == 2)
+        {
+            GunStatus = GunStatus_Shot;
         }
         else
         {
             GunStatus = GunStatus_Stop;
         }
+        
+        //自动射击关闭
+        AutoMode = AutoMode_OFF;
+    }
+    //键鼠控制
+    else if(DBUS_ReceiveData.switch_left == 2)
+    {
+        ControlMode = ControlMode_KM;
+    }
+    //保护模式
+    else
+    {
+        ControlMode = ControlMode_Protect;
+    }
 }
 
 

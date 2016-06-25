@@ -53,8 +53,8 @@
 .\objects\task_monitor.o: ..\task\inc\Task_Monitor.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_Bell.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_DBUS.h
-.\objects\task_monitor.o: ..\driver\inc\Driver_Motor.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_vision.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_mpu9250.h
-.\objects\task_monitor.o: ..\driver\inc\Driver_SuperGyroscope.h
+.\objects\task_monitor.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\task_monitor.o: ..\user\Config.h
+.\objects\task_monitor.o: ..\driver\inc\Driver_SuperGyroscope.h

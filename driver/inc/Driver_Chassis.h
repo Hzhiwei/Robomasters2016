@@ -7,7 +7,7 @@
 
 
 #define LFCHASSISCONTROLCANID           0x75
-#define Max_WheelSpeed                  900
+#define MaxWheelSpeed                  900
 #define ChassisLimitCurrent             3000            //底盘电流限制极限
 
 
@@ -29,50 +29,40 @@
 #endif
 
 
+//单电机参数
+typedef struct
+{
+    int16_t TargetSpeed;             //电机目标速度
+    int16_t RealSpeed;               //电机实际速度
+    uint16_t LimitCurrent;           //限制电流
+    uint16_t RealCurrent;            //实际电流
+    uint16_t NeedCurrent;            //需求电流
+}OneMotorParam_Struct;
+
 //底盘电机参数结构体
 typedef struct
 {
-    //电机目标速度
-    struct
-    {
-        int16_t LF;
-        int16_t LB;
-        int16_t RF;
-        int16_t RB;
-    }TargetSpeed;
-    //电机实际速度
-    struct
-    {
-        int16_t LF;
-        int16_t LB;
-        int16_t RF;
-        int16_t RB;
-    }RealSpeed;
-    //限制电流
-    struct
-    {
-        uint16_t LF;
-        uint16_t LB;
-        uint16_t RF;
-        uint16_t RB;
-    }LimitCurrent;
-    //实际电流
-    struct
-    {
-        uint16_t LF;
-        uint16_t LB;
-        uint16_t RF;
-        uint16_t RB;
-    }RealCurrent;
-}MotorParam_Struct;
+    OneMotorParam_Struct LF;
+    OneMotorParam_Struct RF;
+    OneMotorParam_Struct LB;
+    OneMotorParam_Struct RB;
+    float VX;
+    float VY;
+    float Omega;
+}ChassisParam_Struct;
 
 
 __DRIVER_CHASSIS_EXT float ChassisMaxSumCurrent;        //底盘最大总电流限制
-__DRIVER_CHASSIS_EXT MotorParam_Struct MotorStatus;        //电机状态
+__DRIVER_CHASSIS_EXT ChassisParam_Struct ChassisParam;        //电机状态
 
 
-void Chassis_SendAngle(void);
+void Chassis_InitConfig(void);
+void Chassis_Adjust(void);
+void Chassis_SendMotorParam(uint8_t mode);
 static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed);
+void Chassis_OmegaSet(float Target);
+void Chassis_SpeedSet(float XSpeed, float YSpeed);
+void Chassis_Control(uint8_t mode);
 
 
 #endif

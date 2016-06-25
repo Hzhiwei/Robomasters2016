@@ -52,10 +52,12 @@
 .\objects\task_control.o: ..\lib\freertos\inc\event_groups.h
 .\objects\task_control.o: ..\user\Config.h
 .\objects\task_control.o: ..\driver\inc\Driver_DBUS.h
-.\objects\task_control.o: ..\driver\inc\Driver_Motor.h
 .\objects\task_control.o: ..\driver\inc\Driver_vision.h
 .\objects\task_control.o: ..\driver\inc\Driver_Chassis.h
 .\objects\task_control.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\task_control.o: ..\driver\inc\Driver_Control.h
+.\objects\task_control.o: ..\driver\inc\Driver_PokeMotor.h
+.\objects\task_control.o: ..\driver\inc\Driver_FricMotor.h
+.\objects\task_control.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\task_control.o: ..\driver\inc\Driver_StatusMachine.h
 .\objects\task_control.o: ..\driver\inc\Driver_SuperGyroscope.h

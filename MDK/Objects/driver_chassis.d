@@ -1,4 +1,5 @@
 .\objects\driver_chassis.o: ..\driver\src\Driver_Chassis.c
+.\objects\driver_chassis.o: ..\user\Config.h
 .\objects\driver_chassis.o: ..\user\Handler.h
 .\objects\driver_chassis.o: ..\core\stm32f4xx.h
 .\objects\driver_chassis.o: ..\core\core_cm4.h
@@ -51,7 +52,7 @@
 .\objects\driver_chassis.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_chassis.o: ..\lib\freertos\inc\event_groups.h
 .\objects\driver_chassis.o: ..\task\inc\Task_CANSend.h
-.\objects\driver_chassis.o: ..\driver\inc\Driver_Motor.h
 .\objects\driver_chassis.o: ..\driver\inc\Driver_Chassis.h
 .\objects\driver_chassis.o: ..\driver\inc\Driver_Control.h
+.\objects\driver_chassis.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\driver_chassis.o: ..\driver\inc\Driver_SuperGyroscope.h

@@ -1,12 +1,13 @@
 
 #define __DRIVER_CHASSIS_GLOBALS
 
+#include "Config.h"
 #include "Handler.h"
 #include "OSinclude.h"
 #include "Task_CANSend.h"
-#include "Driver_Motor.h"
 #include "Driver_Chassis.h"
 #include "Driver_Control.h"
+#include "Driver_CloudMotor.h"
 #include "Driver_SuperGyroscope.h"
 
 
@@ -20,6 +21,7 @@ const signed char MecanumCalculateMAT[4][3] = {
 	{1,-1, 1}, 
 	{1, 1,-1}
 };
+
 
 /**
   * @brief  底盘初始化
@@ -38,33 +40,78 @@ void Chassis_InitConfig(void)
 
 
 /**
-  * @brief  底盘速度控制
-  * @param  x速度（前）
-  * @param  y速度（右）
-  * @param  角速度（顺时针为正）
-  * @note   此函数未发送电流
+  * @brief  角速度设置
+  * @param  目标角速度
   * @retval void
   */
-void Chassis_Control(int16_t Vx, int16_t Vy, int16_t Omega)
+void Chassis_OmegaSet(float Target)
+{
+    ChassisParam.Omega = Target;
+}
+
+
+/**
+  * @brief  XY方向速度设置
+  * @param  X速度
+  * @param  Y速度
+  * @retval void
+  */
+void Chassis_SpeedSet(float XSpeed, float YSpeed)
+{
+    XSpeed = XSpeed > MaxWheelSpeed ? MaxWheelSpeed : XSpeed;
+    XSpeed = XSpeed < -MaxWheelSpeed ? -MaxWheelSpeed : XSpeed;
+    
+    YSpeed = YSpeed > MaxWheelSpeed ? MaxWheelSpeed : YSpeed;
+    YSpeed = YSpeed < -MaxWheelSpeed ? -MaxWheelSpeed : YSpeed;
+    
+    ChassisParam.VX = XSpeed;
+    ChassisParam.VY = YSpeed;
+}
+
+
+
+/**
+  * @brief  底盘调节
+  * @param  void  
+  * @retval void
+  */
+void Chassis_Adjust(void)
 {
     int16_t WheelSpeed[4];
     int16_t PowerSum;
     
-    //麦轮解算
-    MecanumCalculate(Vx, Vy, Omega, WheelSpeed);
+    int16_t ABSSpeed[4];
     
-    MotorStatus.TargetSpeed.LF = WheelSpeed[0];
-    MotorStatus.TargetSpeed.RF = WheelSpeed[1];
-    MotorStatus.TargetSpeed.LB = WheelSpeed[2];
-    MotorStatus.TargetSpeed.RB = WheelSpeed[3];
+    //麦轮解算
+    MecanumCalculate(ChassisParam.VX, ChassisParam.VY, ChassisParam.Omega, WheelSpeed);
+    
+    ChassisParam.LF.TargetSpeed = WheelSpeed[0];
+    ChassisParam.RF.TargetSpeed = WheelSpeed[1];
+    ChassisParam.LB.TargetSpeed = WheelSpeed[2];
+    ChassisParam.RB.TargetSpeed = WheelSpeed[3];
+    
+    ABSSpeed[0] = (ChassisParam.LF.TargetSpeed > 0 ? ChassisParam.LF.TargetSpeed : -ChassisParam.LF.TargetSpeed);
+    ABSSpeed[1] = (ChassisParam.RF.TargetSpeed > 0 ? ChassisParam.RF.TargetSpeed : -ChassisParam.RF.TargetSpeed);
+    ABSSpeed[2] = (ChassisParam.LB.TargetSpeed > 0 ? ChassisParam.LB.TargetSpeed : -ChassisParam.LB.TargetSpeed);
+    ABSSpeed[3] = (ChassisParam.RB.TargetSpeed > 0 ? ChassisParam.RB.TargetSpeed : -ChassisParam.RB.TargetSpeed);
     
     //功率分配
-    PowerSum = MotorStatus.TargetSpeed.LF + MotorStatus.TargetSpeed.RF + MotorStatus.TargetSpeed.LB + MotorStatus.TargetSpeed.RF;
+    PowerSum = ABSSpeed[0] + ABSSpeed[1] + ABSSpeed[2] + ABSSpeed[3];
     
-    MotorStatus.LimitCurrent.LF = ChassisMaxSumCurrent * MotorStatus.TargetSpeed.LF / PowerSum;
-    MotorStatus.LimitCurrent.RF = ChassisMaxSumCurrent * MotorStatus.TargetSpeed.RF / PowerSum;
-    MotorStatus.LimitCurrent.LB = ChassisMaxSumCurrent * MotorStatus.TargetSpeed.LB / PowerSum;
-    MotorStatus.LimitCurrent.RB = ChassisMaxSumCurrent * MotorStatus.TargetSpeed.RB / PowerSum;
+    if(PowerSum > 0)
+    {
+        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[0] / PowerSum;
+        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[1] / PowerSum;
+        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[2] / PowerSum;
+        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[3] / PowerSum;
+    }
+    else
+    {
+        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent / 4;
+        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent / 4;
+        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent / 4;
+        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent / 4;
+    }
 }
 
 
@@ -77,7 +124,11 @@ void Chassis_SendMotorParam(uint8_t mode)
 {
     static  CanSend_Type   SendData;
     
+    #if CANPORT == 1
+    SendData.CANx = 1;
+    #else
     SendData.CANx = 2;
+    #endif
     
     SendData.SendCanTxMsg.DLC   =   8;
     SendData.SendCanTxMsg.IDE   =   CAN_ID_STD;
@@ -86,25 +137,25 @@ void Chassis_SendMotorParam(uint8_t mode)
     if(mode)
     {
         SendData.SendCanTxMsg.StdId =   CHASSISSPEEDSETCANID;
-        SendData.SendCanTxMsg.Data[0] = MotorStatus.TargetSpeed.LF >> 8;
-        SendData.SendCanTxMsg.Data[1] = MotorStatus.TargetSpeed.LF;
-        SendData.SendCanTxMsg.Data[2] = MotorStatus.TargetSpeed.RF >> 8;
-        SendData.SendCanTxMsg.Data[3] = MotorStatus.TargetSpeed.RF;
-        SendData.SendCanTxMsg.Data[4] = MotorStatus.TargetSpeed.LB >> 8;
-        SendData.SendCanTxMsg.Data[5] = MotorStatus.TargetSpeed.LB;
-        SendData.SendCanTxMsg.Data[6] = MotorStatus.TargetSpeed.RB >> 8;
-        SendData.SendCanTxMsg.Data[7] = MotorStatus.TargetSpeed.RB;
+        SendData.SendCanTxMsg.Data[1] = ChassisParam.LF.TargetSpeed >> 8;
+        SendData.SendCanTxMsg.Data[0] = ChassisParam.LF.TargetSpeed;
+        SendData.SendCanTxMsg.Data[3] = ChassisParam.RF.TargetSpeed >> 8;
+        SendData.SendCanTxMsg.Data[2] = ChassisParam.RF.TargetSpeed;
+        SendData.SendCanTxMsg.Data[5] = ChassisParam.LB.TargetSpeed >> 8;
+        SendData.SendCanTxMsg.Data[4] = ChassisParam.LB.TargetSpeed;
+        SendData.SendCanTxMsg.Data[7] = ChassisParam.RB.TargetSpeed >> 8;
+        SendData.SendCanTxMsg.Data[6] = ChassisParam.RB.TargetSpeed;
         xQueueSend(Queue_CANSend, &SendData, 10);
         
         SendData.SendCanTxMsg.StdId =   CHASSISCURRENTSETCANID;
-        SendData.SendCanTxMsg.Data[0] = MotorStatus.LimitCurrent.LF >> 8;
-        SendData.SendCanTxMsg.Data[1] = MotorStatus.LimitCurrent.LF;
-        SendData.SendCanTxMsg.Data[2] = MotorStatus.LimitCurrent.RF >> 8;
-        SendData.SendCanTxMsg.Data[3] = MotorStatus.LimitCurrent.RF;
-        SendData.SendCanTxMsg.Data[4] = MotorStatus.LimitCurrent.LB >> 8;
-        SendData.SendCanTxMsg.Data[5] = MotorStatus.LimitCurrent.LB;
-        SendData.SendCanTxMsg.Data[6] = MotorStatus.LimitCurrent.RB >> 8;
-        SendData.SendCanTxMsg.Data[7] = MotorStatus.LimitCurrent.RB;
+        SendData.SendCanTxMsg.Data[1] = ChassisParam.LF.LimitCurrent >> 8;
+        SendData.SendCanTxMsg.Data[0] = ChassisParam.LF.LimitCurrent;
+        SendData.SendCanTxMsg.Data[3] = ChassisParam.RF.LimitCurrent >> 8;
+        SendData.SendCanTxMsg.Data[2] = ChassisParam.RF.LimitCurrent;
+        SendData.SendCanTxMsg.Data[5] = ChassisParam.LB.LimitCurrent >> 8;
+        SendData.SendCanTxMsg.Data[4] = ChassisParam.LB.LimitCurrent;
+        SendData.SendCanTxMsg.Data[7] = ChassisParam.RB.LimitCurrent >> 8;
+        SendData.SendCanTxMsg.Data[6] = ChassisParam.RB.LimitCurrent;
         xQueueSend(Queue_CANSend, &SendData, 10);
     }
     else
@@ -135,6 +186,19 @@ void Chassis_SendMotorParam(uint8_t mode)
 
 
 /**
+  * @brief  底盘总控制
+  * @param  0 停机        1 正常
+  * @retval void
+  */
+void Chassis_Control(uint8_t mode)
+{
+    Control_ChassisPID();
+    Chassis_Adjust();
+    Chassis_SendMotorParam(mode);
+}
+
+
+/**
   * @brief  麦轮解算
   * @param  x速度（前）
   * @param  y速度（右）
@@ -147,39 +211,36 @@ static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed)
 	float temp_mat[3] = {0,0,0};
 	float max_spd = 0,temp_speed = 0;
 	float temp_ration = 0;	
-	float my_spd[4] = {0,0,0,0};
-    
+	float temp_spd[4] = {0,0,0,0};
 	temp_mat[0] = Vx;
 	temp_mat[1] = Vy;
-	temp_mat[2] = Omega;
-    
+	temp_mat[2] = Omega;//spinning 使自旋的
 	for(ii = 0;ii<4;ii++)
 	{
 		for(jj = 0;jj<3;jj++)
 		{
-			my_spd[ii] += temp_mat[jj]*MecanumCalculateMAT[ii][jj];
+			temp_spd[ii] += temp_mat[jj] * MecanumCalculateMAT[ii][jj];
 		}
-		my_spd[ii] = temp_speed;
-		Last_Spd[ii] = my_spd[ii];
 	}
-	for(ii = 0;ii<4;ii++)  //找到速度最大值
+	//speed 限幅
+	for(ii=0; ii<4; ii++)  
 	{
-		temp_speed = my_spd[ii] > 0 ? my_spd[ii] : -my_spd[ii];
-		max_spd = (max_spd>temp_speed) ? max_spd:temp_speed;
+		temp_speed = temp_spd[ii] > 0 ? temp_spd[ii] : -temp_spd[ii];
+		max_spd = (max_spd > temp_speed) ? max_spd : temp_speed;
 	}
-	if( max_spd > Max_WheelSpeed )//按比例缩小
+	//如果超过麦伦最大速度，等比例缩小4个速度
+	if(max_spd > MaxWheelSpeed)
 	{
-		temp_ration = Max_WheelSpeed/max_spd;
-		for(ii = 0;ii<4;ii++)
+		temp_ration = MaxWheelSpeed / max_spd;
+		for(ii=0; ii<4; ii++)
 		{
-			my_spd[ii] = my_spd[ii]*temp_ration; 
-			Last_Spd[ii] = my_spd[ii];
+			temp_spd[ii] = temp_spd[ii]*temp_ration; 
 		}	
 	}
 	
     //设置实际速度
-	Speed[0] = (int16_t)my_spd[0]; 
-	Speed[1] = (int16_t)my_spd[1]; 
-	Speed[2] = (int16_t)my_spd[2]; 
-	Speed[3] = (int16_t)my_spd[3]; 
+	Speed[0] = (short)temp_spd[0];
+	Speed[1] = (short)temp_spd[1];
+	Speed[2] = (short)temp_spd[2];
+    Speed[3] = (short)temp_spd[3];
 }

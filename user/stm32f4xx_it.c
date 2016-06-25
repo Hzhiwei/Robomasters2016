@@ -140,92 +140,120 @@ void DebugMon_Handler(void)
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 
+#include "Config.h"
 #include "Driver_DBUS.h"
-#include "Driver_Motor.h"
 #include "Driver_vision.h"
+#include "Driver_Chassis.h"
+#include "Driver_CloudMotor.h"
 #include "Driver_SuperGyroscope.h"
 
 
 
 uint8_t temp;
 
-CanRxMsg CanRxData1;
-CanRxMsg CanRxData2;
+CanRxMsg CanRxData;
 
 
 //CAN1数据接收中断（包括底盘陀螺仪）
-void CAN1_RX0_IRQHandler(void)
-{
-    //接受CAN1数据
-    CAN_Receive(CAN1, 0, &CanRxData1);
-    
-    switch(CanRxData1.StdId)
-    {
-    }
-    
-	CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
-}
+//void CAN1_RX0_IRQHandler(void)
+//{
+//    //接受CAN1数据
+//    CAN_Receive(CAN1, 0, &CanRxData1);
+//    
+//    switch(CanRxData1.StdId)
+//    {
+//    }
+//    
+//	CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
+//}
 
 
 //CAN2数据就接受中断（包括云台电机数据，3510摩擦轮数据）
+#if CANPORT == 1
+void CAN1_RX0_IRQHandler(void)
+#else
 void CAN2_RX0_IRQHandler(void)
+#endif
 {
-    static uint8_t SuperGyoStartFlag = 0;
     u8Todouble dataTrans;
     
-    CAN_Receive(CAN2, 0, &CanRxData2);
+    #if CANPORT == 1
+    CAN_Receive(CAN1, 0, &CanRxData);
+    #else
+    CAN_Receive(CAN2, 0, &CanRxData);
+    #endif
     
-    switch(CanRxData2.StdId)
+    switch(CanRxData.StdId)
     {
-        case    YAWCANID  :
+        case    YAWMOTORCANID  :
         {
-            YawMotorFrameCounter++;
-            YawMotorAngle = ((int16_t)CanRxData2.Data[0] << 8) | CanRxData2.Data[1];
+            CloudParam.Yaw.FrameCounter++;
+            CloudParam.Yaw.RealEncoderAngle = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
             break;
         }
-        case    PITCHCANID  :
+        case    PITCHMOTORCANID  :
         {
-            PitchMotorFrameCounter++;
-            PitchMotorAngle = ((int16_t)CanRxData2.Data[0] << 8) | CanRxData2.Data[1];
+            CloudParam.Pitch.FrameCounter++;
+            CloudParam.Pitch.RealEncoderAngle = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
             break;
         }
         case    SUPERGYROSCOPECANIC :
         {
-            if(SuperGyoStartFlag)
-            {
                 SuperGyoFrameCounter++;
                 
-                LastSuperGyoAngle = SuperGyoAngle;
-                
-                dataTrans.uint8_tdata[0] = CanRxData2.Data[0];
-                dataTrans.uint8_tdata[1] = CanRxData2.Data[1];
-                dataTrans.uint8_tdata[2] = CanRxData2.Data[2];
-                dataTrans.uint8_tdata[3] = CanRxData2.Data[3];
-                
+                dataTrans.uint8_tdata[0] = CanRxData.Data[0];
+                dataTrans.uint8_tdata[1] = CanRxData.Data[1];
+                dataTrans.uint8_tdata[2] = CanRxData.Data[2];
+                dataTrans.uint8_tdata[3] = CanRxData.Data[3];
                 SuperGyoAngle = dataTrans.floatdata;
                 
-                SuperGyoOmega = 200 * (SuperGyoAngle - LastSuperGyoAngle);
-                
+                dataTrans.uint8_tdata[0] = CanRxData.Data[4];
+                dataTrans.uint8_tdata[1] = CanRxData.Data[5];
+                dataTrans.uint8_tdata[2] = CanRxData.Data[6];
+                dataTrans.uint8_tdata[3] = CanRxData.Data[7];
+                SuperGyoOmega = dataTrans.floatdata;
                 SuperGyoMotorEncoderOmega = 1.388889F * SuperGyoOmega;
-            }
-            //第一次收到数据
-            else
-            {
-                dataTrans.uint8_tdata[0] = CanRxData1.Data[0];
-                dataTrans.uint8_tdata[1] = CanRxData1.Data[1];
-                dataTrans.uint8_tdata[2] = CanRxData1.Data[2];
-                dataTrans.uint8_tdata[3] = CanRxData1.Data[3];
-                LastSuperGyoAngle = dataTrans.floatdata;
-                SuperGyoAngle = LastSuperGyoAngle;
-                
-                SuperGyoOmega = 0;
-                SuperGyoStartFlag = 1;
-            }
+            break;
+        }
+        case    LFCHASSISCANID  :
+        {
+            ChassisParam.LF.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
+            ChassisParam.LF.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
+            ChassisParam.LF.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
+            
+            break;
+        }
+        case    RFCHASSISCANID  :
+        {
+            ChassisParam.RF.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
+            ChassisParam.RF.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
+            ChassisParam.RF.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
+            
+            break;
+        }
+        case    LBCHASSISCANID  :
+        {
+            ChassisParam.LB.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
+            ChassisParam.LB.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
+            ChassisParam.LB.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
+            
+            break;
+        }
+        case    RBCHASSISCANID  :
+        {
+            ChassisParam.RB.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
+            ChassisParam.RB.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
+            ChassisParam.RB.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
+            
             break;
         }
     }
     
+    #if CANPORT == 1
+	CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
+    #else
 	CAN_ITConfig(CAN2, CAN_IT_FMP0, ENABLE);
+    #endif
 }
 
 

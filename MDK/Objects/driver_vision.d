@@ -36,5 +36,5 @@
 .\objects\driver_vision.o: ..\lib\std\inc\stm32f4xx_dac.h
 .\objects\driver_vision.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\driver_vision.o: ..\lib\std\inc\stm32f4xx_fsmc.h
-.\objects\driver_vision.o: ..\driver\inc\Driver_Motor.h
+.\objects\driver_vision.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\driver_vision.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

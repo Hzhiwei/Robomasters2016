@@ -61,10 +61,15 @@
 .\objects\task_sysinitconfig.o: ..\bsp\inc\BSP_UART.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Bell.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_DBUS.h
-.\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Motor.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Vision.h
+.\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Chassis.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Control.h
+.\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Steering.h
+.\objects\task_sysinitconfig.o: ..\driver\inc\Driver_PokeMotor.h
+.\objects\task_sysinitconfig.o: ..\user\Config.h
+.\objects\task_sysinitconfig.o: ..\driver\inc\Driver_FricMotor.h
+.\objects\task_sysinitconfig.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_StatusMachine.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_SuperGyroscope.h
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_Bell.h

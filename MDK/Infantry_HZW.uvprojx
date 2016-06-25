@@ -446,6 +446,16 @@
               <FileType>5</FileType>
               <FilePath>..\user\control.txt</FilePath>
             </File>
+            <File>
+              <FileName>note.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\note.txt</FilePath>
+            </File>
+            <File>
+              <FileName>backup.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\backup.txt</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -467,11 +477,6 @@
               <FilePath>..\driver\src\Driver_vision.c</FilePath>
             </File>
             <File>
-              <FileName>Driver_Motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\driver\src\Driver_Motor.c</FilePath>
-            </File>
-            <File>
               <FileName>Driver_Chassis.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\driver\src\Driver_Chassis.c</FilePath>
@@ -482,9 +487,29 @@
               <FilePath>..\driver\src\Driver_Control.c</FilePath>
             </File>
             <File>
+              <FileName>Driver_Steering.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\src\Driver_Steering.c</FilePath>
+            </File>
+            <File>
               <FileName>Driver_mpu9250.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\driver\src\Driver_mpu9250.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_FricMototr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\src\Driver_FricMototr.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_PokeMotor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\src\Driver_PokeMotor.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_CloudMotor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\src\Driver_CloudMotor.c</FilePath>
             </File>
             <File>
               <FileName>Driver_StatusMachine.c</FileName>
