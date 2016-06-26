@@ -26,6 +26,7 @@ void Task_Control(void *Parameters)
     int16_t XSpeed, YSpeed;
     int16_t Counter = 0;
     portTickType ControlLastTick = 0;
+    float IntBuffer;
     
     for(;;)
     {
@@ -75,10 +76,14 @@ void Task_Control(void *Parameters)
         else if(ControlMode == ControlMode_KM)
         {
             //前后
-            if((DBUS_ReceiveData.keyBoard.key_code & KEY_W) && (DBUS_ReceiveData.keyBoard.key_code & KEY_S))
+            if((DBUS_ReceiveData.keyBoard.key_code & KEY_W) && (DBUS_ReceiveData.keyBoard.key_code & KEY_SHIFT))
             {
                 //潜行模式（进补给站）
                 XSpeed = SNEAKSPEED;
+            }
+            else if((DBUS_ReceiveData.keyBoard.key_code & KEY_W) && (DBUS_ReceiveData.keyBoard.key_code & KEY_S))
+            {
+                XSpeed = 0;
             }
             else if(DBUS_ReceiveData.keyBoard.key_code & KEY_W)
             {
@@ -101,11 +106,11 @@ void Task_Control(void *Parameters)
             }
             else if(DBUS_ReceiveData.keyBoard.key_code & KEY_A)
             {
-                YSpeed = -MAXWORKINGSPEED;
+                YSpeed = -MAXSHIFTSPEED;
             }
             else if(DBUS_ReceiveData.keyBoard.key_code & KEY_D)
             {
-                YSpeed = MAXWORKINGSPEED;
+                YSpeed = MAXSHIFTSPEED;
             }
             else
             {
@@ -127,7 +132,11 @@ void Task_Control(void *Parameters)
             }
             else
             {
-                CloudParam.Yaw.ABSTargetAngle -= DBUS_ReceiveData.mouse.x / MOUSESPINPARAM;
+                IntBuffer = DBUS_ReceiveData.mouse.x / MOUSESPINPARAM;
+                IntBuffer = IntBuffer > MOUSEINTLIMIT ? MOUSEINTLIMIT : IntBuffer;
+                IntBuffer = IntBuffer < -MOUSEINTLIMIT ? -MOUSEINTLIMIT : IntBuffer;
+                
+                CloudParam.Yaw.ABSTargetAngle -= IntBuffer;
                 Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
             } 
             CloudParam.Pitch.EncoderTargetAngle -= DBUS_ReceiveData.mouse.y;
@@ -154,6 +163,7 @@ void Task_Control(void *Parameters)
         {
             Cloud_Adjust(0);
             Chassis_Control(0);
+            GunFric_Control(0);
         }
         
 /*********************  ↑  根据状态机控制  ↑ *********************/

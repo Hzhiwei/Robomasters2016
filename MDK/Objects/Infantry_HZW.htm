@@ -3,9 +3,9 @@
 <title>Static Call Graph - [.\Objects\Infantry_HZW.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Infantry_HZW.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Sat Jun 25 16:51:48 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Sun Jun 26 14:37:49 2016
 <BR><P>
-<H3>Maximum Stack Usage =        336 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        344 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 Task_Control &rArr; MPU9250_Update &rArr; MPU9250DMP_GetEuler &rArr; dmp_read_fifo &rArr; mpu_read_fifo_stream &rArr; mpu_reset_fifo &rArr; IIC_SendBuffer &rArr; IIC_SendByte
 <P>
@@ -873,7 +873,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_Adjust
 </UL>
 
-<P><STRONG><a name="[b8]"></a>Control_PokeIPID</STRONG> (Thumb, 714 bytes, Stack size 32 bytes, driver_control.o(i.Control_PokeIPID))
+<P><STRONG><a name="[b8]"></a>Control_PokeIPID</STRONG> (Thumb, 712 bytes, Stack size 32 bytes, driver_control.o(i.Control_PokeIPID))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = Control_PokeIPID &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
@@ -1372,8 +1372,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> task_sysinitconfig.o(i.Task_SysInitConfig)
 </UL>
-<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 770 bytes, Stack size 24 bytes, task_control.o(i.Task_Control))
-<BR><BR>[Stack]<UL><LI>Max Depth = 336<LI>Call Chain = Task_Control &rArr; MPU9250_Update &rArr; MPU9250DMP_GetEuler &rArr; dmp_read_fifo &rArr; mpu_read_fifo_stream &rArr; mpu_reset_fifo &rArr; IIC_SendBuffer &rArr; IIC_SendByte
+<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 862 bytes, Stack size 32 bytes, task_control.o(i.Task_Control))
+<BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = Task_Control &rArr; MPU9250_Update &rArr; MPU9250DMP_GetEuler &rArr; dmp_read_fifo &rArr; mpu_read_fifo_stream &rArr; mpu_reset_fifo &rArr; IIC_SendBuffer &rArr; IIC_SendByte
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PokeMotor_Step
 <LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PokeMotor_Adjust
