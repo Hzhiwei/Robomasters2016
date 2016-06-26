@@ -39,30 +39,29 @@ void Vision_InitConfig(void)
   * @param  0 不考虑重力加速度      1 考虑重力加速度
   * @retval 角度
   */
-AngleU_Struct RecToPolar(float X, float Y, float Z, uint8_t mode)
+AngleI_Struct RecToPolar(float X, float Y, float Z, uint8_t mode)
 {
-    AngleU_Struct ReturnData;
+    AngleI_Struct ReturnData;
     float Distance = sqrt(X * X + Z * Z);
     float distance, radian;
     
-    ReturnData.H = YawCenter - atan(X / Z) * 1303.7973F;
+    ReturnData.H =  - atan(X / Z) * 1303.7973F;
     
     distance = sqrt(X * X + Z * Z);
     if(mode == 0)
     {
     //不考虑重力加速度
-        ReturnData.V = PitchCenter - atan(Y / distance) * 1303.7973F;
+        ReturnData.V = atan(Y / distance) * 1303.7973F;
     }
     else
     {
     //考虑重力加速度
         radian = (atan(((AFG * distance * distance) / (GUNSpeed * GUNSpeed) - Y) / sqrt(Y * Y + distance * distance)) - atan(Y / distance)) / 2;
-        ReturnData.V = radian * 1303.7973F + PitchCenter;
+        ReturnData.V = radian * 1303.7973F;
     }
     
     return ReturnData;
 }
-
 
 
 /**
@@ -215,7 +214,7 @@ CompensateSpeed_struct Get_EnemyCompensate(void)
   * @param  时间模式    0 自定义时间（即ForcastTime）， 1 自动设定预判时间（根据距离及子弹速度确定）
   * @retval 0 二次拟合成功        1 因样本数据不够，拟合失败直接使用当前位置作为目标位置
   */
-uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleU_Struct *ForcastAngle, uint8_t TimeMode)
+uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *ForcastAngle, uint8_t TimeMode)
 {
     Point_Struct ForcastPoint;
     float distance;

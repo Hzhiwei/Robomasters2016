@@ -9,6 +9,7 @@
 #define LFCHASSISCONTROLCANID           0x75
 #define MaxWheelSpeed                  900
 #define ChassisLimitCurrent             3000            //底盘电流限制极限
+#define MOUSEINTLIMIT           0.9F        //鼠标旋转速度上限，当鼠标旋转时底盘速度跟不上则减小此值
 
 
 //底盘电机CANID
@@ -38,6 +39,7 @@ typedef struct
     uint16_t RealCurrent;            //实际电流
     uint16_t NeedCurrent;            //需求电流
 }OneMotorParam_Struct;
+
 
 //底盘电机参数结构体
 typedef struct

@@ -137,6 +137,8 @@ void Cloud_YawAngleSet(float Target, uint8_t mode)
     {
         CloudParam.Yaw.AngleMode = AngleMode_Encoder;
         
+//        CloudParam.Yaw.ABSTargetAngle = 
+        
         Buffer = (int16_t)Target + YawCenter;
         Buffer = Buffer > YawLEFTLimit ? YawLEFTLimit : Buffer;
         Buffer = Buffer < YawRIGHTLimit ? YawRIGHTLimit : Buffer;

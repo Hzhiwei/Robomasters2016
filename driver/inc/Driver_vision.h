@@ -55,9 +55,9 @@ typedef struct
 //角数据结构(整型用于编码器角度）
 typedef struct
 {
-    uint16_t H;
-    uint16_t V;
-}AngleU_Struct;
+    int16_t H;
+    int16_t V;
+}AngleI_Struct;
 
 //速度补偿速度
 typedef struct
@@ -85,10 +85,10 @@ __DRIVER_VISION_EXT int16_t PCFrameRate;
 
 
 void Vision_InitConfig(void);
-AngleU_Struct RecToPolar(float X, float Y, float Z, uint8_t mode);
+AngleI_Struct RecToPolar(float X, float Y, float Z, uint8_t mode);
 uint8_t ForcastCore(uint16_t SampleTime, uint16_t ForcastTime, Point_Struct *ForcastPoint);
 CompensateSpeed_struct Get_EnemyCompensate(void);
-uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleU_Struct *ForcastAngle, uint8_t TimeMode);
+uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *ForcastAngle, uint8_t TimeMode);
 
 
 #endif

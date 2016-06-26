@@ -21,6 +21,8 @@
   */
     float PitchSum = 0, YawSum = 0;
     
+    AngleI_Struct AutoTargetAngle;      //自动射击目标角度
+    
 void Task_Control(void *Parameters)
 {
     int16_t XSpeed, YSpeed;
@@ -44,6 +46,7 @@ void Task_Control(void *Parameters)
         //遥控器控制
         if(ControlMode == ControlMode_RC)
         {
+/****************************************   遥控器控制，此处注释，临时改为自动射击调试模式*/
             CloudParam.Yaw.ABSTargetAngle -= DBUS_ReceiveData.ch3 / 600.0F;
             
             CloudParam.Pitch.EncoderTargetAngle += DBUS_ReceiveData.ch4 / 50.0F;
@@ -72,6 +75,20 @@ void Task_Control(void *Parameters)
             
             Chassis_SpeedSet(DBUS_ReceiveData.ch2 * 900 / 660, DBUS_ReceiveData.ch1 * 900 / 660);
             Chassis_Control(1);
+/****************************************/
+        
+//            if(EnemyDataBuffer[EnemyDataBufferPoint].ID)
+//            {
+//                AutoTargetAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
+//                                            EnemyDataBuffer[EnemyDataBufferPoint].Y,
+//                                            EnemyDataBuffer[EnemyDataBufferPoint].Z,
+//                                            0);
+//                
+//                Cloud_YawAngleSet(AutoTargetAngle.H, 1);
+//                Cloud_PitchAngleSet(AutoTargetAngle.V);
+//            
+//                Cloud_Adjust(1);
+//            }
         }
         else if(ControlMode == ControlMode_KM)
         {
