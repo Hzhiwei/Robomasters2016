@@ -3,6 +3,7 @@
 
 #include "Config.h"
 #include "Task_CANSend.h"
+#include "Driver_mpu9250.h"
 #include "Driver_Control.h"
 #include "Driver_CloudMotor.h"
 #include "Driver_SuperGyroscope.h"
@@ -72,6 +73,7 @@ void CloudMotorCurrent(int16_t Pitch, int16_t Yaw)
     SendData.SendCanTxMsg.Data[5] = 0;
     SendData.SendCanTxMsg.Data[6] = 0;
     SendData.SendCanTxMsg.Data[7] = 0;
+    
 //    #else
 //    SendData.SendCanTxMsg.Data[0] = (-Yaw) >> 8;
 //    SendData.SendCanTxMsg.Data[1] = (-Yaw);
@@ -108,6 +110,14 @@ void Cloud_Adjust(uint8_t mode)
             CloudParam.Yaw.EncoderTargetAngle = CloudParam.Yaw.EncoderTargetAngle < YawRIGHTLimit ? YawRIGHTLimit : CloudParam.Yaw.EncoderTargetAngle;
         }
         
+        //Pitch绝对角度目标模式
+        if(CloudParam.Pitch.AngleMode == AngleMode_ABS)
+        {
+            CloudParam.Pitch.EncoderTargetAngle = (CloudParam.Pitch.ABSTargetAngle - Position.Euler.Pitch) * 22.7556F + CloudParam.Pitch.RealEncoderAngle;
+            CloudParam.Pitch.EncoderTargetAngle = CloudParam.Pitch.EncoderTargetAngle > PitchUPLimit ? PitchUPLimit : CloudParam.Pitch.EncoderTargetAngle;
+            CloudParam.Pitch.EncoderTargetAngle = CloudParam.Pitch.EncoderTargetAngle < PitchDOWNLimit ? PitchDOWNLimit : CloudParam.Pitch.EncoderTargetAngle;
+        }
+        
         PitchMotorCurrent = Control_PitchPID();
         YawMotorCurrent = Control_YawPID();
     }
@@ -126,7 +136,7 @@ void Cloud_Adjust(uint8_t mode)
 /**
   * @brief  云台Yaw度及模式设置
   * @param  目标角度
-  * @param  模式  0 绝对角度          1 相对角度（编码器角度,左正右负）
+  * @param  模式  0 绝对角度          1 相对角度（编码器角度,左正右负,中间为0）
   * @retval void
   */
 void Cloud_YawAngleSet(float Target, uint8_t mode)
@@ -137,8 +147,6 @@ void Cloud_YawAngleSet(float Target, uint8_t mode)
     {
         CloudParam.Yaw.AngleMode = AngleMode_Encoder;
         
-//        CloudParam.Yaw.ABSTargetAngle = 
-        
         Buffer = (int16_t)Target + YawCenter;
         Buffer = Buffer > YawLEFTLimit ? YawLEFTLimit : Buffer;
         Buffer = Buffer < YawRIGHTLimit ? YawRIGHTLimit : Buffer;
@@ -148,6 +156,7 @@ void Cloud_YawAngleSet(float Target, uint8_t mode)
     else
     {
         CloudParam.Yaw.AngleMode = AngleMode_ABS;
+        
         CloudParam.Yaw.ABSTargetAngle = Target;
     }
 }
@@ -155,20 +164,34 @@ void Cloud_YawAngleSet(float Target, uint8_t mode)
 
 /**
   * @brief  云台Pitch角度及模式设置
-  * @param  目标角度(编码器角度）
+  * @param  目标角度
+  * @param  模式  0 绝对角度          1 相对角度（编码器角度,上正下负,中间为0）
   * @retval void
   */
-void Cloud_PitchAngleSet(float Target)
+void Cloud_PitchAngleSet(float Target, uint8_t mode)
 {
-    int16_t Buffer;
+    int16_t EncoderBuffer;
+    float ABSBuffer;
     
-    CloudParam.Pitch.AngleMode = AngleMode_Encoder;
-    
-    Buffer = (int16_t)Target + PitchCenter;
-    Buffer = Buffer > PitchUPLimit ? PitchUPLimit : Buffer;
-    Buffer = Buffer < PitchDOWNLimit ? PitchDOWNLimit : Buffer;
-    
-    CloudParam.Pitch.EncoderTargetAngle = Buffer;
+    if(mode)
+    {
+        CloudParam.Pitch.AngleMode = AngleMode_Encoder;
+        
+        EncoderBuffer = (int16_t)Target + PitchCenter;
+        EncoderBuffer = EncoderBuffer > PitchUPLimit ? PitchUPLimit : EncoderBuffer;
+        EncoderBuffer = EncoderBuffer < PitchDOWNLimit ? PitchDOWNLimit : EncoderBuffer;
+        CloudParam.Pitch.EncoderTargetAngle = EncoderBuffer;
+    }
+    else
+    {
+        CloudParam.Pitch.AngleMode = AngleMode_ABS;
+        
+        ABSBuffer = Target;
+        ABSBuffer = ABSBuffer > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : ABSBuffer;
+        ABSBuffer = ABSBuffer > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : ABSBuffer;
+        
+        CloudParam.Pitch.ABSTargetAngle = ABSBuffer;
+    }
 }
 
 

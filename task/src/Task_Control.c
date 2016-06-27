@@ -3,6 +3,7 @@
 
 #include "Config.h"
 
+#include "mpu9250dmp.h"
 #include "Driver_DBUS.h"
 #include "Driver_vision.h"
 #include "Driver_Chassis.h"
@@ -28,7 +29,8 @@ void Task_Control(void *Parameters)
     int16_t XSpeed, YSpeed;
     int16_t Counter = 0;
     portTickType ControlLastTick = 0;
-    float IntBuffer;
+    float MouseSpinIntBuffer = 0, MousePitchIntBuffer = 0;
+    uint16_t dmpresetCounter = 0;
     
     for(;;)
     {
@@ -36,6 +38,17 @@ void Task_Control(void *Parameters)
         
 /************************  ↓  姿态更新  ↓ ************************/
         MPU9250_Update();
+        
+        if(dmpresetCounter >= 5000)
+        {
+            dmpresetCounter = 0;
+            mpu_set_dmp_state(0);
+            mpu_set_dmp_state(1);
+        }
+        else
+        {
+            dmpresetCounter++;
+        }
 /************************  ↑  姿态更新  ↑ ************************/
 /**************************************************************************************************/
 /*********************  ↓  状态机状态更新  ↓ *********************/
@@ -48,13 +61,12 @@ void Task_Control(void *Parameters)
         {
 /****************************************   遥控器控制，此处注释，临时改为自动射击调试模式*/
             CloudParam.Yaw.ABSTargetAngle -= DBUS_ReceiveData.ch3 / 600.0F;
-            
-            CloudParam.Pitch.EncoderTargetAngle += DBUS_ReceiveData.ch4 / 50.0F;
-            CloudParam.Pitch.EncoderTargetAngle = CloudParam.Pitch.EncoderTargetAngle > PitchUPLimit ? PitchUPLimit : CloudParam.Pitch.EncoderTargetAngle;
-            CloudParam.Pitch.EncoderTargetAngle = CloudParam.Pitch.EncoderTargetAngle < PitchDOWNLimit ? PitchDOWNLimit : CloudParam.Pitch.EncoderTargetAngle;
-            
             Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
-//            Cloud_PitchAngleSet(CloudParam.Pitch.EncoderTargetAngle);
+            
+            CloudParam.Pitch.ABSTargetAngle += DBUS_ReceiveData.ch4 / 250.0F;
+            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
+            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
+            CloudParam.Pitch.AngleMode = AngleMode_ABS;
             
             Cloud_Adjust(1);
             
@@ -92,6 +104,19 @@ void Task_Control(void *Parameters)
         }
         else if(ControlMode == ControlMode_KM)
         {
+            //速度倍率设置
+            if((DBUS_ReceiveData.keyBoard.key_code & KEY_V) & (!(LASTDBUS_ReceiveData.keyBoard.key_code & KEY_V)))
+            {
+                if(ChassisParam.SpeedLevel == ChassisSpeedLevel_Hight)
+                {
+                    ChassisParam.SpeedLevel = ChassisSpeedLevel_Low;
+                }
+                else if(ChassisParam.SpeedLevel == ChassisSpeedLevel_Low)
+                {
+                    ChassisParam.SpeedLevel = ChassisSpeedLevel_Hight;
+                }
+            }
+            
             //前后
             if((DBUS_ReceiveData.keyBoard.key_code & KEY_W) && (DBUS_ReceiveData.keyBoard.key_code & KEY_SHIFT))
             {
@@ -104,11 +129,11 @@ void Task_Control(void *Parameters)
             }
             else if(DBUS_ReceiveData.keyBoard.key_code & KEY_W)
             {
-                XSpeed = MAXWORKINGSPEED;
+                XSpeed = ChassisParam.SpeedLevel == ChassisSpeedLevel_Hight ? MAXWORKINGSPEED : MAXWORKINGSPEED * LOWSPEEDOVERRIDE;
             }
             else if(DBUS_ReceiveData.keyBoard.key_code & KEY_S)
             {
-                XSpeed = -MAXWORKINGSPEED;
+                XSpeed = -(ChassisParam.SpeedLevel == ChassisSpeedLevel_Hight ? MAXWORKINGSPEED : MAXWORKINGSPEED * LOWSPEEDOVERRIDE);
             }
             else
             {
@@ -149,17 +174,19 @@ void Task_Control(void *Parameters)
             }
             else
             {
-                IntBuffer = DBUS_ReceiveData.mouse.x / MOUSESPINPARAM;
-                IntBuffer = IntBuffer > MOUSEINTLIMIT ? MOUSEINTLIMIT : IntBuffer;
-                IntBuffer = IntBuffer < -MOUSEINTLIMIT ? -MOUSEINTLIMIT : IntBuffer;
+                MouseSpinIntBuffer = DBUS_ReceiveData.mouse.x / MOUSESPINPARAM;
+                MouseSpinIntBuffer = MouseSpinIntBuffer > MOUSEINTLIMIT ? MOUSEINTLIMIT : MouseSpinIntBuffer;
+                MouseSpinIntBuffer = MouseSpinIntBuffer < -MOUSEINTLIMIT ? -MOUSEINTLIMIT : MouseSpinIntBuffer;
                 
-                CloudParam.Yaw.ABSTargetAngle -= IntBuffer;
-                Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
+                CloudParam.Yaw.ABSTargetAngle -= MouseSpinIntBuffer;
+                CloudParam.Yaw.AngleMode = AngleMode_ABS;
             } 
-            CloudParam.Pitch.EncoderTargetAngle -= DBUS_ReceiveData.mouse.y;
-            CloudParam.Pitch.EncoderTargetAngle = CloudParam.Pitch.EncoderTargetAngle > PitchUPLimit ? PitchUPLimit : CloudParam.Pitch.EncoderTargetAngle;
-            CloudParam.Pitch.EncoderTargetAngle = CloudParam.Pitch.EncoderTargetAngle < PitchDOWNLimit ? PitchDOWNLimit : CloudParam.Pitch.EncoderTargetAngle;
-        
+            
+            CloudParam.Pitch.ABSTargetAngle -= DBUS_ReceiveData.mouse.y / 80.0F;
+            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
+            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
+            CloudParam.Pitch.AngleMode = AngleMode_ABS;
+            
             //发射
             if(DBUS_ReceiveData.switch_right == 3)
             {

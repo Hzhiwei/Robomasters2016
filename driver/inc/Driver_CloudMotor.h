@@ -24,18 +24,21 @@
 #elif INFANTRY == 2     //阿拉斯加
 #define PitchUPLimit            5600
 #define PitchDOWNLimit          4400
-#define PitchCenter             4844
+#define PitchCenter             4804
 #define YawLEFTLimit            4900
 #define YawRIGHTLimit           3400
 #define YawCenter               4100
 #elif INFANTRY == 3     //哈士奇
 #define PitchUPLimit            4400
 #define PitchDOWNLimit          3500
-#define PitchCenter             3820
+#define PitchCenter             3897
 #define YawLEFTLimit            4050
 #define YawRIGHTLimit           2420
-#define YawCenter               3340
+#define YawCenter               3380
 #endif
+
+#define ABSPITCHUPLIMIT         70.0F          //pitch绝对角度上限幅
+#define ABSPITCHDOWNLIMIT       -50.0F          //pitch绝对角度下限幅
 
 
 
@@ -83,7 +86,7 @@ void CloudMotor_InitConfig(void);
 void CloudMotorCurrent(int16_t Pitch, int16_t Yaw);
 void Cloud_Adjust(uint8_t mode);
 void Cloud_YawAngleSet(float Target, uint8_t mode);
-void Cloud_PitchAngleSet(float Target);
+void Cloud_PitchAngleSet(float Target, uint8_t mode);
 
 
 #endif

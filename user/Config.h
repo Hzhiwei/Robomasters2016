@@ -3,7 +3,7 @@
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
 #define VISIONDEBUG             0           //视觉debug模式
-#define INFANTRY                1           //1萨摩       2阿拉斯加       3哈士奇
+#define INFANTRY                2           //1萨摩       2阿拉斯加       3哈士奇
 
 #if INFANTRY == 1               //萨摩参数↓
 
@@ -16,6 +16,7 @@
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          16.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
 #define POKESTRUCKDEALLINES     200         //拨弹电机卡弹后反转处理线数
+#define LOWSPEEDOVERRIDE        0.65F       //底盘低速为全速的多少倍（0-1）
 
 #elif INFANTRY == 2               //阿拉斯加参数↓
 
@@ -23,11 +24,12 @@
 #define MAXSHIFTSPEED           1200        //正常前进后退速度
 #define SNEAKSPEED              100         //潜行速度
 #define QESPINPARAM             0.9F        //QE自旋系数（越大自旋越快，过大会发生底盘响应跟不上）
-#define FRICMOTORWORKINGSPEED   230         //摩擦轮工作速度(230)
+#define FRICMOTORWORKINGSPEED   250         //摩擦轮工作速度(230)
 #define POKESTEPSPEED           -300        //拨弹电机步进速度（符号控制方向，不要动）
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          10.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
 #define POKESTRUCKDEALLINES     100         //拨弹电机卡弹后反转处理线数
+#define LOWSPEEDOVERRIDE        0.65F       //底盘低速为全速的多少倍（0-1）
 
 #elif INFANTRY == 3               //哈士奇参数↓
 
@@ -40,6 +42,7 @@
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          24.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
 #define POKESTRUCKDEALLINES     200         //拨弹电机卡弹后反转处理线数
+#define LOWSPEEDOVERRIDE        0.65F       //底盘低速为全速的多少倍（0-1）
 
 #endif
 /***************************************   ↑ 操作手参数  ↑ **********************************************/

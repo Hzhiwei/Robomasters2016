@@ -51,6 +51,7 @@
 .\objects\driver_cloudmotor.o: ..\lib\freertos\inc\queue.h
 .\objects\driver_cloudmotor.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_cloudmotor.o: ..\lib\freertos\inc\event_groups.h
+.\objects\driver_cloudmotor.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\driver_cloudmotor.o: ..\driver\inc\Driver_Control.h
 .\objects\driver_cloudmotor.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\driver_cloudmotor.o: ..\driver\inc\Driver_SuperGyroscope.h

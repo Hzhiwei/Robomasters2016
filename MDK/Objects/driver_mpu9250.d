@@ -35,7 +35,6 @@
 .\objects\driver_mpu9250.o: ..\lib\std\inc\stm32f4xx_dac.h
 .\objects\driver_mpu9250.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\driver_mpu9250.o: ..\lib\std\inc\stm32f4xx_fsmc.h
-.\objects\driver_mpu9250.o: ..\bsp\inc\BSP_SPI.h
 .\objects\driver_mpu9250.o: ..\user\OSinclude.h
 .\objects\driver_mpu9250.o: ..\lib\freertos\inc\FreeRTOS.h
 .\objects\driver_mpu9250.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
@@ -52,3 +51,5 @@
 .\objects\driver_mpu9250.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_mpu9250.o: ..\lib\freertos\inc\event_groups.h
 .\objects\driver_mpu9250.o: ..\lib\eMPL\custom\mpu9250dmp.h
+.\objects\driver_mpu9250.o: ..\lib\eMPL\inv_mpu.h
+.\objects\driver_mpu9250.o: ..\lib\eMPL\inv_mpu_dmp_motion_driver.h

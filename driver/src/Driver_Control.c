@@ -181,7 +181,7 @@ void CloudPID_InitConfig(void)
 	
 	
 	PitchOPID.LastError = 0;
-	PitchOPID.P = 9;
+	PitchOPID.P = 11;
 	PitchOPID.I = 0;
 	PitchOPID.D = 0;
 	PitchOPID.IMax = 0;
@@ -189,7 +189,7 @@ void CloudPID_InitConfig(void)
 	PitchOPID.LastTick = 0;
 	
 	PitchIPID.LastError = 0;
-	PitchIPID.P = 1.5;
+	PitchIPID.P = 1.2;
 	PitchIPID.I = 0;
 	PitchIPID.D = 0;
 	PitchIPID.IMax = 0;

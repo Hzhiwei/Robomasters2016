@@ -2,7 +2,7 @@
 #define __MPU9250_GLOBALS
 
 #include "Driver_mpu9250.h"
-#include "BSP_SPI.h"
+//#include "BSP_SPI.h"
 #include "OSinclude.h"
 #include "mpu9250dmp.h"
 

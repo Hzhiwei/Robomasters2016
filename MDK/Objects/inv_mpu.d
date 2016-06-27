@@ -41,3 +41,4 @@
 .\objects\inv_mpu.o: ..\lib\std\inc\stm32f4xx_fsmc.h
 .\objects\inv_mpu.o: ..\system\sim_IIC\sim_IIC.h
 .\objects\inv_mpu.o: ..\lib\eMPL\custom\mpu9250dmp.h
+.\objects\inv_mpu.o: ..\lib\eMPL\inv_mpu_dmp_motion_driver.h

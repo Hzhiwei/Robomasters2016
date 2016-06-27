@@ -52,6 +52,8 @@
 .\objects\task_sysinitconfig.o: ..\lib\freertos\inc\event_groups.h
 .\objects\task_sysinitconfig.o: ..\user\Handler.h
 .\objects\task_sysinitconfig.o: ..\lib\eMPL\custom\mpu9250dmp.h
+.\objects\task_sysinitconfig.o: ..\lib\eMPL\inv_mpu.h
+.\objects\task_sysinitconfig.o: ..\lib\eMPL\inv_mpu_dmp_motion_driver.h
 .\objects\task_sysinitconfig.o: ..\bsp\inc\BSP_CAN.h
 .\objects\task_sysinitconfig.o: ..\bsp\inc\BSP_TIM.h
 .\objects\task_sysinitconfig.o: ..\bsp\inc\BSP_DMA.h

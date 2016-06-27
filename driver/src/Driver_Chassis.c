@@ -36,6 +36,11 @@ void Chassis_InitConfig(void)
     }
     
     ChassisMaxSumCurrent = 2900.0F;
+    
+    ChassisParam.VX = 0;
+    ChassisParam.VY = 0;
+    ChassisParam.Omega = 0;
+    ChassisParam.SpeedLevel = ChassisSpeedLevel_Hight;
 }
 
 

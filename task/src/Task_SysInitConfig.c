@@ -63,9 +63,12 @@ void Task_SysInitConfig(void *Parameters)
 //    MPU9250DMP_InitConfig(0);
 //    vTaskDelay(1000);
     
-    //延时保证系统稳定
+    //延时保证陀螺仪正常初始化
     vTaskDelay(1000);
     MPU9250DMP_InitConfig(0);
+    
+    //等待底盘陀螺仪初始化完成
+//    vTaskDelay(4000);
     
     //生成CAN发送队列
 	Queue_CANSend = xQueueCreate(32, sizeof(CanSend_Type));		

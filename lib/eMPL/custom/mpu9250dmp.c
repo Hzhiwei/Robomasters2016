@@ -3,8 +3,6 @@
 
 #include "mpu9250dmp.h"
 #include "sim_IIC.h"
-#include "inv_mpu.h"
-#include "inv_mpu_dmp_motion_driver.h"
 
 #include <math.h>
 #include <string.h>
@@ -59,7 +57,7 @@ uint8_t MPU9250DMP_InitConfig(uint8_t mode)
 //        DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
 //        DMP_FEATURE_GYRO_CAL;
     
-    hal.dmp_features = DMP_FEATURE_6X_LP_QUAT;
+    hal.dmp_features = DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP;
 
     result = dmp_enable_feature(hal.dmp_features);
     if(result)return 6;
@@ -290,7 +288,7 @@ uint8_t mpu6050_Check(void)
   */
 __weak void mpu_delay_ms(int x)
 {
-    x *= 10000;
+    x *= 20000;
     while(x--);
 }
 

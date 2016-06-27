@@ -30,6 +30,14 @@
 #endif
 
 
+//速度枚举
+typedef enum
+{
+    ChassisSpeedLevel_Hight,
+    ChassisSpeedLevel_Low
+}ChassisSpeedLevel_Enum;
+
+
 //单电机参数
 typedef struct
 {
@@ -48,6 +56,7 @@ typedef struct
     OneMotorParam_Struct RF;
     OneMotorParam_Struct LB;
     OneMotorParam_Struct RB;
+    ChassisSpeedLevel_Enum SpeedLevel;
     float VX;
     float VY;
     float Omega;

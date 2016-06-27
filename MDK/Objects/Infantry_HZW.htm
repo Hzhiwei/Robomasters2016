@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Infantry_HZW.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Infantry_HZW.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Sun Jun 26 23:15:24 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Mon Jun 27 22:42:35 2016
 <BR><P>
 <H3>Maximum Stack Usage =        344 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -815,7 +815,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 </UL>
 
-<P><STRONG><a name="[105]"></a>Chassis_InitConfig</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, driver_chassis.o(i.Chassis_InitConfig))
+<P><STRONG><a name="[105]"></a>Chassis_InitConfig</STRONG> (Thumb, 70 bytes, Stack size 0 bytes, driver_chassis.o(i.Chassis_InitConfig))
 <BR><BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
 
@@ -847,7 +847,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
 
-<P><STRONG><a name="[b4]"></a>Cloud_Adjust</STRONG> (Thumb, 132 bytes, Stack size 16 bytes, driver_cloudmotor.o(i.Cloud_Adjust))
+<P><STRONG><a name="[b4]"></a>Cloud_Adjust</STRONG> (Thumb, 236 bytes, Stack size 16 bytes, driver_cloudmotor.o(i.Cloud_Adjust))
 <BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = Cloud_Adjust &rArr; CloudMotorCurrent &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_YawPID
@@ -1056,13 +1056,13 @@ Global Symbols
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IIC_Start
 <LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IIC_SendByte
 </UL>
-<BR>[Called By]<UL><LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_write_mem
+<BR>[Called By]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_dmp_state
+<LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_write_mem
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_sensors
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_sample_rate
 <LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_lpf
 <LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_int_latched
 <LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_gyro_fsr
-<LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_dmp_state
 <LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_compass_sample_rate
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_bypass
 <LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_accel_fsr
@@ -1139,7 +1139,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 240 + Unknown Stack Size
 <LI>Call Chain = MPU9250DMP_InitConfig &rArr; MPU9250DMPU_Selftest &rArr; mpu_run_self_test &rArr; mpu_set_dmp_state &rArr; mpu_set_sample_rate &rArr; mpu_lp_accel_mode &rArr; mpu_configure_fifo &rArr; set_int_enable &rArr; IIC_SendBuffer &rArr; IIC_SendByte
 </UL>
-<BR>[Calls]<UL><LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;inv_row_2_scale
+<BR>[Calls]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_dmp_state
+<LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;inv_row_2_scale
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU9250DMPU_Selftest
 <LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dmp_set_orientation
 <LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dmp_set_fifo_rate
@@ -1147,7 +1148,6 @@ Global Symbols
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dmp_enable_feature
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_sensors
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_sample_rate
-<LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_dmp_state
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_init
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_configure_fifo
 </UL>
@@ -1372,7 +1372,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> task_sysinitconfig.o(i.Task_SysInitConfig)
 </UL>
-<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 862 bytes, Stack size 32 bytes, task_control.o(i.Task_Control))
+<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 1136 bytes, Stack size 32 bytes, task_control.o(i.Task_Control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = Task_Control &rArr; MPU9250_Update &rArr; MPU9250DMP_GetEuler &rArr; dmp_read_fifo &rArr; mpu_read_fifo_stream &rArr; mpu_reset_fifo &rArr; IIC_SendBuffer &rArr; IIC_SendByte
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PokeMotor_Step
@@ -1383,6 +1383,7 @@ Global Symbols
 <LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_SpeedSet
 <LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Control
 <LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelayUntil
+<LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_dmp_state
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StatusMachine_Update
 <LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_YawAngleSet
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_Adjust
@@ -1903,11 +1904,11 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_delay_ms
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IIC_SendBuffer
 </UL>
-<BR>[Called By]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dmp_read_fifo
+<BR>[Called By]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_dmp_state
+<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dmp_read_fifo
 <LI><a href="#[128]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dmp_enable_lp_quat
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dmp_enable_feature
 <LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dmp_enable_6x_lp_quat
-<LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_dmp_state
 <LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_read_fifo_stream
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_configure_fifo
 </UL>
@@ -1915,11 +1916,11 @@ Global Symbols
 <P><STRONG><a name="[cb]"></a>mpu_run_self_test</STRONG> (Thumb, 168 bytes, Stack size 48 bytes, inv_mpu.o(i.mpu_run_self_test))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = mpu_run_self_test &rArr; mpu_set_dmp_state &rArr; mpu_set_sample_rate &rArr; mpu_lp_accel_mode &rArr; mpu_configure_fifo &rArr; set_int_enable &rArr; IIC_SendBuffer &rArr; IIC_SendByte
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_sensors
+<BR>[Calls]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_dmp_state
+<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_sensors
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_sample_rate
 <LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_lpf
 <LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_gyro_fsr
-<LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_dmp_state
 <LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_set_accel_fsr
 <LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_get_sample_rate
 <LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_get_lpf
@@ -1971,6 +1972,7 @@ Global Symbols
 <LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;set_int_enable
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU9250DMP_InitConfig
+<LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpu_run_self_test
 </UL>
 
@@ -2085,9 +2087,6 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelete
 <LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelayUntil
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
-<LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSwitchTimerLists
-<LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessReceivedCommands
-<LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessExpiredTimer
 <LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskPriorityDisinherit
@@ -2096,6 +2095,9 @@ Global Symbols
 <LI><a href="#[16b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventList
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
+<LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSwitchTimerLists
+<LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessReceivedCommands
+<LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessExpiredTimer
 </UL>
 
 <P><STRONG><a name="[148]"></a>vListInitialise</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, list.o(i.vListInitialise))
@@ -2111,10 +2113,10 @@ Global Symbols
 <P><STRONG><a name="[142]"></a>vListInsert</STRONG> (Thumb, 52 bytes, Stack size 8 bytes, list.o(i.vListInsert))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = vListInsert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSwitchTimerLists
-<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertTimerInActiveList
-<LI><a href="#[16b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventList
+<BR>[Called By]<UL><LI><a href="#[16b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventList
 <LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
+<LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSwitchTimerLists
+<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertTimerInActiveList
 </UL>
 
 <P><STRONG><a name="[169]"></a>vListInsertEnd</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, list.o(i.vListInsertEnd))
@@ -2167,9 +2169,9 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
 </UL>
-<BR>[Called By]<UL><LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessReceivedCommands
-<LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvDeleteTCB
+<BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvDeleteTCB
 <LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAllocateTCBAndStack
+<LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessReceivedCommands
 </UL>
 
 <P><STRONG><a name="[16f]"></a>vPortSetupTimerInterrupt</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, port.o(i.vPortSetupTimerInterrupt))
@@ -2292,10 +2294,10 @@ Global Symbols
 <LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
 <LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelayUntil
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
-<LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessTimerOrBlockTask
 <LI><a href="#[145]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortFree
 <LI><a href="#[144]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pvPortMalloc
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
+<LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessTimerOrBlockTask
 </UL>
 
 <P><STRONG><a name="[7a]"></a>vTaskSwitchContext</STRONG> (Thumb, 118 bytes, Stack size 0 bytes, tasks.o(i.vTaskSwitchContext))
@@ -2475,10 +2477,10 @@ Global Symbols
 <LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
 <LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelayUntil
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
-<LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessTimerOrBlockTask
 <LI><a href="#[145]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortFree
 <LI><a href="#[144]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pvPortMalloc
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
+<LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessTimerOrBlockTask
 </UL>
 
 <P><STRONG><a name="[16d]"></a>xTimerCreateTimerTask</STRONG> (Thumb, 72 bytes, Stack size 24 bytes, timers.o(i.xTimerCreateTimerTask))
@@ -2821,9 +2823,9 @@ Local Symbols
 <P><STRONG><a name="[159]"></a>prvProcessExpiredTimer</STRONG> (Thumb, 96 bytes, Stack size 24 bytes, timers.o(i.prvProcessExpiredTimer))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = prvProcessExpiredTimer &rArr; xTimerGenericCommand &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertTimerInActiveList
-<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
+<BR>[Calls]<UL><LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 <LI><a href="#[15a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTimerGenericCommand
+<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertTimerInActiveList
 </UL>
 <BR>[Called By]<UL><LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessTimerOrBlockTask
 </UL>
@@ -2832,11 +2834,11 @@ Local Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = prvProcessReceivedCommands &rArr; prvSampleTimeNow &rArr; prvSwitchTimerLists &rArr; xTimerGenericCommand &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
-<LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSampleTimeNow
-<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertTimerInActiveList
 <LI><a href="#[145]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortFree
 <LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 <LI><a href="#[15a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTimerGenericCommand
+<LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSampleTimeNow
+<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertTimerInActiveList
 </UL>
 <BR>[Called By]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvTimerTask
 </UL>
@@ -2844,11 +2846,11 @@ Local Symbols
 <P><STRONG><a name="[15d]"></a>prvProcessTimerOrBlockTask</STRONG> (Thumb, 102 bytes, Stack size 24 bytes, timers.o(i.prvProcessTimerOrBlockTask))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = prvProcessTimerOrBlockTask &rArr; prvSampleTimeNow &rArr; prvSwitchTimerLists &rArr; xTimerGenericCommand &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSampleTimeNow
-<LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessExpiredTimer
-<LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<BR>[Calls]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
 <LI><a href="#[15e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vQueueWaitForMessageRestricted
+<LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSampleTimeNow
+<LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessExpiredTimer
 </UL>
 <BR>[Called By]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvTimerTask
 </UL>
@@ -2876,9 +2878,9 @@ Local Symbols
 <P><STRONG><a name="[68]"></a>prvTimerTask</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, timers.o(i.prvTimerTask))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = prvTimerTask &rArr; prvProcessReceivedCommands &rArr; prvSampleTimeNow &rArr; prvSwitchTimerLists &rArr; xTimerGenericCommand &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessTimerOrBlockTask
+<BR>[Calls]<UL><LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvGetNextExpireTime
+<LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessTimerOrBlockTask
 <LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessReceivedCommands
-<LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvGetNextExpireTime
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> timers.o(i.xTimerCreateTimerTask)
 </UL>

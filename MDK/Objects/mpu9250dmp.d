@@ -35,8 +35,8 @@
 .\objects\mpu9250dmp.o: ..\lib\std\inc\stm32f4xx_dac.h
 .\objects\mpu9250dmp.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\mpu9250dmp.o: ..\lib\std\inc\stm32f4xx_fsmc.h
-.\objects\mpu9250dmp.o: ..\system\sim_IIC\sim_IIC.h
 .\objects\mpu9250dmp.o: ..\lib\eMPL\inv_mpu.h
 .\objects\mpu9250dmp.o: ..\lib\eMPL\inv_mpu_dmp_motion_driver.h
+.\objects\mpu9250dmp.o: ..\system\sim_IIC\sim_IIC.h
 .\objects\mpu9250dmp.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\mpu9250dmp.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
