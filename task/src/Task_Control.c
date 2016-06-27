@@ -118,7 +118,7 @@ void Task_Control(void *Parameters)
             }
             
             //前后
-            if((DBUS_ReceiveData.keyBoard.key_code & KEY_W) && (DBUS_ReceiveData.keyBoard.key_code & KEY_SHIFT))
+            if((DBUS_ReceiveData.keyBoard.key_code & KEY_W) && (DBUS_ReceiveData.keyBoard.key_code & KEY_CTRL))
             {
                 //潜行模式（进补给站）
                 XSpeed = SNEAKSPEED;

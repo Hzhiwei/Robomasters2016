@@ -46,7 +46,7 @@ uint8_t MPU9250DMP_InitConfig(uint8_t mode)
     if(result)return 4;
     result = mpu_set_sample_rate(DEFAULT_MPU_HZ);
     if(result)return 5;
-    
+    mpu_accel_lpfset();
     memset(&hal, 0, sizeof(hal));
 //    hal.sensors = ACCEL_ON | GYRO_ON | QUAT_ON;
     
@@ -276,6 +276,18 @@ uint8_t mpu6050_Check(void)
 	{
 		return 0;
 	}
+}
+
+
+/**
+  * @brief  加速度计低通滤波设置
+  * @param  void
+  * @retval void
+  */
+void mpu_accel_lpfset(void)
+{
+    uint8_t data = 2;
+    IIC_SendBuffer(0x68, 0x1D, 1, &data);
 }
     
     

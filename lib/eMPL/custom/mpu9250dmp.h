@@ -57,6 +57,7 @@ static uint8_t MPU9250DMPU_Selftest(uint8_t mode);
 
 void mpu_delay_ms(int x);
 void mpu_get_ms(unsigned long *p);
+void mpu_accel_lpfset(void);
 
 
 
