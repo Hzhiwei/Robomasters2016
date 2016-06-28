@@ -3,7 +3,7 @@
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
 #define VISIONDEBUG             0           //视觉debug模式
-#define INFANTRY                3           //1萨摩       2阿拉斯加       3哈士奇
+#define INFANTRY                1           //1萨摩       2阿拉斯加       3哈士奇
 
 #if INFANTRY == 1               //萨摩参数↓
 
@@ -16,7 +16,7 @@
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          16.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
 #define MOUSEPITCHPARAM         20.0F       //鼠标pitch控制系数（越小速度越快）
-#define POKESTRUCKDEALLINES     200         //拨弹电机卡弹后反转处理线数
+#define POKESTRUCKDEALLINES     300         //拨弹电机卡弹后反转处理线数
 #define LOWSPEEDOVERRIDE        0.65F       //底盘低速为全速的多少倍（0-1）
 
 #elif INFANTRY == 2               //阿拉斯加参数↓

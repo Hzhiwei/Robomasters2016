@@ -27,7 +27,6 @@
 void Task_Control(void *Parameters)
 {
     int16_t XSpeed, YSpeed;
-    int16_t Counter = 0;
     portTickType ControlLastTick = 0;
     float MouseSpinIntBuffer = 0, MousePitchIntBuffer = 0;
     uint16_t dmpresetCounter = 0;
@@ -213,20 +212,7 @@ void Task_Control(void *Parameters)
 /*********************  ↑  根据状态机控制  ↑ *********************/
 /**************************************************************************************************/
 /**********************  ↓  拨弹电机控制   ↓ ***********************/
-        //将拨弹电机控制频率降低
-        if(Counter >= 5)
-        {
-            Counter = 0;
-        }
-        else
-        {
-            Counter++;
-        }
-        
-        if(Counter == 0)
-        {
-            PokeMotor_Adjust();
-        }
+        PokeMotor_Adjust();
 /*********************  ↑  拨弹电机PID  ↑  ***********************/
 /**************************************************************************************************/
 /*********************  ↓  云台PID      ↓  **********************/

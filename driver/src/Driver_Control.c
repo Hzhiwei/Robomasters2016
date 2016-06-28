@@ -60,7 +60,7 @@ void CloudPID_InitConfig(void)
     
     PokeOPID.CurrentError = 0;
     PokeOPID.LastError = 0;
-    PokeOPID.P = 0.2;
+    PokeOPID.P = 0.07;
     PokeOPID.I = 0;
     PokeOPID.D = 0;
     PokeOPID.IMax = 0;
@@ -69,11 +69,11 @@ void CloudPID_InitConfig(void)
     
     PokeIPID.CurrentError = 0;
     PokeIPID.LastError = 0;
-    PokeIPID.P = 0.8;
-    PokeIPID.I = 0.15;
-    PokeIPID.D = 0.3;
-    PokeIPID.IMax = 100;
-    PokeIPID.PIDMax = 120;
+    PokeIPID.P = 3.8;
+    PokeIPID.I = 0.2;
+    PokeIPID.D = 0;
+    PokeIPID.IMax = 200;
+    PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
     
     ChassisOPID.CurrentError = 0;
@@ -129,7 +129,7 @@ void CloudPID_InitConfig(void)
     
     PokeOPID.CurrentError = 0;
     PokeOPID.LastError = 0;
-    PokeOPID.P = 0.2;
+    PokeOPID.P = 0.07;
     PokeOPID.I = 0;
     PokeOPID.D = 0;
     PokeOPID.IMax = 0;
@@ -138,11 +138,11 @@ void CloudPID_InitConfig(void)
     
     PokeIPID.CurrentError = 0;
     PokeIPID.LastError = 0;
-    PokeIPID.P = 0.8;
-    PokeIPID.I = 0.15;
-    PokeIPID.D = 0.3;
-    PokeIPID.IMax = 300;
-    PokeIPID.PIDMax = 150;
+    PokeIPID.P = 3.8;
+    PokeIPID.I = 0.2;
+    PokeIPID.D = 0;
+    PokeIPID.IMax = 200;
+    PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
     
     ChassisOPID.CurrentError = 0;
@@ -198,7 +198,7 @@ void CloudPID_InitConfig(void)
     
     PokeOPID.CurrentError = 0;
     PokeOPID.LastError = 0;
-    PokeOPID.P = 0.2;
+    PokeOPID.P = 0.07;
     PokeOPID.I = 0;
     PokeOPID.D = 0;
     PokeOPID.IMax = 0;
@@ -207,11 +207,11 @@ void CloudPID_InitConfig(void)
     
     PokeIPID.CurrentError = 0;
     PokeIPID.LastError = 0;
-    PokeIPID.P = 0.8;
-    PokeIPID.I = 0.15;
-    PokeIPID.D = 0.3;
-    PokeIPID.IMax = 100;
-    PokeIPID.PIDMax = 120;
+    PokeIPID.P = 3.8;
+    PokeIPID.I = 0.2;
+    PokeIPID.D = 0;
+    PokeIPID.IMax = 200;
+    PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
     
     ChassisOPID.CurrentError = 0;
@@ -360,22 +360,7 @@ int16_t Control_PokeIPID(void)
     /*****************************  外环  *****************************/
     PokeOPID.CurrentError = PokeMotorParam.TargetLocation - PokeMotorParam.RealLocation;
     
-    //误差小30线
-    if((PokeOPID.CurrentError < 30) && (PokeOPID.CurrentError > -30))
-    {
-        PokeMotorParam.Status = PokeMotorParam_Working;
-    }
-    
-    //卡弹反转时高速调节
-    if(PokeMotorParam.Status == PokeMotorParam_Stuck)
-    {
-        PokeOPID.Pout = 3.0F * PokeOPID.P * PokeOPID.CurrentError;
-    }
-    else
-    {
-        PokeOPID.Pout = PokeOPID.P * PokeOPID.CurrentError;
-    }
-    
+    PokeOPID.Pout = PokeOPID.P * PokeOPID.CurrentError;
     PokeOPID.Dout = PokeOPID.D * (PokeOPID.CurrentError - PokeOPID.LastError);
     
     PokeOPID.PIDout = PokeOPID.Pout + PokeOPID.Dout;
@@ -393,14 +378,6 @@ int16_t Control_PokeIPID(void)
     PokeIPID.Iout += PokeIPID.CurrentError * PokeIPID.I;
     PokeIPID.Iout = PokeIPID.Iout > PokeIPID.IMax ? PokeIPID.IMax : PokeIPID.Iout;
     PokeIPID.Iout = PokeIPID.Iout < -PokeIPID.IMax ? -PokeIPID.IMax : PokeIPID.Iout;
-    
-    //根据积分判断是否卡弹，当积分达到80%上限时认为卡弹,并反转指定角度
-    if(((PokeIPID.Iout > 0.9 * PokeIPID.IMax) || (PokeIPID.Iout < -0.9 * PokeIPID.IMax)) && (PokeMotorParam.Status == PokeMotorParam_Working))
-    {
-        
-        PokeMotorParam.Status = PokeMotorParam_Stuck;
-        PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + POKESTRUCKDEALLINES;
-    }
     
     PokeIPID.Dout = PokeIPID.D * (PokeIPID.CurrentError - PokeIPID.LastError);
     
