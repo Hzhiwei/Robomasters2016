@@ -8,11 +8,11 @@
 #if INFANTRY == 1               //萨摩参数↓
 
 #define MAXWORKINGSPEED         850         //正常前进后退速度（最大900）
-#define MAXSHIFTSPEED           1200        //正常前进后退速度
+#define MAXSHIFTSPEED           1200        //正常平移速度
 #define SNEAKSPEED              100         //潜行速度
 #define QESPINPARAM             0.9F        //QE自旋系数（越大自旋越快，过大会发生底盘响应跟不上）
 #define FRICMOTORWORKINGSPEED   230         //摩擦轮工作速度(230)
-#define POKESTEPSPEED           -200        //拨弹电机步进速度（符号控制方向，不要动）
+#define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          16.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
 #define MOUSEPITCHPARAM         20.0F       //鼠标pitch控制系数（越小速度越快）
@@ -22,11 +22,11 @@
 #elif INFANTRY == 2               //阿拉斯加参数↓
 
 #define MAXWORKINGSPEED         850         //正常前进后退速度（最大900）
-#define MAXSHIFTSPEED           1200        //正常前进后退速度
+#define MAXSHIFTSPEED           1200        //正常平移速度
 #define SNEAKSPEED              100         //潜行速度
 #define QESPINPARAM             0.9F        //QE自旋系数（越大自旋越快，过大会发生底盘响应跟不上）
 #define FRICMOTORWORKINGSPEED   250         //摩擦轮工作速度(230)
-#define POKESTEPSPEED           -300        //拨弹电机步进速度（符号控制方向，不要动）
+#define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          10.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
 #define MOUSEPITCHPARAM         20.0F       //鼠标pitch控制系数（越小速度越快）
@@ -36,11 +36,11 @@
 #elif INFANTRY == 3               //哈士奇参数↓
 
 #define MAXWORKINGSPEED         850         //正常前进后退速度（最大900）
-#define MAXSHIFTSPEED           1200        //正常前进后退速度
+#define MAXSHIFTSPEED           1200        //正常平移速度
 #define SNEAKSPEED              100         //潜行速度
 #define QESPINPARAM             0.9F        //QE自旋系数（越大自旋越快，过大会发生底盘响应跟不上）
 #define FRICMOTORWORKINGSPEED   315         //摩擦轮工作速度(230)
-#define POKESTEPSPEED           -200        //拨弹电机步进速度（符号控制方向，不要动）
+#define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          24.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
 #define MOUSEPITCHPARAM         20.0F       //鼠标pitch控制系数（越小速度越快）
@@ -53,7 +53,7 @@
 
 
 #define CANPORT             1           //选择can端口
-//#define MOTORTYPE           1           //电机类型（不管）
+//#define MOTORTYPE         1           //电机类型（不管）
 
 #define DEBUGEMODE			1           //debuge模式
 #define BELLBARKPeriod      100         //蜂鸣器序列时间长度（ms）
