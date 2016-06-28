@@ -363,11 +363,11 @@ int16_t Control_PokeIPID(void)
     //误差小30线
     if((PokeOPID.CurrentError < 30) && (PokeOPID.CurrentError > -30))
     {
-        PokeMotorParam.Status = PokeChassisParam_Working;
+        PokeMotorParam.Status = PokeMotorParam_Working;
     }
     
     //卡弹反转时高速调节
-    if(PokeMotorParam.Status == PokeChassisParam_Stuck)
+    if(PokeMotorParam.Status == PokeMotorParam_Stuck)
     {
         PokeOPID.Pout = 3.0F * PokeOPID.P * PokeOPID.CurrentError;
     }
@@ -395,10 +395,10 @@ int16_t Control_PokeIPID(void)
     PokeIPID.Iout = PokeIPID.Iout < -PokeIPID.IMax ? -PokeIPID.IMax : PokeIPID.Iout;
     
     //根据积分判断是否卡弹，当积分达到80%上限时认为卡弹,并反转指定角度
-    if(((PokeIPID.Iout > 0.9 * PokeIPID.IMax) || (PokeIPID.Iout < -0.9 * PokeIPID.IMax)) && (PokeMotorParam.Status == PokeChassisParam_Working))
+    if(((PokeIPID.Iout > 0.9 * PokeIPID.IMax) || (PokeIPID.Iout < -0.9 * PokeIPID.IMax)) && (PokeMotorParam.Status == PokeMotorParam_Working))
     {
         
-        PokeMotorParam.Status = PokeChassisParam_Stuck;
+        PokeMotorParam.Status = PokeMotorParam_Stuck;
         PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + POKESTRUCKDEALLINES;
     }
     

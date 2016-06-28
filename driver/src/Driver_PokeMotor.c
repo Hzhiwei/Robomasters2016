@@ -15,7 +15,7 @@ void PokeMotor_InitConfig(void)
 {
     PokeMotorParam.RealLocation = 0;
     PokeMotorParam.RealSpeed = 0;
-    PokeMotorParam.Status = PokeChassisParam_Working;
+    PokeMotorParam.Status = PokeMotorParam_Working;
     PokeMotorParam.TargetLocation = 0;
     PokeMotorParam.LastShotTick = 0;
     
@@ -41,19 +41,6 @@ void PokeMotorCurrent(int16_t Current)
     S = Current > 399 ? 399 : Current;
     S = Current < -399 ? -399 : Current;
     
-//#if INFANTRY == 3
-//    //Ë³Ê±Õë
-//    if(Current <= 0)
-//    {
-//        GPIO_SetBits(GPIOA, GPIO_Pin_5);
-//        TIM5->CCR2 = S;
-//    }
-//    else
-//    {
-//        GPIO_ResetBits(GPIOA, GPIO_Pin_5);
-//        TIM5->CCR2 = -S;
-//    }
-//#else
     //Ë³Ê±Õë
     if(Current >= 0)
     {
@@ -79,7 +66,7 @@ void PokeMotor_Step(void)
 {
     portTickType CurrentTick = xTaskGetTickCount();
     
-    if((PokeMotorParam.Status == PokeChassisParam_Working) && 
+    if((PokeMotorParam.Status == PokeMotorParam_Working) && 
         (CurrentTick - PokeMotorParam.LastShotTick >= POKESTEPMINTIMECRACK)/* && 
         (PokeMotorParam.RealLocation - PokeMotorParam.TargetLocation >= -30) &&
         (PokeMotorParam.RealLocation - PokeMotorParam.TargetLocation <= 30)*/)

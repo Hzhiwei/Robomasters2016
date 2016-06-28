@@ -24,8 +24,8 @@
 //拨弹电机状态枚举
 typedef enum
 {
-    PokeChassisParam_Working,                        //正常
-    PokeChassisParam_Stuck                           //卡弹或正在反转处理卡弹
+    PokeMotorParam_Working,                        //正常
+    PokeMotorParam_Stuck                           //卡弹或正在反转处理卡弹
 }PokeChassisParam_Enum;  
     
     

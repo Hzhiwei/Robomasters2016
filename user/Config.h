@@ -15,6 +15,7 @@
 #define POKESTEPSPEED           -200        //拨弹电机步进速度（符号控制方向，不要动）
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          16.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
+#define MOUSEPITCHPARAM         20.0F       //鼠标pitch控制系数（越小速度越快）
 #define POKESTRUCKDEALLINES     200         //拨弹电机卡弹后反转处理线数
 #define LOWSPEEDOVERRIDE        0.65F       //底盘低速为全速的多少倍（0-1）
 
@@ -28,6 +29,7 @@
 #define POKESTEPSPEED           -300        //拨弹电机步进速度（符号控制方向，不要动）
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          10.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
+#define MOUSEPITCHPARAM         20.0F       //鼠标pitch控制系数（越小速度越快）
 #define POKESTRUCKDEALLINES     100         //拨弹电机卡弹后反转处理线数
 #define LOWSPEEDOVERRIDE        0.65F       //底盘低速为全速的多少倍（0-1）
 
@@ -41,6 +43,7 @@
 #define POKESTEPSPEED           -200        //拨弹电机步进速度（符号控制方向，不要动）
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          24.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
+#define MOUSEPITCHPARAM         20.0F       //鼠标pitch控制系数（越小速度越快）
 #define POKESTRUCKDEALLINES     200         //拨弹电机卡弹后反转处理线数
 #define LOWSPEEDOVERRIDE        0.65F       //底盘低速为全速的多少倍（0-1）
 

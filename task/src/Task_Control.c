@@ -182,7 +182,7 @@ void Task_Control(void *Parameters)
                 CloudParam.Yaw.AngleMode = AngleMode_ABS;
             } 
             
-            CloudParam.Pitch.ABSTargetAngle -= DBUS_ReceiveData.mouse.y / 80.0F;
+            CloudParam.Pitch.ABSTargetAngle -= DBUS_ReceiveData.mouse.y / MOUSEPITCHPARAM;
             CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
             CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
             CloudParam.Pitch.AngleMode = AngleMode_ABS;
