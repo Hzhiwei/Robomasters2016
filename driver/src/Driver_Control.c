@@ -41,6 +41,13 @@ void CloudPID_InitConfig(void)
 	YawIPID.PIDMax = 5000;
 	YawIPID.LastTick = 0;
 	
+	ForcastYawSpeedPID.LastError = 0;
+	ForcastYawSpeedPID.P = 4;
+	ForcastYawSpeedPID.I = 0.2F;
+	ForcastYawSpeedPID.D = 2;
+	ForcastYawSpeedPID.IMax = 1000;
+	ForcastYawSpeedPID.PIDMax = 5000;
+	ForcastYawSpeedPID.LastTick = 0;
 	
 	PitchOPID.LastError = 0;
 	PitchOPID.P = 9;
@@ -78,7 +85,7 @@ void CloudPID_InitConfig(void)
     
     ChassisOPID.CurrentError = 0;
     ChassisOPID.LastError = 0;
-    ChassisOPID.P = 11;
+    ChassisOPID.P = 7.2;
     ChassisOPID.I = 0;
     ChassisOPID.D = 0;
     ChassisOPID.IMax = 0;
@@ -87,7 +94,7 @@ void CloudPID_InitConfig(void)
     
     ChassisIPID.CurrentError = 0;
     ChassisIPID.LastError = 0;
-    ChassisIPID.P = 3;
+    ChassisIPID.P = 1.6;
     ChassisIPID.I = 0;
     ChassisIPID.D = 0;
     ChassisIPID.IMax = 0;
@@ -110,6 +117,13 @@ void CloudPID_InitConfig(void)
 	YawIPID.PIDMax = 5000;
 	YawIPID.LastTick = 0;
 	
+	ForcastYawSpeedPID.LastError = 0;
+	ForcastYawSpeedPID.P = 1;
+	ForcastYawSpeedPID.I = 0.2;
+	ForcastYawSpeedPID.D = 0;
+	ForcastYawSpeedPID.IMax = 100;
+	ForcastYawSpeedPID.PIDMax = 5000;
+	ForcastYawSpeedPID.LastTick = 0;
 	
 	PitchOPID.LastError = 0;
 	PitchOPID.P = 15;
@@ -147,7 +161,7 @@ void CloudPID_InitConfig(void)
     
     ChassisOPID.CurrentError = 0;
     ChassisOPID.LastError = 0;
-    ChassisOPID.P = 11;
+    ChassisOPID.P = 7.2;
     ChassisOPID.I = 0;
     ChassisOPID.D = 0;
     ChassisOPID.IMax = 0;
@@ -156,7 +170,7 @@ void CloudPID_InitConfig(void)
     
     ChassisIPID.CurrentError = 0;
     ChassisIPID.LastError = 0;
-    ChassisIPID.P = 3;
+    ChassisIPID.P = 1.6;
     ChassisIPID.I = 0;
     ChassisIPID.D = 0;
     ChassisIPID.IMax = 0;
@@ -178,6 +192,14 @@ void CloudPID_InitConfig(void)
 	YawIPID.IMax = 100;
 	YawIPID.PIDMax = 5000;
 	YawIPID.LastTick = 0;
+    
+	ForcastYawSpeedPID.LastError = 0;
+	ForcastYawSpeedPID.P = 1.0F;
+	ForcastYawSpeedPID.I = 0.2;
+	ForcastYawSpeedPID.D = 0;
+	ForcastYawSpeedPID.IMax = 1000;
+	ForcastYawSpeedPID.PIDMax = 5000;
+	ForcastYawSpeedPID.LastTick = 0;
 	
 	
 	PitchOPID.LastError = 0;
@@ -216,20 +238,20 @@ void CloudPID_InitConfig(void)
     
     ChassisOPID.CurrentError = 0;
     ChassisOPID.LastError = 0;
-    ChassisOPID.P = 11;
+    ChassisOPID.P = 7.2;
     ChassisOPID.I = 0;
     ChassisOPID.D = 0;
     ChassisOPID.IMax = 0;
-    ChassisOPID.PIDMax = 800;
+    ChassisOPID.PIDMax = 500;
     ChassisOPID.LastTick = 0;
     
     ChassisIPID.CurrentError = 0;
     ChassisIPID.LastError = 0;
-    ChassisIPID.P = 3;
+    ChassisIPID.P = 1.6;
     ChassisIPID.I = 0;
     ChassisIPID.D = 0;
     ChassisIPID.IMax = 0;
-    ChassisIPID.PIDMax = 1000;
+    ChassisIPID.PIDMax = 600;
     ChassisIPID.LastTick = 0;
 #endif
 }
@@ -421,6 +443,45 @@ void Control_ChassisPID(void)
     
     ChassisParam.Omega = ChassisIPID.PIDout;
 }
+
+
+/**
+  * @brief  预判自动追踪专用速度PID
+  * @param  目标角速度（编码器线单位）
+  * @retval 输出电流值
+  */
+int16_t VControl_YawPID(float TargetOmega)
+{
+	portTickType CurrentTick = xTaskGetTickCount(); 
+    
+    ForcastYawSpeedPID.CurrentError = TargetOmega * 22.7556F - (Position.MotorEncoderOmega.Z - SuperGyoMotorEncoderOmega);
+	
+	ForcastYawSpeedPID.Pout = ForcastYawSpeedPID.P * ForcastYawSpeedPID.CurrentError;
+	
+	ForcastYawSpeedPID.Iout += ForcastYawSpeedPID.I * ForcastYawSpeedPID.CurrentError;
+	ForcastYawSpeedPID.Iout = ForcastYawSpeedPID.Iout > ForcastYawSpeedPID.IMax ? ForcastYawSpeedPID.IMax : ForcastYawSpeedPID.Iout;
+	ForcastYawSpeedPID.Iout = ForcastYawSpeedPID.Iout < -ForcastYawSpeedPID.IMax ? -ForcastYawSpeedPID.IMax : ForcastYawSpeedPID.Iout;
+	
+	if(ForcastYawSpeedPID.LastTick != CurrentTick)
+	{
+		ForcastYawSpeedPID.Dout = ForcastYawSpeedPID.D * (ForcastYawSpeedPID.CurrentError - ForcastYawSpeedPID.LastError) * 5 / (CurrentTick - ForcastYawSpeedPID.LastTick);
+	}
+	else
+	{
+		ForcastYawSpeedPID.Dout = ForcastYawSpeedPID.D * (ForcastYawSpeedPID.CurrentError - ForcastYawSpeedPID.LastError);
+	}
+	
+	ForcastYawSpeedPID.PIDout = (ForcastYawSpeedPID.Pout + ForcastYawSpeedPID.Iout + ForcastYawSpeedPID.Dout);
+	
+	ForcastYawSpeedPID.PIDout = ForcastYawSpeedPID.PIDout > ForcastYawSpeedPID.PIDMax ? ForcastYawSpeedPID.PIDMax : ForcastYawSpeedPID.PIDout;
+	ForcastYawSpeedPID.PIDout = ForcastYawSpeedPID.PIDout < -ForcastYawSpeedPID.PIDMax ? -ForcastYawSpeedPID.PIDMax : ForcastYawSpeedPID.PIDout;
+	
+	ForcastYawSpeedPID.LastError = ForcastYawSpeedPID.CurrentError;
+	ForcastYawSpeedPID.LastTick = CurrentTick;
+	
+	return (short)ForcastYawSpeedPID.PIDout;
+}
+
 
 
 

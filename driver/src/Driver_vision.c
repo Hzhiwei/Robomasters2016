@@ -37,7 +37,7 @@ void Vision_InitConfig(void)
   * @param  Y
   * @param  Z
   * @param  0 不考虑重力加速度      1 考虑重力加速度
-  * @retval 角度
+  * @retval 角度(编码器，中间为0）
   */
 AngleI_Struct RecToPolar(float X, float Y, float Z, uint8_t mode)
 {
@@ -51,7 +51,7 @@ AngleI_Struct RecToPolar(float X, float Y, float Z, uint8_t mode)
     if(mode == 0)
     {
     //不考虑重力加速度
-        ReturnData.V = atan(Y / distance) * 1303.7973F;
+        ReturnData.V = -atan(Y / distance) * 1303.7973F;
     }
     else
     {
@@ -179,31 +179,6 @@ uint8_t ForcastCore(uint16_t SampleTime, uint16_t ForcastTime, Point_Struct *For
     ForcastPoint->Z = (Paz * ForcastTime * ForcastTime + Pbz * ForcastTime + Pcz);
     
     return 0;
-}    
-
-
-/**
-  * @brief  获取目标当前角速度
-  * @param  void
-  * @retval 以云台为圆心，目标的角速度，单位为线/s
-  */
-CompensateSpeed_struct Get_EnemyCompensate(void)
-{
-    CompensateSpeed_struct ReturnData;
-    
-    ReturnData.X = (EnemyDataBuffer[EnemyDataBufferPoint].X - 
-                            EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].X) /
-                            (EnemyDataBuffer[EnemyDataBufferPoint].Time - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Time);
-    
-    ReturnData.Y = (EnemyDataBuffer[EnemyDataBufferPoint].Y - 
-                            EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Y) /
-                            (EnemyDataBuffer[EnemyDataBufferPoint].Time - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Time);
-        
-    ReturnData.Z = (EnemyDataBuffer[EnemyDataBufferPoint].Z - 
-                            EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Z) /
-                            (EnemyDataBuffer[EnemyDataBufferPoint].Time - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Time);
-    
-    return ReturnData;
 }
 
 
@@ -250,6 +225,42 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *Fo
 }
 
 
+/**
+  * @brief  射击评估
+  * @param  当前时间
+  * @retval 0 评估结果不适合           1 评估结果适合发射
+  */
+uint8_t VShot_Evaluation(portTickType CurrentTick)
+{
+    
+/**********************     傻逼评估方式      **********************/
+    //时间误差小于±10
+//    if((CurrentTick + 10 > ForcastTarget.TargetTick) && (CurrentTick - 10 < ForcastTarget.TargetTick))
+//    {
+        //角度误差小于50线
+        if((CloudParam.Yaw.RealEncoderAngle - ForcastTarget.Target.H - YawCenter > -50) && (CloudParam.Yaw.RealEncoderAngle - ForcastTarget.Target.H  - YawCenter < 50))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+//    }
+//    else
+//    {
+//    return 0;
+//    }
+        
+        
+/**********************     评估方式二       **********************/
+    
+    
+    
+    
+    
+    
+}
 
 
 

@@ -11,8 +11,6 @@
 #include "Driver_SuperGyroscope.h"
 
 
-
-
 volatile float Last_Spd[4];
 //ÂóÂÖ½âËã¾ØÕó
 const signed char MecanumCalculateMAT[4][3] = { 
@@ -41,6 +39,12 @@ void Chassis_InitConfig(void)
     ChassisParam.VY = 0;
     ChassisParam.Omega = 0;
     ChassisParam.SpeedLevel = ChassisSpeedLevel_Hight;
+    
+    for(int i = 0; i < 4; i++)
+    {
+        ChassisFrameCounter[i] = 0;
+        ChassisFrameRate[i] = 0;
+    }
 }
 
 

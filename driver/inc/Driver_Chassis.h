@@ -8,7 +8,7 @@
 
 #define LFCHASSISCONTROLCANID           0x75
 #define MaxWheelSpeed                  900
-#define ChassisLimitCurrent             3000            //底盘电流限制极限
+#define ChassisLimitCurrent             2750            //底盘电流限制极限
 #define MOUSEINTLIMIT           0.9F        //鼠标旋转速度上限，当鼠标旋转时底盘速度跟不上则减小此值
 
 
@@ -63,8 +63,14 @@ typedef struct
 }ChassisParam_Struct;
 
 
-__DRIVER_CHASSIS_EXT float ChassisMaxSumCurrent;        //底盘最大总电流限制
-__DRIVER_CHASSIS_EXT ChassisParam_Struct ChassisParam;        //电机状态
+//底盘最大总电流限制
+__DRIVER_CHASSIS_EXT float ChassisMaxSumCurrent;   
+//电机状态
+__DRIVER_CHASSIS_EXT ChassisParam_Struct ChassisParam;    
+//底盘电机帧计数器
+__DRIVER_CHASSIS_EXT uint16_t ChassisFrameCounter[4];   
+//底盘电机帧计数器
+__DRIVER_CHASSIS_EXT uint16_t ChassisFrameRate[4];  
 
 
 void Chassis_InitConfig(void);

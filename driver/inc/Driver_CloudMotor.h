@@ -22,11 +22,11 @@
 #define YawRIGHTLimit           3800
 #define YawCenter               4650
 #elif INFANTRY == 2     //阿拉斯加
-#define PitchUPLimit            5600
-#define PitchDOWNLimit          4400
-#define PitchCenter             4804
-#define YawLEFTLimit            4900
-#define YawRIGHTLimit           3400
+#define PitchUPLimit            3500
+#define PitchDOWNLimit          2600
+#define PitchCenter             2888
+#define YawLEFTLimit            5500
+#define YawRIGHTLimit           3000
 #define YawCenter               4100
 #elif INFANTRY == 3     //哈士奇
 #define PitchUPLimit            4400

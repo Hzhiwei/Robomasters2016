@@ -7,6 +7,7 @@
 
 
 void Steering_InitConfig(void);
+void Steering_Control(uint8_t status);
 
 
 #endif

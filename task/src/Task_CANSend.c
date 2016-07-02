@@ -16,12 +16,25 @@ void Task_CANSend(void *Parameters)
     {
 		xQueueReceive(Queue_CANSend, &CANSendData, portMAX_DELAY);
         
-        if(CANSendData.CANx == 1)
+         if(CANSendData.CANx == 1)
         {
+            //CAN¹ÊÕÏÖØÆô
+            if(CAN1->ESR)
+            {
+                CAN1->MCR |= 0x02;
+                CAN1->MCR &= 0xFD;
+            }
+            
             CAN_Transmit(CAN1, &(CANSendData.SendCanTxMsg));
         }
         else
         {
+            //CAN¹ÊÕÏÖØÆô
+            if(CAN2->ESR)
+            {
+                CAN2->MCR |= 0x02;
+                CAN2->MCR &= 0xFD;
+            }
             CAN_Transmit(CAN2, &(CANSendData.SendCanTxMsg));
         }
         

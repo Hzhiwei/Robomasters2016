@@ -442,14 +442,14 @@
               <FilePath>..\lib\freertos\inc\FreeRTOSConfig.h</FilePath>
             </File>
             <File>
-              <FileName>control.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\control.txt</FilePath>
-            </File>
-            <File>
               <FileName>note.txt</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\note.txt</FilePath>
+            </File>
+            <File>
+              <FileName>control.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\control.txt</FilePath>
             </File>
             <File>
               <FileName>backup.txt</FileName>
@@ -470,6 +470,11 @@
               <FileName>Driver_DBUS.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\driver\src\Driver_DBUS.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_Judge.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\src\Driver_Judge.c</FilePath>
             </File>
             <File>
               <FileName>Driver_vision.c</FileName>
@@ -687,14 +692,14 @@
               <FilePath>..\lib\eMPL\inv_mpu.c</FilePath>
             </File>
             <File>
-              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\lib\eMPL\inv_mpu_dmp_motion_driver.c</FilePath>
-            </File>
-            <File>
               <FileName>mpu9250dmp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\lib\eMPL\custom\mpu9250dmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\eMPL\inv_mpu_dmp_motion_driver.c</FilePath>
             </File>
           </Files>
         </Group>

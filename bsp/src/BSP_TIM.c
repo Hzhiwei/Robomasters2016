@@ -81,9 +81,15 @@ void BSP_TIM_InitConfig(void)
     TIM_OCInitStructure.TIM_OutputState=   TIM_OutputState_Enable;
     TIM_OCInitStructure.TIM_Pulse      =   1000;
     TIM_OCInitStructure.TIM_OCPolarity =   TIM_OCPolarity_High;
-    TIM_OCInitStructure.TIM_OCIdleState =  TIM_OCIdleState_Reset; 
+    TIM_OCInitStructure.TIM_OCIdleState=   TIM_OCIdleState_Reset; 
     TIM_OC1Init(TIM8, &TIM_OCInitStructure);
     TIM_OC2Init(TIM8, &TIM_OCInitStructure);
+    
+    TIM_OCInitStructure.TIM_OCMode     =   TIM_OCMode_PWM2;
+    TIM_OCInitStructure.TIM_OutputState=   TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_Pulse      =   1500;
+    TIM_OCInitStructure.TIM_OCPolarity =   TIM_OCPolarity_Low;
+    TIM_OCInitStructure.TIM_OCIdleState =  TIM_OCIdleState_Reset; 
     TIM_OC4Init(TIM8, &TIM_OCInitStructure);
     
     TIM_Cmd(TIM8, ENABLE);

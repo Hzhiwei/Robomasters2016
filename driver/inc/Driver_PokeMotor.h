@@ -8,7 +8,7 @@
 
 
 #define POKEENCODERLINESPERCIRCLE       5050        //拨弹电机编码器每周线数
-#define POKELINESPERSTEP                920         //拨弹电机拨弹步进线数
+#define POKELINESPERSTEP                841         //拨弹电机拨弹步进线数
 
 //拨弹电机编码器中点位置
 #define POKEENCODERCenter               0x7FFF

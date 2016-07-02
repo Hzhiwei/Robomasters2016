@@ -5,6 +5,7 @@
 #include "Driver_Control.h"
 #include "Driver_PokeMotor.h"
 
+//拨弹电机编码器5050/圈
 
 /**
   * @brief  拨弹电机初始化
@@ -101,8 +102,7 @@ void PokeMotor_Adjust(void)
     {
         PokeMotorParam.Status = PokeMotorParam_Stuck;
         
-//        PokeMotorParam.TargetLocation -= PokeMotorParam.RealSpeed > 0 ? POKESTRUCKDEALLINES : -POKESTRUCKDEALLINES;
-        PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + POKESTRUCKDEALLINES;
+        PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + ((PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation) ? (-POKESTRUCKDEALLINES) : POKESTRUCKDEALLINES);
     }
     
     PokeMotorParam.RealLocation += PokeMotorParam.RealSpeed;

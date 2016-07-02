@@ -142,6 +142,7 @@ void DebugMon_Handler(void)
 
 #include "Config.h"
 #include "Driver_DBUS.h"
+#include "Driver_Judge.h"
 #include "Driver_vision.h"
 #include "Driver_Chassis.h"
 #include "Driver_CloudMotor.h"
@@ -303,8 +304,9 @@ void USART1_IRQHandler(void)
 
         if (PCDataBuffer[(PCDataBufferPoint + 24) % PCDATALENGTH] == (Sum & 0xFF))       //Ð£¼ìÍ¨¹ý
         {
-            if(PCDataBuffer[(PCDataBufferPoint + 3) % PCDATALENGTH] != 0)
+            if(PCDataBuffer[(PCDataBufferPoint + 3) % PCDATALENGTH] != 0)       //ID!=0
             {
+                VisionUpdataFlag = 1;
                 PCFrameCounter++;
                 
                 EnemyDataBufferPoint = (EnemyDataBufferPoint + 1) % ENEMYDATABUFFERLENGHT;

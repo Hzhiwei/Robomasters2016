@@ -9,6 +9,7 @@
 #include "Driver_Chassis.h"
 #include "Driver_mpu9250.h"
 #include "Driver_Control.h"
+#include "Driver_Steering.h"
 #include "Driver_PokeMotor.h"
 #include "Driver_FricMotor.h"
 #include "Driver_CloudMotor.h"
@@ -30,6 +31,10 @@ void Task_Control(void *Parameters)
     portTickType ControlLastTick = 0;
     float MouseSpinIntBuffer = 0, MousePitchIntBuffer = 0;
     uint16_t dmpresetCounter = 0;
+    int16_t ForcastCurrent;
+    AngleI_Struct ForcastAngle;     //预判结果
+    int16_t PitchCurrent = 0, YawCurrent = 0;
+    int16_t ForcastTargetEncoderOmega;
     
     for(;;)
     {
@@ -38,6 +43,7 @@ void Task_Control(void *Parameters)
 /************************  ↓  姿态更新  ↓ ************************/
         MPU9250_Update();
         
+        //DMP每20s重启，否则会傻逼
         if(dmpresetCounter >= 5000)
         {
             dmpresetCounter = 0;
@@ -55,10 +61,10 @@ void Task_Control(void *Parameters)
 /*********************  ↑  状态机状态更新  ↑ *********************/
 /**************************************************************************************************/
 /*********************  ↓  根据状态机控制  ↓ *********************/
-        //遥控器控制
+////        //遥控器控制
         if(ControlMode == ControlMode_RC)
         {
-/****************************************   遥控器控制，此处注释，临时改为自动射击调试模式*/
+//      操作手临时代码 
             CloudParam.Yaw.ABSTargetAngle -= DBUS_ReceiveData.ch3 / 600.0F;
             Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
             
@@ -86,8 +92,63 @@ void Task_Control(void *Parameters)
             
             Chassis_SpeedSet(DBUS_ReceiveData.ch2 * 900 / 660, DBUS_ReceiveData.ch1 * 900 / 660);
             Chassis_Control(1);
-/****************************************/
-        
+
+            
+            
+///****************************************   遥控器控制，此处注释，临时改为自动射击调试模式*/
+//            //Pitch轴不使用预判，直接使用最新帧数据的pitch数据作为目标数据
+//            //Yaw轴使用预判
+//            
+//            //Pitch轴直接使用最新数据
+//            CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
+//            ForcastAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 1);
+//            CloudParam.Pitch.EncoderTargetAngle = ForcastAngle.V + PitchCenter;
+//            PitchCurrent = Control_PitchPID();
+//            
+//            //Yaw轴速度跟随
+//            //计算目标角速度大小（编码器单位）
+//            if(VisionUpdataFlag)
+//            {
+//                ForcastOnce(400, 200, &ForcastAngle, 0);        //预判 
+//                ForcastTarget.Target.H = ForcastAngle.H;
+//                ForcastTarget.TargetTick = ControlLastTick + 150;
+//            }
+//            
+//            if(ForcastTarget.TargetTick > ControlLastTick)
+//            {
+//                if(ForcastTarget.TargetTick - ControlLastTick > 30)
+//                {
+//                    ForcastTargetEncoderOmega = ((float)ForcastAngle.H + YawCenter - CloudParam.Yaw.RealEncoderAngle) * 1000 / ((int)ForcastTarget.TargetTick - ControlLastTick);
+//                    if((ForcastTargetEncoderOmega < 500) && (ForcastTargetEncoderOmega > -500))
+//                    {
+//                        ForcastTargetEncoderOmega /= 3.5F;
+//                    }
+//                }
+//            }
+//            else
+//            {
+//                ForcastTargetEncoderOmega = 0;
+//            }
+//            
+//            YawCurrent = VControl_YawPID(ForcastTargetEncoderOmega);
+//            
+//            CloudMotorCurrent(PitchCurrent, YawCurrent);
+//            
+//            if(DBUS_ReceiveData.switch_right == 3)
+//            {
+//                GunFric_Control(1);
+//            }
+//            else if(DBUS_ReceiveData.switch_right == 2)
+//            {
+//                GunFric_Control(1);
+//                PokeMotor_Step();
+//            }
+//            else
+//            {
+//                GunFric_Control(0);
+//            }
+            
+/******************     直接跟随的搓逼模式，战五的渣渣    **********************/
 //            if(EnemyDataBuffer[EnemyDataBufferPoint].ID)
 //            {
 //                AutoTargetAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
@@ -96,9 +157,23 @@ void Task_Control(void *Parameters)
 //                                            0);
 //                
 //                Cloud_YawAngleSet(AutoTargetAngle.H, 1);
-//                Cloud_PitchAngleSet(AutoTargetAngle.V);
+//                Cloud_PitchAngleSet(AutoTargetAngle.V, 1);
 //            
 //                Cloud_Adjust(1);
+//                    
+//                if(DBUS_ReceiveData.switch_right == 3)
+//                {
+//                    GunFric_Control(1);
+//                }
+//                else if(DBUS_ReceiveData.switch_right == 2)
+//                {
+//                    GunFric_Control(1);
+//                    PokeMotor_Step();
+//                }
+//                else
+//                {
+//                    GunFric_Control(0);
+//                }
 //            }
         }
         else if(ControlMode == ControlMode_KM)
@@ -160,31 +235,94 @@ void Task_Control(void *Parameters)
             Chassis_SpeedSet(XSpeed, YSpeed);
             Chassis_Control(1);
             
-            //旋转控制
-            if(DBUS_ReceiveData.keyBoard.key_code & KEY_E)
+            
+            if(DBUS_ReceiveData.keyBoard.key_code & KEY_CTRL)
             {
-                CloudParam.Yaw.ABSTargetAngle -= QESPINPARAM;
-                Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
-            }
-            else if(DBUS_ReceiveData.keyBoard.key_code & KEY_Q)
-            {
-                CloudParam.Yaw.ABSTargetAngle += QESPINPARAM;
-                Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
+                Steering_Control(1);//舱门控制
+                
+                CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
+                CloudParam.Pitch.EncoderTargetAngle = PitchCenter;
+                PitchCurrent = Control_PitchPID();
+                
+                YawCurrent = VControl_YawPID(0);
+                
+                CloudMotorCurrent(PitchCurrent, YawCurrent);
             }
             else
             {
-                MouseSpinIntBuffer = DBUS_ReceiveData.mouse.x / MOUSESPINPARAM;
-                MouseSpinIntBuffer = MouseSpinIntBuffer > MOUSEINTLIMIT ? MOUSEINTLIMIT : MouseSpinIntBuffer;
-                MouseSpinIntBuffer = MouseSpinIntBuffer < -MOUSEINTLIMIT ? -MOUSEINTLIMIT : MouseSpinIntBuffer;
+                Steering_Control(0);
+                //自动射击
+                if(DBUS_ReceiveData.mouse.press_right)
+                {
+                    //Pitch轴不使用预判，直接使用最新帧数据的pitch数据作为目标数据
+                    //Yaw轴使用预判
+                    
+                    //Pitch轴直接使用最新数据
+                    CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
+                    ForcastAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 1);
+                    CloudParam.Pitch.EncoderTargetAngle = ForcastAngle.V + PitchCenter;
+                    PitchCurrent = Control_PitchPID();
+                    
+                    //Yaw轴速度跟随
+                    //计算目标角速度大小（编码器单位）
+                    if(VisionUpdataFlag)
+                    {
+                        ForcastOnce(400, 200, &ForcastAngle, 0);        //预判 
+                        ForcastTarget.Target.H = ForcastAngle.H;
+                        ForcastTarget.TargetTick = ControlLastTick + 150;
+                    }
+                    
+                    if(ForcastTarget.TargetTick > ControlLastTick)
+                    {
+                        if(ForcastTarget.TargetTick - ControlLastTick > 30)
+                        {
+                            ForcastTargetEncoderOmega = ((float)ForcastAngle.H + YawCenter - CloudParam.Yaw.RealEncoderAngle) * 1000 / ((int)ForcastTarget.TargetTick - ControlLastTick);
+                            if((ForcastTargetEncoderOmega < 500) && (ForcastTargetEncoderOmega > -500))
+                            {
+                                ForcastTargetEncoderOmega /= 3.5F;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ForcastTargetEncoderOmega = 0;
+                    }
+                    
+                    YawCurrent = VControl_YawPID(ForcastTargetEncoderOmega);
+                    
+                    CloudMotorCurrent(PitchCurrent, YawCurrent);
+                }
+                else    //手动射击
+                {
+                    //旋转控制
+                    if(DBUS_ReceiveData.keyBoard.key_code & KEY_E)
+                    {
+                        CloudParam.Yaw.ABSTargetAngle -= QESPINPARAM;
+                        Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
+                    }
+                    else if(DBUS_ReceiveData.keyBoard.key_code & KEY_Q)
+                    {
+                        CloudParam.Yaw.ABSTargetAngle += QESPINPARAM;
+                        Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
+                    }
+                    else
+                    {
+                        MouseSpinIntBuffer = DBUS_ReceiveData.mouse.x / MOUSESPINPARAM;
+                        MouseSpinIntBuffer = MouseSpinIntBuffer > MOUSEINTLIMIT ? MOUSEINTLIMIT : MouseSpinIntBuffer;
+                        MouseSpinIntBuffer = MouseSpinIntBuffer < -MOUSEINTLIMIT ? -MOUSEINTLIMIT : MouseSpinIntBuffer;
+                        
+                        CloudParam.Yaw.ABSTargetAngle -= MouseSpinIntBuffer;
+                        CloudParam.Yaw.AngleMode = AngleMode_ABS;
+                    } 
+                    
+                    CloudParam.Pitch.ABSTargetAngle -= DBUS_ReceiveData.mouse.y / MOUSEPITCHPARAM;
+                    CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
+                    CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
+                    CloudParam.Pitch.AngleMode = AngleMode_ABS;
                 
-                CloudParam.Yaw.ABSTargetAngle -= MouseSpinIntBuffer;
-                CloudParam.Yaw.AngleMode = AngleMode_ABS;
-            } 
-            
-            CloudParam.Pitch.ABSTargetAngle -= DBUS_ReceiveData.mouse.y / MOUSEPITCHPARAM;
-            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
-            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
-            CloudParam.Pitch.AngleMode = AngleMode_ABS;
+                    Cloud_Adjust(1);
+                }
+            }
             
             //发射
             if(DBUS_ReceiveData.switch_right == 3)
@@ -199,8 +337,6 @@ void Task_Control(void *Parameters)
             {
                 GunFric_Control(0);
             }
-            
-            Cloud_Adjust(1);
         }
         else
         {
