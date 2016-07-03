@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "OSinclude.h"
 #include "Driver_DBUS.h"
+#include "Driver_vision.h"
 #include "Driver_StatusMachine.h"
 
 
@@ -38,6 +39,10 @@ void StatusMachine_InitConfig(void)
   */
 void StatusMachine_Update(void)
 {
+    static uint8_t Counter = 0;
+    static portTickType LastPCShutdownSignalTick = 0;
+    portTickType CurrentTick = xTaskGetTickCount();
+    
     //帧率过低停机
     if(DBUSFrameRate < 3)
     {
@@ -72,11 +77,47 @@ void StatusMachine_Update(void)
     else if(DBUS_ReceiveData.switch_left == 2)
     {
         ControlMode = ControlMode_KM;
+        
+        //降低发送频率减小串口负担
+        if(Counter == 4)
+        {
+            if(DBUS_ReceiveData.keyBoard.key_code & KEY_X)
+            {
+                VisionType = VisionType_BigSample;
+                SendPCOrder(PCOrder_BigSample);
+            }
+            else
+            {
+                VisionType = VisionType_Attack;
+                SendPCOrder(PCOrder_Attack);
+            }
+            Counter = 0;
+        }
+        else
+        {
+            Counter++;
+        }
     }
     //保护模式
     else
     {
         ControlMode = ControlMode_Protect;
+        
+        //关机
+        if((DBUS_ReceiveData.ch1 > 600) && 
+            (DBUS_ReceiveData.ch2 < -600) &&
+            (DBUS_ReceiveData.ch3 < -600) &&
+            (DBUS_ReceiveData.ch4 > 600))
+        {
+            if(LastPCShutdownSignalTick + 5000 < CurrentTick)
+            {
+                SendPCOrder(PCOrder_Shutdown);
+            }
+        }
+        else
+        {
+            LastPCShutdownSignalTick = CurrentTick;
+        }
     }
 }
 

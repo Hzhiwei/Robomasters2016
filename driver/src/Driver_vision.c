@@ -2,10 +2,37 @@
 #define __DRIVER_VISION_GLOBALS
 
 #include "Config.h"
-#include "Driver_mpu9250.h"
 #include "Driver_vision.h"
+#include "Driver_mpu9250.h"
 #include "Driver_CloudMotor.h"
 #include <math.h>
+
+
+//攻击模式指令
+const uint8_t AttackModeOrder[PCDATALENGTH] = {0x00, 0x00, 0x09, 0x00, 0x00,
+                                               0x00, 0x00, 0x00, 0x00, 0x00,
+                                               0x00, 0x00, 0x00, 0x00, 0x00,
+                                               0x00, 0x00, 0x00, 0x00, 0x00,
+                                               0x00, 0x00, 0x00, 0x00, 0x00,
+                                               0x00};
+
+//大符模式指令
+const uint8_t BigSymbolModeOrder[PCDATALENGTH] = {0x00, 0x00, 0x1E, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00};
+
+//关机模式指令
+const uint8_t ShutdownOrder[PCDATALENGTH] = {0x00, 0x00, 0xFF, 0x00, 0x00,
+                                             0x00, 0x00, 0x00, 0x00, 0x00,
+                                             0x00, 0x00, 0x00, 0x00, 0x00,
+                                             0x00, 0x00, 0x00, 0x00, 0x00,
+                                             0x00, 0x00, 0x00, 0x00, 0x00,
+                                             0x00};
+
+
 
 /*
 X正 右
@@ -29,6 +56,9 @@ void Vision_InitConfig(void)
     EnemyDataBuffer[EnemyDataBufferPoint].X = 0;
     EnemyDataBuffer[EnemyDataBufferPoint].Y = 0;
     EnemyDataBuffer[EnemyDataBufferPoint].Z = 1;
+    
+    //默认视觉模式Attack
+    VisionType = VisionType_Attack;
 }
 
 
@@ -234,6 +264,48 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *Fo
 }
     
     
+/**
+  * @brief  给PC发指令
+  * @param  指令
+  * @retval void
+  */
+void SendPCOrder(PCOrder_Enum order)
+{
+//    if(DMA2_Stream7->NDTR == 0)
+//    {
+        if(PCOrder_Attack == order)
+        {
+            DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
+            while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+            DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
+            DMA2_Stream7->M0AR = (uint32_t)AttackModeOrder;     //设置数据
+            DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量
+            DMA_Cmd(DMA2_Stream7, ENABLE);                      //开启 DMA 传输
+        }
+        else if(PCOrder_BigSample == order)
+        {
+            DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
+            while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+            DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
+            DMA2_Stream7->M0AR = (uint32_t)BigSymbolModeOrder;  //设置数据
+            DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量
+            DMA_Cmd(DMA2_Stream7, ENABLE);                      //开启 DMA 传输
+        }
+        else if(PCOrder_Shutdown == order)
+        {
+            DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
+            while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+            DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
+            DMA2_Stream7->M0AR = (uint32_t)ShutdownOrder;       //设置数据
+            DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量
+            DMA_Cmd(DMA2_Stream7, ENABLE);                      //开启 DMA 传输
+        }
+//    }
+}
+
+
+
+
 
 
 

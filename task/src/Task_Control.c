@@ -302,6 +302,24 @@ void Task_Control(void *Parameters)
                     
                     CloudMotorCurrent(PitchCurrent, YawCurrent);
                 }
+                //大符模式
+                else if(DBUS_ReceiveData.keyBoard.key_code & KEY_X)
+                {
+                    CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
+                    CloudParam.Yaw.AngleMode = AngleMode_Encoder;         //编码器模式
+                    
+                    ForcastAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
+                                                EnemyDataBuffer[EnemyDataBufferPoint].Y, 
+                                                EnemyDataBuffer[EnemyDataBufferPoint].Z, 
+                                                Position.Euler.Pitch,
+                                                CloudParam.Pitch.RealEncoderAngle,
+                                                1);
+                    
+                    CloudParam.Pitch.EncoderTargetAngle = ForcastAngle.V + PitchCenter;
+                    CloudParam.Yaw.EncoderTargetAngle = ForcastAngle.H + YawCenter;
+                    
+                    Cloud_Adjust(1);
+                }
                 else    //手动射击
                 {
                     //旋转控制

@@ -51,4 +51,5 @@
 .\objects\driver_statusmachine.o: ..\lib\std\inc\stm32f4xx_dac.h
 .\objects\driver_statusmachine.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\driver_statusmachine.o: ..\lib\std\inc\stm32f4xx_fsmc.h
+.\objects\driver_statusmachine.o: ..\driver\inc\Driver_vision.h
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_StatusMachine.h

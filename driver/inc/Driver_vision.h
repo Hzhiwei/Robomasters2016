@@ -19,6 +19,23 @@
 #endif
 
 
+//视觉模式
+typedef enum
+{
+    VisionType_Attack,
+    VisionType_BigSample
+}VisionType_Enum;
+
+
+//PC指令枚举
+typedef enum
+{
+    PCOrder_Attack,
+    PCOrder_BigSample,
+    PCOrder_Shutdown
+}PCOrder_Enum;
+
+
 //视觉数据结构
 typedef struct
 {
@@ -68,6 +85,10 @@ typedef struct
 }ForcastControl_Struct;
 
 
+//视觉模式
+__DRIVER_VISION_EXT VisionType_Enum VisionType;
+
+
 //主机原始数据缓存
 __DRIVER_VISION_EXT uint8_t PCDataBuffer[PCDATALENGTH];
 //主机原始数据缓存指针
@@ -82,17 +103,22 @@ __DRIVER_VISION_EXT ForcastControl_Struct ForcastTarget;
 __DRIVER_VISION_EXT uint8_t VisionUpdataFlag;
 
 
-
 //帧数统计
 __DRIVER_VISION_EXT int16_t PCFrameCounter;
 //帧率统计
 __DRIVER_VISION_EXT int16_t PCFrameRate;
 
 
+extern const uint8_t AttackModeOrder[PCDATALENGTH];
+extern const uint8_t BigSymbolModeOrder[PCDATALENGTH];
+extern const uint8_t ShutdownOrder[PCDATALENGTH];
+    
+
 void Vision_InitConfig(void);
 AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t PitchEncoder, uint8_t mode);
 uint8_t ForcastCore(uint16_t SampleTime, uint16_t ForcastTime, Point_Struct *ForcastPoint);
 uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *ForcastAngle, uint8_t TimeMode);
+void SendPCOrder(PCOrder_Enum order);
 
 
 #endif
