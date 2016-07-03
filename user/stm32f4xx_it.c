@@ -220,9 +220,9 @@ void CAN2_RX0_IRQHandler(void)
         {
             ChassisFrameCounter[0]++;
             
-            ChassisParam.LF.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
+            ChassisParam.LF.NeedCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
             ChassisParam.LF.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
-            ChassisParam.LF.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
+            ChassisParam.LF.RealCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
             
             break;
         }
@@ -230,9 +230,9 @@ void CAN2_RX0_IRQHandler(void)
         {
             ChassisFrameCounter[1]++;
             
-            ChassisParam.RF.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
+            ChassisParam.RF.NeedCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
             ChassisParam.RF.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
-            ChassisParam.RF.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
+            ChassisParam.RF.RealCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
             
             break;
         }
@@ -240,9 +240,9 @@ void CAN2_RX0_IRQHandler(void)
         {
             ChassisFrameCounter[2]++;
             
-            ChassisParam.LB.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
+            ChassisParam.LB.NeedCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
             ChassisParam.LB.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
-            ChassisParam.LB.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
+            ChassisParam.LB.RealCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
             
             break;
         }
@@ -250,9 +250,9 @@ void CAN2_RX0_IRQHandler(void)
         {
             ChassisFrameCounter[3]++;
             
-            ChassisParam.RB.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
+            ChassisParam.RB.NeedCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
             ChassisParam.RB.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
-            ChassisParam.RB.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
+            ChassisParam.RB.RealCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
             
             break;
         }
@@ -292,6 +292,8 @@ void UART5_IRQHandler(void)
 //裁判系统空闲中断
 void UART4_IRQHandler(void)
 {
+    FormatTrans FT;
+    
     temp = UART4->DR;
     temp = UART4->SR;
     
@@ -302,16 +304,31 @@ void UART4_IRQHandler(void)
     //很奇怪，大疆pdf给的比赛信息有效数据长度是38，而传过来的是37，而sizeof得到的也是38，反正这里有问题，最后决定用大疆发过来的的长度（37）为准
     //我选择相信
     if((DMA1_Stream2->NDTR == JudgeBufferLength - JudgeFrameLength_1) && 
-        (Verify_CRC16_Check_Sum(JudgeDataBuffer, 37 + 8)) &&
-        (JudgeDataBuffer[5] == 0x1))
+        (Verify_CRC16_Check_Sum(JudgeDataBuffer, 38 + 8) == 1) &&
+        (JudgeDataBuffer[4] == 1))
     {
         JudgeFrameCounter++;        //帧数增加
         
+        //读取电压
+        FT.u8[3] = JudgeDataBuffer[15];
+        FT.u8[2] = JudgeDataBuffer[14];
+        FT.u8[1] = JudgeDataBuffer[13];
+        FT.u8[0] = JudgeDataBuffer[12];
+        JudgeRealVoltage = FT.F;
         
+        //读取电压
+        FT.u8[3] = JudgeDataBuffer[19];
+        FT.u8[2] = JudgeDataBuffer[18];
+        FT.u8[1] = JudgeDataBuffer[17];
+        FT.u8[0] = JudgeDataBuffer[16];
+        JudgeRealCurrent = FT.F;
+        
+        //功率限制
+        ChassisMaxSumCurrent = CHASSISMAXPOWERRATE * CHASSISMAXPOWER * 1000 / JudgeRealVoltage;
     }
     
     //重启DMA
-    DMA_ClearFlag(DMA1_Stream2, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
+    DMA_ClearFlag(DMA1_Stream2, DMA_FLAG_TCIF2 | DMA_FLAG_HTIF2);
     while(DMA_GetCmdStatus(DMA1_Stream2) != DISABLE);
     DMA_SetCurrDataCounter(DMA1_Stream2, JudgeBufferLength);
     DMA_Cmd(DMA1_Stream2, ENABLE);

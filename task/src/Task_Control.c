@@ -369,7 +369,7 @@ void Task_Control(void *Parameters)
         else
         {
             Cloud_Adjust(0);
-            Chassis_Control(0);
+            Chassis_MotorDebug();       //电机调试模式，速度0，电流700
             GunFric_Control(0);
         }
         

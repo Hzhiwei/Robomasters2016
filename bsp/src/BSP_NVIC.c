@@ -40,7 +40,7 @@ void BSP_NVIC_InitConfig(void)
     //UART4
 	NVIC_InitStructure.NVIC_IRQChannel						=	UART4_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelCmd					=	ENABLE;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority	=	13;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority	=	10;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority			=	0;
 	NVIC_Init(&NVIC_InitStructure);
 	USART_ITConfig(UART4, USART_IT_IDLE, ENABLE);

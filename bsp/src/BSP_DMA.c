@@ -40,7 +40,7 @@ void BSP_DMA_InitConfig(void)
     //UART4_RX
     DMA_InitStructure.DMA_Channel           =   DMA_Channel_4;
     DMA_InitStructure.DMA_PeripheralBaseAddr=   (uint32_t)(&UART4->DR);
-    DMA_InitStructure.DMA_Memory0BaseAddr   =   (uint32_t)(JudgeBufferLength);
+    DMA_InitStructure.DMA_Memory0BaseAddr   =   (uint32_t)(JudgeDataBuffer);
     DMA_InitStructure.DMA_DIR               =   DMA_DIR_PeripheralToMemory;
     DMA_InitStructure.DMA_BufferSize        =   JudgeBufferLength;
     DMA_InitStructure.DMA_PeripheralInc     =   DMA_PeripheralInc_Disable;

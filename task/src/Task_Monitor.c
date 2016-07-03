@@ -5,6 +5,7 @@
 
 #include "Driver_Bell.h"
 #include "Driver_DBUS.h"
+#include "Driver_Judge.h"
 #include "Driver_vision.h"
 #include "Driver_Chassis.h"
 #include "Driver_mpu9250.h"
@@ -25,7 +26,7 @@ void Task_Monitor(void *Parameters)
     //系统状态，每一位对应一个错误，0正常，1错误
 /****************************************************************
     15  |   14  |   13  |   12  |   11  |   10  |   9   |   8   |
-        |       |       |       |       |       |左前底盘|右前底盘|
+        |       |       |       |       |裁判系统|左前底盘|右前底盘|
 -----------------------------------------------------------------
     7   |   6   |   5   |   4   |   3   |   2   |   1   |   0   |
 左后底盘|右后底盘|底盘Gyr|    -  |    -  |  Yaw  | Pitch |  DBUS |
@@ -62,6 +63,10 @@ void Task_Monitor(void *Parameters)
         ChassisFrameCounter[2] = 0;
         ChassisFrameRate[3] = ChassisFrameCounter[3];
         ChassisFrameCounter[3] = 0;
+        
+        //裁判系统帧率统计
+        JudgeFrameRate = JudgeFrameCounter;
+        JudgeFrameCounter = 0;
         
         //DBUS帧率过低
         if(DBUSFrameRate < 6)
@@ -135,6 +140,15 @@ void Task_Monitor(void *Parameters)
         {
             SysErrorStatus &= 0xFDFF;
         }
+        //裁判系统帧率过低
+        if(JudgeFrameRate < 3)
+        {
+            SysErrorStatus |= 0x0400;
+        }
+        else
+        {
+            SysErrorStatus &= 0xFBFF;
+        }
         
 /**************************  ↑   数据帧率统计   ↑  **************************/
 /**************************************************************************************************/
@@ -179,6 +193,12 @@ void Task_Monitor(void *Parameters)
         {
             Bell_BarkWarning(11, MAXAWarning);
         }
+        //裁判系统
+        else if(SysErrorStatus & 0x0400)
+        {
+            Bell_BarkWarning(12, MAXAWarning);
+        }
+        //无警告
         else
         {
             Bell_BarkWarning(0, MAXAWarning);

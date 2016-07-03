@@ -98,21 +98,44 @@ void Chassis_Adjust(void)
     ChassisParam.RF.TargetSpeed = WheelSpeed[1];
     ChassisParam.LB.TargetSpeed = WheelSpeed[2];
     ChassisParam.RB.TargetSpeed = WheelSpeed[3];
-    
-    ABSSpeed[0] = (ChassisParam.LF.TargetSpeed > 0 ? ChassisParam.LF.TargetSpeed : -ChassisParam.LF.TargetSpeed);
-    ABSSpeed[1] = (ChassisParam.RF.TargetSpeed > 0 ? ChassisParam.RF.TargetSpeed : -ChassisParam.RF.TargetSpeed);
-    ABSSpeed[2] = (ChassisParam.LB.TargetSpeed > 0 ? ChassisParam.LB.TargetSpeed : -ChassisParam.LB.TargetSpeed);
-    ABSSpeed[3] = (ChassisParam.RB.TargetSpeed > 0 ? ChassisParam.RB.TargetSpeed : -ChassisParam.RB.TargetSpeed);
+//    
+//    ABSSpeed[0] = (ChassisParam.LF.TargetSpeed > 0 ? ChassisParam.LF.TargetSpeed : -ChassisParam.LF.TargetSpeed);
+//    ABSSpeed[1] = (ChassisParam.RF.TargetSpeed > 0 ? ChassisParam.RF.TargetSpeed : -ChassisParam.RF.TargetSpeed);
+//    ABSSpeed[2] = (ChassisParam.LB.TargetSpeed > 0 ? ChassisParam.LB.TargetSpeed : -ChassisParam.LB.TargetSpeed);
+//    ABSSpeed[3] = (ChassisParam.RB.TargetSpeed > 0 ? ChassisParam.RB.TargetSpeed : -ChassisParam.RB.TargetSpeed);
+//    
+//    //功率分配
+//    PowerSum = ABSSpeed[0] + ABSSpeed[1] + ABSSpeed[2] + ABSSpeed[3];
+//    
+//    if(PowerSum > 0)
+//    {
+//        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[0] / PowerSum;
+//        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[1] / PowerSum;
+//        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[2] / PowerSum;
+//        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[3] / PowerSum;
+//    }
+//    else
+//    {
+//        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent / 4;
+//        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent / 4;
+//        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent / 4;
+//        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent / 4;
+//    }
+
+    ABSSpeed[0] = (ChassisParam.LF.NeedCurrent > 0 ? ChassisParam.LF.NeedCurrent : -ChassisParam.LF.NeedCurrent);
+    ABSSpeed[1] = (ChassisParam.RF.NeedCurrent > 0 ? ChassisParam.RF.NeedCurrent : -ChassisParam.RF.NeedCurrent);
+    ABSSpeed[2] = (ChassisParam.LB.NeedCurrent > 0 ? ChassisParam.LB.NeedCurrent : -ChassisParam.LB.NeedCurrent);
+    ABSSpeed[3] = (ChassisParam.RB.NeedCurrent > 0 ? ChassisParam.RB.NeedCurrent : -ChassisParam.RB.NeedCurrent);
     
     //功率分配
-    PowerSum = ChassisParam.LF.NeedCurrent + ChassisParam.RF.NeedCurrent + ChassisParam.LB.NeedCurrent + ChassisParam.RB.NeedCurrent;
+    PowerSum = ABSSpeed[0] + ABSSpeed[1] + ABSSpeed[2] + ABSSpeed[3];
     
     if(PowerSum > 0)
     {
-        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ChassisParam.LF.NeedCurrent / PowerSum;
-        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ChassisParam.RF.NeedCurrent / PowerSum;
-        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ChassisParam.LB.NeedCurrent / PowerSum;
-        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ChassisParam.RB.NeedCurrent / PowerSum;
+        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[0] / PowerSum;
+        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[1] / PowerSum;
+        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[2] / PowerSum;
+        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[3] / PowerSum;
     }
     else
     {
@@ -191,6 +214,50 @@ void Chassis_SendMotorParam(uint8_t mode)
         SendData.SendCanTxMsg.Data[7] = 0;
         xQueueSend(Queue_CANSend, &SendData, 10);
     }
+}
+
+
+
+/**
+  * @brief  电机调试模式，电流700，速度0
+  * @param  void
+  * @retval void
+  */
+void Chassis_MotorDebug(void)
+{
+    static  CanSend_Type   SendData;
+    
+    #if CANPORT == 1
+    SendData.CANx = 1;
+    #else
+    SendData.CANx = 2;
+    #endif
+    
+    SendData.SendCanTxMsg.DLC   =   8;
+    SendData.SendCanTxMsg.IDE   =   CAN_ID_STD;
+    SendData.SendCanTxMsg.RTR   =   CAN_RTR_Data;
+    
+    SendData.SendCanTxMsg.StdId =   CHASSISSPEEDSETCANID;
+    SendData.SendCanTxMsg.Data[1] = 0;
+    SendData.SendCanTxMsg.Data[0] = 0;
+    SendData.SendCanTxMsg.Data[3] = 0;
+    SendData.SendCanTxMsg.Data[2] = 0;
+    SendData.SendCanTxMsg.Data[5] = 0;
+    SendData.SendCanTxMsg.Data[4] = 0;
+    SendData.SendCanTxMsg.Data[7] = 0;
+    SendData.SendCanTxMsg.Data[6] = 0;
+    xQueueSend(Queue_CANSend, &SendData, 10);
+    
+    SendData.SendCanTxMsg.StdId =   CHASSISCURRENTSETCANID;
+    SendData.SendCanTxMsg.Data[1] = 0x02;
+    SendData.SendCanTxMsg.Data[0] = 0xBC;
+    SendData.SendCanTxMsg.Data[3] = 0x02;
+    SendData.SendCanTxMsg.Data[2] = 0xBC;
+    SendData.SendCanTxMsg.Data[5] = 0x02;
+    SendData.SendCanTxMsg.Data[4] = 0xBC;
+    SendData.SendCanTxMsg.Data[7] = 0x02;
+    SendData.SendCanTxMsg.Data[6] = 0xBC;
+    xQueueSend(Queue_CANSend, &SendData, 10);
 }
 
 

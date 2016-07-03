@@ -21,6 +21,7 @@
 #define CHASSISSPEEDSETCANID            0x46
 //底盘电机电流控制
 #define CHASSISCURRENTSETCANID          0x40
+#define CHASSISMAXPOWER                 80.0F       //底盘最大功率
 
 
 #ifdef  __DRIVER_CHASSIS_GLOBALS
@@ -80,6 +81,7 @@ static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed);
 void Chassis_OmegaSet(float Target);
 void Chassis_SpeedSet(float XSpeed, float YSpeed);
 void Chassis_Control(uint8_t mode);
+void Chassis_MotorDebug(void);
 
 
 #endif
