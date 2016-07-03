@@ -6,6 +6,9 @@
 #include "stm32f4xx.h"
 
 
+#define VisiolModeChangeDataSendNum     10
+
+
 #ifdef  __DRIVER_STATUSMACHINE_GLOBALS
 #define __DRIVER_STATUSMACHINE_EXT
 #else

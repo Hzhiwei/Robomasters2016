@@ -17,7 +17,7 @@ const uint8_t AttackModeOrder[PCDATALENGTH] = {0x00, 0x00, 0x09, 0x00, 0x00,
                                                0x00};
 
 //大符模式指令
-const uint8_t BigSymbolModeOrder[PCDATALENGTH] = {0x00, 0x00, 0x1E, 0x00, 0x00,
+const uint8_t BigSymbolModeOrder[PCDATALENGTH] = {0x00, 0x00, 0x28, 0x00, 0x00,
                                                   0x00, 0x00, 0x00, 0x00, 0x00,
                                                   0x00, 0x00, 0x00, 0x00, 0x00,
                                                   0x00, 0x00, 0x00, 0x00, 0x00,
@@ -80,9 +80,13 @@ AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t Pi
     
     //考虑荒地上底盘不水平情况，进行坐标轴距离变换（仅Pitch轴）
     OneAngle = RealPitch - (PitchEncoder - PitchCenter) * 0.04395F - atan(Z / Y);
+//    X0 = X;
+//    Y0 = sqrt(Z * Z + Y * Y) * sin(OneAngle);
+//    Z0 = sqrt(Z * Z + Y * Y) * cos(OneAngle);
+    
     X0 = X;
-    Y0 = sqrt(Z * Z + Y * Y) * sin(OneAngle);
-    Z0 = sqrt(Z * Z + Y * Y) * cos(OneAngle);
+    Y0 = Y;
+    Z0 = Z;
     
     ReturnData.H =  - atan(X / Z0) * 1303.7973F;
     

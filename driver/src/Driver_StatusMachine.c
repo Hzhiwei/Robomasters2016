@@ -39,9 +39,13 @@ void StatusMachine_InitConfig(void)
   */
 void StatusMachine_Update(void)
 {
-    static uint8_t Counter = 0;
+    static uint8_t RateCounter = 0;
+    static uint8_t BigSampleCounter = 0;
+    static uint8_t AttackCounter = 0;
     static portTickType LastPCShutdownSignalTick = 0;
     portTickType CurrentTick = xTaskGetTickCount();
+    
+    
     
     //帧率过低停机
     if(DBUSFrameRate < 3)
@@ -79,23 +83,35 @@ void StatusMachine_Update(void)
         ControlMode = ControlMode_KM;
         
         //降低发送频率减小串口负担
-        if(Counter == 4)
+        if(RateCounter == 4)
         {
             if(DBUS_ReceiveData.keyBoard.key_code & KEY_X)
             {
-                VisionType = VisionType_BigSample;
-                SendPCOrder(PCOrder_BigSample);
+                AttackCounter = 0;
+                
+                if(BigSampleCounter < VisiolModeChangeDataSendNum)
+                {
+                    VisionType = VisionType_BigSample;
+                    SendPCOrder(PCOrder_BigSample);
+                    BigSampleCounter++;
+                }
             }
             else
             {
-                VisionType = VisionType_Attack;
-                SendPCOrder(PCOrder_Attack);
+                BigSampleCounter = 0;
+                
+                if(AttackCounter < VisiolModeChangeDataSendNum)
+                {
+                    VisionType = VisionType_Attack;
+                    SendPCOrder(PCOrder_Attack);
+                    AttackCounter++;
+                }
             }
-            Counter = 0;
+            RateCounter = 0;
         }
         else
         {
-            Counter++;
+            RateCounter++;
         }
     }
     //保护模式

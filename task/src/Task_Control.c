@@ -93,6 +93,21 @@ void Task_Control(void *Parameters)
             Chassis_SpeedSet(DBUS_ReceiveData.ch2 * 900 / 660, DBUS_ReceiveData.ch1 * 900 / 660);
             Chassis_Control(1);
 
+////      大符模式
+//                    CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
+//                    CloudParam.Yaw.AngleMode = AngleMode_Encoder;         //编码器模式
+//                    
+//                    ForcastAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
+//                                                EnemyDataBuffer[EnemyDataBufferPoint].Y, 
+//                                                EnemyDataBuffer[EnemyDataBufferPoint].Z, 
+//                                                Position.Euler.Pitch,
+//                                                CloudParam.Pitch.RealEncoderAngle,
+//                                                1);
+//                    
+//                    CloudParam.Pitch.EncoderTargetAngle = ForcastAngle.V + PitchCenter;
+//                    CloudParam.Yaw.EncoderTargetAngle = ForcastAngle.H + YawCenter;
+//                    
+//                    Cloud_Adjust(1);
             
             
 ///****************************************   遥控器控制，此处注释，临时改为自动射击调试模式*/
