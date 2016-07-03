@@ -2,6 +2,7 @@
 #define __DRIVER_VISION_GLOBALS
 
 #include "Config.h"
+#include "Driver_mpu9250.h"
 #include "Driver_vision.h"
 #include "Driver_CloudMotor.h"
 #include <math.h>
@@ -39,24 +40,32 @@ void Vision_InitConfig(void)
   * @param  0 不考虑重力加速度      1 考虑重力加速度
   * @retval 角度(编码器，中间为0）
   */
-AngleI_Struct RecToPolar(float X, float Y, float Z, uint8_t mode)
+AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t PitchEncoder, uint8_t mode)
 {
     AngleI_Struct ReturnData;
     float Distance = sqrt(X * X + Z * Z);
     float distance, radian;
+    float OneAngle;
+    float X0, Y0, Z0;
     
-    ReturnData.H =  - atan(X / Z) * 1303.7973F;
+    //考虑荒地上底盘不水平情况，进行坐标轴距离变换（仅Pitch轴）
+    OneAngle = RealPitch - (PitchEncoder - PitchCenter) * 0.04395F - atan(Z / Y);
+    X0 = X;
+    Y0 = sqrt(Z * Z + Y * Y) * sin(OneAngle);
+    Z0 = sqrt(Z * Z + Y * Y) * cos(OneAngle);
     
-    distance = sqrt(X * X + Z * Z);
+    ReturnData.H =  - atan(X / Z0) * 1303.7973F;
+    
+    distance = sqrt(X0 * X0 + Z0 * Z0);
     if(mode == 0)
     {
     //不考虑重力加速度
-        ReturnData.V = -atan(Y / distance) * 1303.7973F;
+        ReturnData.V = -atan(Y0 / distance) * 1303.7973F;
     }
     else
     {
     //考虑重力加速度
-        radian = (atan(((AFG * distance * distance) / (GUNSpeed * GUNSpeed) - Y) / sqrt(Y * Y + distance * distance)) - atan(Y / distance)) / 2;
+        radian = (atan(((AFG * distance * distance) / (GUNSpeed * GUNSpeed) - Y0) / sqrt(Y0 * Y0 + distance * distance)) - atan(Y0 / distance)) / 2;
         ReturnData.V = radian * 1303.7973F;
     }
     
@@ -130,10 +139,6 @@ uint8_t ForcastCore(uint16_t SampleTime, uint16_t ForcastTime, Point_Struct *For
         Currentindex = (EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - index) % ENEMYDATABUFFERLENGHT;
         
         RelativeTime = EnemyDataBuffer[Currentindex].Time - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - SampleNum) % ENEMYDATABUFFERLENGHT].Time;        
-
-//        Relative2 = RelativeTime * RelativeTime;
-//        Relative3 = Relative2 * RelativeTime;
-//        Relative4 = Relative3 * RelativeTime;
         
         A = A - RelativeTime * RelativeTime * RelativeTime * RelativeTime;
         B = B - RelativeTime * RelativeTime * RelativeTime;
@@ -207,6 +212,8 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *Fo
         *ForcastAngle = RecToPolar(ForcastPoint.X, 
                                     ForcastPoint.Y, 
                                     ForcastPoint.Z,
+                                    Position.Euler.Pitch,
+                                    CloudParam.Pitch.RealEncoderAngle,
                                     1);
         
         return 0;
@@ -218,49 +225,16 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *Fo
         *ForcastAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
                                     EnemyDataBuffer[EnemyDataBufferPoint].Y, 
                                     EnemyDataBuffer[EnemyDataBufferPoint].Z,
+                                    Position.Euler.Pitch,
+                                    CloudParam.Pitch.RealEncoderAngle,
                                     1);
         
         return 1;
     }
 }
+    
+    
 
-
-/**
-  * @brief  射击评估
-  * @param  当前时间
-  * @retval 0 评估结果不适合           1 评估结果适合发射
-  */
-uint8_t VShot_Evaluation(portTickType CurrentTick)
-{
-    
-/**********************     傻逼评估方式      **********************/
-    //时间误差小于±10
-//    if((CurrentTick + 10 > ForcastTarget.TargetTick) && (CurrentTick - 10 < ForcastTarget.TargetTick))
-//    {
-        //角度误差小于50线
-        if((CloudParam.Yaw.RealEncoderAngle - ForcastTarget.Target.H - YawCenter > -50) && (CloudParam.Yaw.RealEncoderAngle - ForcastTarget.Target.H  - YawCenter < 50))
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-//    }
-//    else
-//    {
-//    return 0;
-//    }
-        
-        
-/**********************     评估方式二       **********************/
-    
-    
-    
-    
-    
-    
-}
 
 
 

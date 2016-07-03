@@ -16,7 +16,7 @@ void BSP_CAN_InitConfig(void)
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN2, ENABLE);
     
     //CAN1
-    CAN_InitStructure.CAN_ABOM      =   DISABLE;
+    CAN_InitStructure.CAN_ABOM      =   ENABLE;
     CAN_InitStructure.CAN_AWUM      =   DISABLE;
     CAN_InitStructure.CAN_BS1       =   CAN_BS1_9tq;
     CAN_InitStructure.CAN_BS2       =   CAN_BS2_4tq;
@@ -46,7 +46,7 @@ void BSP_CAN_InitConfig(void)
     CAN_InitStructure.CAN_BS1       =   CAN_BS1_9tq;
     CAN_InitStructure.CAN_BS2       =   CAN_BS2_4tq;
     CAN_InitStructure.CAN_Mode      =   CAN_Mode_Normal;
-    CAN_InitStructure.CAN_NART      =   ENABLE;
+    CAN_InitStructure.CAN_NART      =   DISABLE;
     CAN_InitStructure.CAN_Prescaler =   3;
     CAN_InitStructure.CAN_RFLM      =   DISABLE;
     CAN_InitStructure.CAN_SJW       =   CAN_SJW_1tq;

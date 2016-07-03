@@ -38,7 +38,7 @@
 #endif
 
 #define ABSPITCHUPLIMIT         70.0F          //pitch绝对角度上限幅
-#define ABSPITCHDOWNLIMIT       -50.0F          //pitch绝对角度下限幅
+#define ABSPITCHDOWNLIMIT       -50.0F         //pitch绝对角度下限幅
 
 
 

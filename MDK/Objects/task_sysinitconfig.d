@@ -63,6 +63,7 @@
 .\objects\task_sysinitconfig.o: ..\bsp\inc\BSP_UART.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Bell.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_DBUS.h
+.\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Judge.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Vision.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Chassis.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_mpu9250.h

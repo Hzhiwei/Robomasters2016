@@ -36,3 +36,4 @@
 .\objects\bsp_dma.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\bsp_dma.o: ..\lib\std\inc\stm32f4xx_fsmc.h
 .\objects\bsp_dma.o: ..\driver\inc\Driver_DBUS.h
+.\objects\bsp_dma.o: ..\driver\inc\Driver_Judge.h

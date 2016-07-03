@@ -48,16 +48,6 @@ void BSP_GPIO_InitConfig(void)
     GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_CAN2);
     
     
-    //DBUS2
-    GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_AF;
-    GPIO_InitStructure.GPIO_OType  =   GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_Pin    =   GPIO_Pin_2;
-    GPIO_InitStructure.GPIO_PuPd   =   GPIO_PuPd_UP;
-    GPIO_InitStructure.GPIO_Speed  =   GPIO_Speed_100MHz;
-    GPIO_Init(GPIOD, &GPIO_InitStructure);
-    GPIO_PinAFConfig(GPIOD, GPIO_PinSource2, GPIO_AF_UART5);
-    
-    
     //USART1
     GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_OType  =   GPIO_OType_PP;
@@ -67,6 +57,27 @@ void BSP_GPIO_InitConfig(void)
     GPIO_Init(GPIOA, &GPIO_InitStructure);
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_USART1);
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_USART1);
+    
+    
+    //UART4(Judge)
+    GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_OType  =   GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Pin    =   GPIO_Pin_10 | GPIO_Pin_11;
+    GPIO_InitStructure.GPIO_PuPd   =   GPIO_PuPd_UP;
+    GPIO_InitStructure.GPIO_Speed  =   GPIO_Speed_100MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+    GPIO_PinAFConfig(GPIOC, GPIO_PinSource10, GPIO_AF_UART4);
+    GPIO_PinAFConfig(GPIOC, GPIO_PinSource11, GPIO_AF_UART4);
+    
+    
+    //UART5(DBUS)
+    GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_OType  =   GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Pin    =   GPIO_Pin_2;
+    GPIO_InitStructure.GPIO_PuPd   =   GPIO_PuPd_UP;
+    GPIO_InitStructure.GPIO_Speed  =   GPIO_Speed_100MHz;
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
+    GPIO_PinAFConfig(GPIOD, GPIO_PinSource2, GPIO_AF_UART5);
     
     
     //拨弹电机方向控制引脚

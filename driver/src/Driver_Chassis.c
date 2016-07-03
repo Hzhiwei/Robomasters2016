@@ -105,14 +105,14 @@ void Chassis_Adjust(void)
     ABSSpeed[3] = (ChassisParam.RB.TargetSpeed > 0 ? ChassisParam.RB.TargetSpeed : -ChassisParam.RB.TargetSpeed);
     
     //¹¦ÂÊ·ÖÅä
-    PowerSum = ABSSpeed[0] + ABSSpeed[1] + ABSSpeed[2] + ABSSpeed[3];
+    PowerSum = ChassisParam.LF.NeedCurrent + ChassisParam.RF.NeedCurrent + ChassisParam.LB.NeedCurrent + ChassisParam.RB.NeedCurrent;
     
     if(PowerSum > 0)
     {
-        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[0] / PowerSum;
-        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[1] / PowerSum;
-        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[2] / PowerSum;
-        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[3] / PowerSum;
+        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ChassisParam.LF.NeedCurrent / PowerSum;
+        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ChassisParam.RF.NeedCurrent / PowerSum;
+        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ChassisParam.LB.NeedCurrent / PowerSum;
+        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ChassisParam.RB.NeedCurrent / PowerSum;
     }
     else
     {

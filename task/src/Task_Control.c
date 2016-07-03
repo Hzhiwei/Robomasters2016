@@ -235,18 +235,21 @@ void Task_Control(void *Parameters)
             Chassis_SpeedSet(XSpeed, YSpeed);
             Chassis_Control(1);
             
-            
+            //补给站模式
             if(DBUS_ReceiveData.keyBoard.key_code & KEY_CTRL)
             {
                 Steering_Control(1);//舱门控制
                 
                 CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
-                CloudParam.Pitch.EncoderTargetAngle = PitchCenter;
-                PitchCurrent = Control_PitchPID();
+                CloudParam.Pitch.EncoderTargetAngle = DEPOTABSPITCH + PitchCenter;
                 
-                YawCurrent = VControl_YawPID(0);
+                MouseSpinIntBuffer = DBUS_ReceiveData.mouse.x / (MOUSESPINPARAM * 4);
+                MouseSpinIntBuffer = MouseSpinIntBuffer > MOUSEINTLIMIT ? MOUSEINTLIMIT : MouseSpinIntBuffer;
+                MouseSpinIntBuffer = MouseSpinIntBuffer < -MOUSEINTLIMIT ? -MOUSEINTLIMIT : MouseSpinIntBuffer;
+                CloudParam.Yaw.ABSTargetAngle -= MouseSpinIntBuffer;
+                CloudParam.Yaw.AngleMode = AngleMode_ABS;
                 
-                CloudMotorCurrent(PitchCurrent, YawCurrent);
+                Cloud_Adjust(1);
             }
             else
             {
@@ -259,7 +262,14 @@ void Task_Control(void *Parameters)
                     
                     //Pitch轴直接使用最新数据
                     CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
-                    ForcastAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 1);
+                    
+                    ForcastAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
+                                                EnemyDataBuffer[EnemyDataBufferPoint].Y, 
+                                                EnemyDataBuffer[EnemyDataBufferPoint].Z, 
+                                                Position.Euler.Pitch,
+                                                CloudParam.Pitch.RealEncoderAngle,
+                                                1);
+                    
                     CloudParam.Pitch.EncoderTargetAngle = ForcastAngle.V + PitchCenter;
                     PitchCurrent = Control_PitchPID();
                     

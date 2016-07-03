@@ -29,14 +29,6 @@ void BSP_NVIC_InitConfig(void)
 	NVIC_Init(&NVIC_InitStructure);
 	CAN_ITConfig(CAN2, CAN_IT_FMP0, ENABLE);
 	
-    //UART5
-	NVIC_InitStructure.NVIC_IRQChannel						=	UART5_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelCmd					=	ENABLE;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority	=	11;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority			=	0;
-	NVIC_Init(&NVIC_InitStructure);
-	USART_ITConfig(UART5, USART_IT_IDLE, ENABLE);
-	
     //USART1
 	NVIC_InitStructure.NVIC_IRQChannel						=	USART1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelCmd					=	ENABLE;
@@ -44,5 +36,21 @@ void BSP_NVIC_InitConfig(void)
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority			=	0;
 	NVIC_Init(&NVIC_InitStructure);
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+	
+    //UART4
+	NVIC_InitStructure.NVIC_IRQChannel						=	UART4_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelCmd					=	ENABLE;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority	=	13;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority			=	0;
+	NVIC_Init(&NVIC_InitStructure);
+	USART_ITConfig(UART4, USART_IT_IDLE, ENABLE);
+	
+    //UART5
+	NVIC_InitStructure.NVIC_IRQChannel						=	UART5_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelCmd					=	ENABLE;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority	=	11;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority			=	0;
+	NVIC_Init(&NVIC_InitStructure);
+	USART_ITConfig(UART5, USART_IT_IDLE, ENABLE);
 }
 

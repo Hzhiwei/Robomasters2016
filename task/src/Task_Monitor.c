@@ -6,6 +6,7 @@
 #include "Driver_Bell.h"
 #include "Driver_DBUS.h"
 #include "Driver_vision.h"
+#include "Driver_Chassis.h"
 #include "Driver_mpu9250.h"
 #include "Driver_CloudMotor.h"
 #include "Driver_SuperGyroscope.h"
@@ -24,10 +25,10 @@ void Task_Monitor(void *Parameters)
     //系统状态，每一位对应一个错误，0正常，1错误
 /****************************************************************
     15  |   14  |   13  |   12  |   11  |   10  |   9   |   8   |
-        |       |       |       |       |       |       |       |
+        |       |       |       |       |       |左前底盘|右前底盘|
 -----------------------------------------------------------------
     7   |   6   |   5   |   4   |   3   |   2   |   1   |   0   |
-        |       |底盘Gyr|右摩擦  |左摩擦 |  Yaw  | Pitch |  DBUS |
+左后底盘|右后底盘|底盘Gyr|    -  |    -  |  Yaw  | Pitch |  DBUS |
 ****************************************************************/
     uint16_t SysErrorStatus = 0;
     
@@ -51,6 +52,16 @@ void Task_Monitor(void *Parameters)
         //视觉帧率统计
         PCFrameRate = PCFrameCounter;
         PCFrameCounter = 0;
+        
+        //底盘电机帧率统计
+        ChassisFrameRate[0] = ChassisFrameCounter[0];
+        ChassisFrameCounter[0] = 0;
+        ChassisFrameRate[1] = ChassisFrameCounter[1];
+        ChassisFrameCounter[1] = 0;
+        ChassisFrameRate[2] = ChassisFrameCounter[2];
+        ChassisFrameCounter[2] = 0;
+        ChassisFrameRate[3] = ChassisFrameCounter[3];
+        ChassisFrameCounter[3] = 0;
         
         //DBUS帧率过低
         if(DBUSFrameRate < 6)
@@ -88,6 +99,43 @@ void Task_Monitor(void *Parameters)
         {
             SysErrorStatus &= 0xFFDF;
         }
+        //左前底盘电机帧率过低
+        if(ChassisFrameRate[0] < 30)
+        {
+            SysErrorStatus |= 0x0040;
+        }
+        else
+        {
+            SysErrorStatus &= 0xFFBF;
+        }
+        //右前底盘电机帧率过低
+        if(ChassisFrameRate[1] < 30)
+        {
+            SysErrorStatus |= 0x0080;
+        }
+        else
+        {
+            SysErrorStatus &= 0xFF7F;
+        }
+        //左后底盘电机帧率过低
+        if(ChassisFrameRate[2] < 30)
+        {
+            SysErrorStatus |= 0x0100;
+        }
+        else
+        {
+            SysErrorStatus &= 0xFEFF;
+        }
+        //右后底盘电机帧率过低
+        if(ChassisFrameRate[3] < 30)
+        {
+            SysErrorStatus |= 0x0200;
+        }
+        else
+        {
+            SysErrorStatus &= 0xFDFF;
+        }
+        
 /**************************  ↑   数据帧率统计   ↑  **************************/
 /**************************************************************************************************/
 /**************************  ↓   警告标志置位   ↓  **************************/
@@ -111,11 +159,31 @@ void Task_Monitor(void *Parameters)
         {
             Bell_BarkWarning(7, MAXAWarning);
         }
+        //左前底盘电机
+        else if(SysErrorStatus & 0x0040)
+        {
+            Bell_BarkWarning(8, MAXAWarning);
+        }
+        //右前底盘电机
+        else if(SysErrorStatus & 0x0080)
+        {
+            Bell_BarkWarning(9, MAXAWarning);
+        }
+        //左后底盘电机
+        else if(SysErrorStatus & 0x0100)
+        {
+            Bell_BarkWarning(10, MAXAWarning);
+        }
+        //右后底盘电机
+        else if(SysErrorStatus & 0x0200)
+        {
+            Bell_BarkWarning(11, MAXAWarning);
+        }
         else
         {
             Bell_BarkWarning(0, MAXAWarning);
         }
-            
+/**************************  ↑   警告标志置位   ↑  **************************/
 
         
         vTaskDelay(200);

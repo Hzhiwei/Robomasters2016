@@ -90,10 +90,9 @@ __DRIVER_VISION_EXT int16_t PCFrameRate;
 
 
 void Vision_InitConfig(void);
-AngleI_Struct RecToPolar(float X, float Y, float Z, uint8_t mode);
+AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t PitchEncoder, uint8_t mode);
 uint8_t ForcastCore(uint16_t SampleTime, uint16_t ForcastTime, Point_Struct *ForcastPoint);
 uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *ForcastAngle, uint8_t TimeMode);
-uint8_t VShot_Evaluation(portTickType CurrentTick);
 
 
 #endif

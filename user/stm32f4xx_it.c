@@ -218,6 +218,8 @@ void CAN2_RX0_IRQHandler(void)
         }
         case    LFCHASSISCANID  :
         {
+            ChassisFrameCounter[0]++;
+            
             ChassisParam.LF.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
             ChassisParam.LF.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
             ChassisParam.LF.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
@@ -226,6 +228,8 @@ void CAN2_RX0_IRQHandler(void)
         }
         case    RFCHASSISCANID  :
         {
+            ChassisFrameCounter[1]++;
+            
             ChassisParam.RF.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
             ChassisParam.RF.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
             ChassisParam.RF.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
@@ -234,6 +238,8 @@ void CAN2_RX0_IRQHandler(void)
         }
         case    LBCHASSISCANID  :
         {
+            ChassisFrameCounter[2]++;
+            
             ChassisParam.LB.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
             ChassisParam.LB.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
             ChassisParam.LB.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
@@ -242,6 +248,8 @@ void CAN2_RX0_IRQHandler(void)
         }
         case    RBCHASSISCANID  :
         {
+            ChassisFrameCounter[3]++;
+            
             ChassisParam.RB.RealCurrent = ((uint16_t)CanRxData.Data[1] << 8) | CanRxData.Data[0];
             ChassisParam.RB.RealSpeed = ((int16_t)CanRxData.Data[3] << 8) | CanRxData.Data[2];
             ChassisParam.RB.NeedCurrent = ((uint16_t)CanRxData.Data[5] << 8) | CanRxData.Data[4];
@@ -278,6 +286,35 @@ void UART5_IRQHandler(void)
     while(DMA_GetCmdStatus(DMA1_Stream0) != DISABLE);
     DMA_SetCurrDataCounter(DMA1_Stream0, DBUSLength + DBUSBackLength);
     DMA_Cmd(DMA1_Stream0, ENABLE);
+}
+
+
+//裁判系统空闲中断
+void UART4_IRQHandler(void)
+{
+    temp = UART4->DR;
+    temp = UART4->SR;
+    
+    DMA_Cmd(DMA1_Stream2, DISABLE);
+    
+    //比赛进程信息，只读电压电流
+    //傻狗说：
+    //很奇怪，大疆pdf给的比赛信息有效数据长度是38，而传过来的是37，而sizeof得到的也是38，反正这里有问题，最后决定用大疆发过来的的长度（37）为准
+    //我选择相信
+    if((DMA1_Stream2->NDTR == JudgeBufferLength - JudgeFrameLength_1) && 
+        (Verify_CRC16_Check_Sum(JudgeDataBuffer, 37 + 8)) &&
+        (JudgeDataBuffer[5] == 0x1))
+    {
+        JudgeFrameCounter++;        //帧数增加
+        
+        
+    }
+    
+    //重启DMA
+    DMA_ClearFlag(DMA1_Stream2, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
+    while(DMA_GetCmdStatus(DMA1_Stream2) != DISABLE);
+    DMA_SetCurrDataCounter(DMA1_Stream2, JudgeBufferLength);
+    DMA_Cmd(DMA1_Stream2, ENABLE);
 }
 
 

@@ -16,6 +16,7 @@
 
 #include "Driver_Bell.h"
 #include "Driver_DBUS.h"
+#include "Driver_Judge.h"
 #include "Driver_Vision.h"
 #include "Driver_Chassis.h"
 #include "Driver_mpu9250.h"
@@ -110,6 +111,11 @@ void Task_SysInitConfig(void *Parameters)
     while(DMA_GetCmdStatus(DMA1_Stream0) != DISABLE);
     DMA_SetCurrDataCounter(DMA1_Stream0, DBUSLength + DBUSBackLength);
     DMA_Cmd(DMA1_Stream0, ENABLE);
+    
+    DMA_Cmd(DMA1_Stream2, DISABLE);
+    while(DMA_GetCmdStatus(DMA1_Stream2) != DISABLE);
+    DMA_SetCurrDataCounter(DMA1_Stream2, JudgeBufferLength);
+    DMA_Cmd(DMA1_Stream2, ENABLE);
     
     Bell_BarkWarning(1, 1);
 

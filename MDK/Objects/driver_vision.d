@@ -1,6 +1,6 @@
 .\objects\driver_vision.o: ..\driver\src\Driver_vision.c
 .\objects\driver_vision.o: ..\user\Config.h
-.\objects\driver_vision.o: ..\driver\inc\Driver_vision.h
+.\objects\driver_vision.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\driver_vision.o: ..\core\stm32f4xx.h
 .\objects\driver_vision.o: ..\core\core_cm4.h
 .\objects\driver_vision.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -36,6 +36,7 @@
 .\objects\driver_vision.o: ..\lib\std\inc\stm32f4xx_dac.h
 .\objects\driver_vision.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\driver_vision.o: ..\lib\std\inc\stm32f4xx_fsmc.h
+.\objects\driver_vision.o: ..\driver\inc\Driver_vision.h
 .\objects\driver_vision.o: ..\user\OSinclude.h
 .\objects\driver_vision.o: ..\lib\freertos\inc\FreeRTOS.h
 .\objects\driver_vision.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
