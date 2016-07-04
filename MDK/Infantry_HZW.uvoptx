@@ -164,6 +164,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -207,6 +208,16 @@
           <count>2</count>
           <WinNumber>1</WinNumber>
           <ItemText>BigSampleCounter,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ChassisOPID,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ChassisIPID,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

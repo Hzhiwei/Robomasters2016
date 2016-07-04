@@ -21,6 +21,8 @@
 #define YawLEFTLimit            5600
 #define YawRIGHTLimit           3800
 #define YawCenter               4650
+#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
+#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
 #elif INFANTRY == 2     //阿拉斯加
 #define PitchUPLimit            3500
 #define PitchDOWNLimit          2600
@@ -28,17 +30,28 @@
 #define YawLEFTLimit            5500
 #define YawRIGHTLimit           3000
 #define YawCenter               4100
+#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
+#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
 #elif INFANTRY == 3     //哈士奇
 #define PitchUPLimit            4400
 #define PitchDOWNLimit          3500
 #define PitchCenter             3897
-#define YawLEFTLimit            4050
-#define YawRIGHTLimit           2420
+#define YawLEFTLimit            4600
+#define YawRIGHTLimit           2220
 #define YawCenter               3380
+#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
+#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
+#elif INFANTRY == 4     //边牧（没名字，先这么叫吧）
+#define PitchUPLimit            4400
+#define PitchDOWNLimit          3500
+#define PitchCenter             3897
+#define YawLEFTLimit            4600
+#define YawRIGHTLimit           2220
+#define YawCenter               3380
+#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
+#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
 #endif
 
-#define ABSPITCHUPLIMIT         70.0F          //pitch绝对角度上限幅
-#define ABSPITCHDOWNLIMIT       -50.0F         //pitch绝对角度下限幅
 
 
 

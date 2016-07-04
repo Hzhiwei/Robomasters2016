@@ -29,9 +29,8 @@ void Task_Control(void *Parameters)
 {
     int16_t XSpeed, YSpeed;
     portTickType ControlLastTick = 0;
-    float MouseSpinIntBuffer = 0, MousePitchIntBuffer = 0;
+    float MouseSpinIntBuffer = 0;
     uint16_t dmpresetCounter = 0;
-    int16_t ForcastCurrent;
     AngleI_Struct ForcastAngle;     //т╓еп╫А╧Ш
     int16_t PitchCurrent = 0, YawCurrent = 0;
     int16_t ForcastTargetEncoderOmega;
