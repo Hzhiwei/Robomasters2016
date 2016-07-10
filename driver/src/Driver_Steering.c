@@ -23,7 +23,7 @@ void Steering_Control(uint8_t status)
 {
     if(status)
     {
-        TIM8->CCR4 = 500;
+        TIM8->CCR4 = 800;
     }
     else
     {

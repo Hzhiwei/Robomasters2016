@@ -50,5 +50,5 @@
 .\objects\driver_pokemotor.o: ..\lib\std\inc\stm32f4xx_dac.h
 .\objects\driver_pokemotor.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\driver_pokemotor.o: ..\lib\std\inc\stm32f4xx_fsmc.h
-.\objects\driver_pokemotor.o: ..\driver\inc\Driver_PokeMotor.h
 .\objects\driver_pokemotor.o: ..\user\Config.h
+.\objects\driver_pokemotor.o: ..\driver\inc\Driver_PokeMotor.h

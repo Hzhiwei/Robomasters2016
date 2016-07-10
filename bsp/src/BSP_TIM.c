@@ -73,7 +73,7 @@ void BSP_TIM_InitConfig(void)
     //Ç¹Ä¦²ÁÂÖ(CH1,CH2)£¬¶æ»ú(CH4)£¨TIM8)(100Hz)
     TIM_TimeBaseInitStructure.TIM_ClockDivision =   0;
     TIM_TimeBaseInitStructure.TIM_CounterMode   =   TIM_CounterMode_Up;
-    TIM_TimeBaseInitStructure.TIM_Period        =   9999;
+    TIM_TimeBaseInitStructure.TIM_Period        =   2999;
     TIM_TimeBaseInitStructure.TIM_Prescaler     =   167;
     TIM_TimeBaseInit(TIM8, &TIM_TimeBaseInitStructure);
 

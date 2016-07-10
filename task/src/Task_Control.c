@@ -24,6 +24,7 @@
     float PitchSum = 0, YawSum = 0;
     
     AngleI_Struct AutoTargetAngle;      //自动射击目标角度
+    int16_t ForcastTargetEncoderOmega;
     
 void Task_Control(void *Parameters)
 {
@@ -33,7 +34,6 @@ void Task_Control(void *Parameters)
     uint16_t dmpresetCounter = 0;
     AngleI_Struct ForcastAngle;     //预判结果
     int16_t PitchCurrent = 0, YawCurrent = 0;
-    int16_t ForcastTargetEncoderOmega;
     
     for(;;)
     {
@@ -63,7 +63,7 @@ void Task_Control(void *Parameters)
 ////        //遥控器控制
         if(ControlMode == ControlMode_RC)
         {
-//      操作手临时代码 
+//      手动
             CloudParam.Yaw.ABSTargetAngle -= DBUS_ReceiveData.ch3 / 600.0F;
             Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
             
@@ -168,6 +168,8 @@ void Task_Control(void *Parameters)
 //                AutoTargetAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
 //                                            EnemyDataBuffer[EnemyDataBufferPoint].Y,
 //                                            EnemyDataBuffer[EnemyDataBufferPoint].Z,
+//                                            Position.Euler.Pitch,
+//                                            CloudParam.Pitch.RealEncoderAngle,
 //                                            0);
 //                
 //                Cloud_YawAngleSet(AutoTargetAngle.H, 1);
@@ -192,6 +194,10 @@ void Task_Control(void *Parameters)
         }
         else if(ControlMode == ControlMode_KM)
         {
+#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
+    if(ABInfantryMode == ABInfantry_Master)
+    {
+#endif
             //速度倍率设置
             if((DBUS_ReceiveData.keyBoard.key_code & KEY_V) & (!(LASTDBUS_ReceiveData.keyBoard.key_code & KEY_V)))
             {
@@ -291,7 +297,7 @@ void Task_Control(void *Parameters)
                     //计算目标角速度大小（编码器单位）
                     if(VisionUpdataFlag)
                     {
-                        ForcastOnce(400, 200, &ForcastAngle, 0);        //预判 
+                        ForcastOnce(400, 150, &ForcastAngle, 0);        //预判 
                         ForcastTarget.Target.H = ForcastAngle.H;
                         ForcastTarget.TargetTick = ControlLastTick + 150;
                     }
@@ -369,7 +375,14 @@ void Task_Control(void *Parameters)
             //发射
             if(DBUS_ReceiveData.switch_right == 3)
             {
-                GunFric_Control(1);
+                if(DBUS_ReceiveData.keyBoard.key_code & KEY_Z)
+                {
+                    GunFric_Control(2);
+                }
+                else
+                {
+                    GunFric_Control(1);
+                }
                 if(DBUS_ReceiveData.mouse.press_left)
                 {
                     PokeMotor_Step();
@@ -379,6 +392,57 @@ void Task_Control(void *Parameters)
             {
                 GunFric_Control(0);
             }
+            
+#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
+        }
+        else
+        {
+            //Pitch轴不使用预判，直接使用最新帧数据的pitch数据作为目标数据
+            //Yaw轴使用预判
+            
+            //Pitch轴直接使用最新数据
+            CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
+            
+            ForcastAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
+                                        EnemyDataBuffer[EnemyDataBufferPoint].Y, 
+                                        EnemyDataBuffer[EnemyDataBufferPoint].Z, 
+                                        Position.Euler.Pitch,
+                                        CloudParam.Pitch.RealEncoderAngle,
+                                        1);
+            
+            CloudParam.Pitch.EncoderTargetAngle = ForcastAngle.V + PitchCenter;
+            PitchCurrent = Control_PitchPID();
+            
+            //Yaw轴速度跟随
+            //计算目标角速度大小（编码器单位）
+            if(VisionUpdataFlag)
+            {
+                ForcastOnce(400, 200, &ForcastAngle, 0);        //预判 
+                ForcastTarget.Target.H = ForcastAngle.H;
+                ForcastTarget.TargetTick = ControlLastTick + 150;
+            }
+            
+            if(ForcastTarget.TargetTick > ControlLastTick)
+            {
+                if(ForcastTarget.TargetTick - ControlLastTick > 30)
+                {
+                    ForcastTargetEncoderOmega = ((float)ForcastAngle.H + YawCenter - CloudParam.Yaw.RealEncoderAngle) * 1000 / ((int)ForcastTarget.TargetTick - ControlLastTick);
+                    if((ForcastTargetEncoderOmega < 500) && (ForcastTargetEncoderOmega > -500))
+                    {
+                        ForcastTargetEncoderOmega /= 3.5F;
+                    }
+                }
+            }
+            else
+            {
+                ForcastTargetEncoderOmega = 0;
+            }
+            
+            YawCurrent = VControl_YawPID(ForcastTargetEncoderOmega);
+            
+            CloudMotorCurrent(PitchCurrent, YawCurrent);
+        }
+#endif
         }
         else
         {

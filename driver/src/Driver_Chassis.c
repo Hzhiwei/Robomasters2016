@@ -33,7 +33,7 @@ void Chassis_InitConfig(void)
         Last_Spd[i]=0;
     }
     
-    ChassisMaxSumCurrent = 2900.0F;
+    ChassisMaxSumCurrent = 2380.0F;
     
     ChassisParam.VX = 0;
     ChassisParam.VY = 0;

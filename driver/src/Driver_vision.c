@@ -24,6 +24,22 @@ const uint8_t BigSymbolModeOrder[PCDATALENGTH] = {0x00, 0x00, 0x28, 0x00, 0x00,
                                                   0x00, 0x00, 0x00, 0x00, 0x00,
                                                   0x00};
 
+//红目标指令
+const uint8_t RedEnemyOrder[PCDATALENGTH] = {0x00, 0x00, 0xFA, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00};
+
+//蓝目标指令
+const uint8_t BlueEnemyOrder[PCDATALENGTH] = {0x00, 0x00, 0xFB, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00};
+
 //关机模式指令
 const uint8_t ShutdownOrder[PCDATALENGTH] = {0x00, 0x00, 0xFF, 0x00, 0x00,
                                              0x00, 0x00, 0x00, 0x00, 0x00,
@@ -308,7 +324,32 @@ void SendPCOrder(PCOrder_Enum order)
 }
 
 
-
+/**
+  * @brief  发送目标颜色
+  * @param  'R' 红色      'B' 蓝色      其他 红色
+  * @retval void
+  */
+void SendEnemyColor(char Co)
+{
+    if('B' == Co)
+    {
+        DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
+        while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+        DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
+        DMA2_Stream7->M0AR = (uint32_t)BlueEnemyOrder;      //设置数据
+        DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量
+        DMA_Cmd(DMA2_Stream7, ENABLE);                      //开启 DMA 传输
+    }
+    else
+    {
+        DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
+        while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+        DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
+        DMA2_Stream7->M0AR = (uint32_t)RedEnemyOrder;       //设置数据
+        DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量
+        DMA_Cmd(DMA2_Stream7, ENABLE);                      //开启 DMA 传输
+    }
+}
 
 
 

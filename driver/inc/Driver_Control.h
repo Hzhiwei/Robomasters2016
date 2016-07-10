@@ -5,6 +5,7 @@
 
 #include "stm32f4xx.h"
 #include "OSinclude.h"
+#include "Config.h"
 
 
 #ifdef  __DRIVER_CONTROL_GLOBALS
@@ -14,8 +15,14 @@
 #endif
 
 
-#define Motor3510Speed      4000        //不超速3510最大速度
-
+#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
+//AB车模式
+typedef enum
+{
+    ABInfantry_Master,      //主车，正常控制
+    ABInfantry_Slave        //从车，自动射击
+}ABInfantryMode_Enum;
+#endif
 
 
 //PID数据结构
@@ -48,6 +55,11 @@ __DRIVER_CONTROL_EXT PID_Type PokeIPID, PokeOPID;
 __DRIVER_CONTROL_EXT PID_Type ChassisIPID, ChassisOPID; 
 //预判速度PID
 __DRIVER_CONTROL_EXT PID_Type ForcastYawSpeedPID;
+
+#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
+//AB车模式
+__DRIVER_CONTROL_EXT ABInfantryMode_Enum ABInfantryMode;
+#endif
 
 
 void CloudPID_InitConfig(void);

@@ -21,7 +21,13 @@
 #define CHASSISSPEEDSETCANID            0x46
 //底盘电机电流控制
 #define CHASSISCURRENTSETCANID          0x40
+
+
+#if INFANTRY == 1 || INFANTRY == 2 || INFANTRY == 3 || INFANTRY == 4
 #define CHASSISMAXPOWER                 80.0F       //底盘最大功率
+#elif INFANTRY == 5
+#define CHASSISMAXPOWER                 160.0F      //底盘最大功率
+#endif
 
 
 #ifdef  __DRIVER_CHASSIS_GLOBALS

@@ -5,6 +5,7 @@
 #include "OSinclude.h"
 #include "Driver_DBUS.h"
 #include "Driver_vision.h"
+#include "Driver_Control.h"
 #include "Driver_StatusMachine.h"
 
 
@@ -85,7 +86,24 @@ void StatusMachine_Update(void)
         //降低发送频率减小串口负担
         if(RateCounter == 4)
         {
-            if(DBUS_ReceiveData.keyBoard.key_code & KEY_X)
+            //敌方目标红色
+            if((DBUS_ReceiveData.ch1 > 600) && 
+                (DBUS_ReceiveData.ch2 > 600) &&
+                (DBUS_ReceiveData.ch3 < -600) &&
+                (DBUS_ReceiveData.ch4 > 600))
+            {
+                SendEnemyColor('R');
+            }
+            //敌方目标蓝色
+            else if((DBUS_ReceiveData.ch1 < -600) && 
+                (DBUS_ReceiveData.ch2 > 600) &&
+                (DBUS_ReceiveData.ch3 > 600) &&
+                (DBUS_ReceiveData.ch4 > 600))
+            {
+                SendEnemyColor('B');
+            }
+            //大符模式
+            else if(DBUS_ReceiveData.keyBoard.key_code & KEY_X)
             {
                 AttackCounter = 0;
                 
@@ -96,6 +114,7 @@ void StatusMachine_Update(void)
                     BigSampleCounter++;
                 }
             }
+            //自动射击模式（主机，单主控并不是）
             else
             {
                 BigSampleCounter = 0;
@@ -113,6 +132,26 @@ void StatusMachine_Update(void)
         {
             RateCounter++;
         }
+        
+#if INFANTRYTYPE == 1 
+        if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
+        {
+            ABInfantryMode = ABInfantry_Master;
+        }
+        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
+        {
+            ABInfantryMode = ABInfantry_Slave;
+        }
+#elif INFANTRYTYPE == 2
+        if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
+        {
+            ABInfantryMode = ABInfantry_Master;
+        }
+        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
+        {
+            ABInfantryMode = ABInfantry_Slave;
+        }
+#endif
     }
     //保护模式
     else

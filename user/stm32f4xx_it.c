@@ -176,6 +176,8 @@ void CAN1_RX0_IRQHandler(void)
 void CAN2_RX0_IRQHandler(void)
 #endif
 {
+    static uint8_t FristGyroData = 0;
+    static float GyroOffset = 0;
     u8Todouble dataTrans;
     
     #if CANPORT == 1
@@ -200,20 +202,30 @@ void CAN2_RX0_IRQHandler(void)
         }
         case    SUPERGYROSCOPECANIC :
         {
-                SuperGyoFrameCounter++;
-                
-                dataTrans.uint8_tdata[0] = CanRxData.Data[0];
-                dataTrans.uint8_tdata[1] = CanRxData.Data[1];
-                dataTrans.uint8_tdata[2] = CanRxData.Data[2];
-                dataTrans.uint8_tdata[3] = CanRxData.Data[3];
-                SuperGyoAngle = dataTrans.floatdata;
-                
-                dataTrans.uint8_tdata[0] = CanRxData.Data[4];
-                dataTrans.uint8_tdata[1] = CanRxData.Data[5];
-                dataTrans.uint8_tdata[2] = CanRxData.Data[6];
-                dataTrans.uint8_tdata[3] = CanRxData.Data[7];
-                SuperGyoOmega = dataTrans.floatdata;
-                SuperGyoMotorEncoderOmega = 1.388889F * SuperGyoOmega;
+            SuperGyoFrameCounter++;
+            
+            dataTrans.uint8_tdata[0] = CanRxData.Data[0];
+            dataTrans.uint8_tdata[1] = CanRxData.Data[1];
+            dataTrans.uint8_tdata[2] = CanRxData.Data[2];
+            dataTrans.uint8_tdata[3] = CanRxData.Data[3];
+            
+            if(FristGyroData)
+            {
+                SuperGyoAngle = dataTrans.floatdata - GyroOffset;
+            }
+            else
+            {
+                SuperGyoAngle = 0;
+                GyroOffset = dataTrans.floatdata;
+                FristGyroData = 1;
+            }
+            
+            dataTrans.uint8_tdata[0] = CanRxData.Data[4];
+            dataTrans.uint8_tdata[1] = CanRxData.Data[5];
+            dataTrans.uint8_tdata[2] = CanRxData.Data[6];
+            dataTrans.uint8_tdata[3] = CanRxData.Data[7];
+            SuperGyoOmega = dataTrans.floatdata;
+            SuperGyoMotorEncoderOmega = 1.388889F * SuperGyoOmega;
             break;
         }
         case    LFCHASSISCANID  :

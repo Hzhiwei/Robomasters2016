@@ -18,15 +18,20 @@ void FricMotor_InitConfig(void)
 
 /**
   * @brief  Ç¹Ä¦²ÁÂÖÆðÍ£
-  * @param  0 Í£Ö¹        1 Æô¶¯
+  * @param  0 Í£Ö¹        1 Æô¶¯        2 ¿ñÒ°Ä£Ê½
   * @retval void
   */
 void GunFric_Control(uint8_t Control)
 {
-    if(Control)
+    if(Control == 1)
     {
         TIM8->CCR1 = 1000 + FRICMOTORWORKINGSPEED;
         TIM8->CCR2 = 1000 + FRICMOTORWORKINGSPEED;
+    }
+    else if(Control == 2)
+    {
+        TIM8->CCR1 = 1000 + 800;
+        TIM8->CCR2 = 1000 + 800;
     }
     else
     {
