@@ -286,7 +286,7 @@ uint8_t mpu6050_Check(void)
   */
 void mpu_accel_lpfset(void)
 {
-    uint8_t data = 2;
+    uint8_t data = 3;
     IIC_SendBuffer(0x68, 0x1D, 1, &data);
 }
     

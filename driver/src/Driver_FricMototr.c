@@ -30,8 +30,8 @@ void GunFric_Control(uint8_t Control)
     }
     else if(Control == 2)
     {
-        TIM8->CCR1 = 1000 + 800;
-        TIM8->CCR2 = 1000 + 800;
+        TIM8->CCR1 = 1000 + 1000;
+        TIM8->CCR2 = 1000 + 1000;
     }
     else
     {

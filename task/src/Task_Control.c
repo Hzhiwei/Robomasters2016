@@ -92,6 +92,7 @@ void Task_Control(void *Parameters)
             Chassis_SpeedSet(DBUS_ReceiveData.ch2 * 900 / 660, DBUS_ReceiveData.ch1 * 900 / 660);
             Chassis_Control(1);
 
+
 ////      大符模式
 //                    CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
 //                    CloudParam.Yaw.AngleMode = AngleMode_Encoder;         //编码器模式
@@ -277,6 +278,30 @@ void Task_Control(void *Parameters)
                 //自动射击
                 if(DBUS_ReceiveData.mouse.press_right)
                 {
+                    
+                    //旋转控制
+                    if(DBUS_ReceiveData.keyBoard.key_code & KEY_E)
+                    {
+                        CloudParam.Yaw.ABSTargetAngle -= QESPINPARAM;
+                    }
+                    else if(DBUS_ReceiveData.keyBoard.key_code & KEY_Q)
+                    {
+                        CloudParam.Yaw.ABSTargetAngle += QESPINPARAM;
+                    }
+                    else
+                    {
+                        MouseSpinIntBuffer = DBUS_ReceiveData.mouse.x / MOUSESPINPARAM;
+                        MouseSpinIntBuffer = MouseSpinIntBuffer > MOUSEINTLIMIT ? MOUSEINTLIMIT : MouseSpinIntBuffer;
+                        MouseSpinIntBuffer = MouseSpinIntBuffer < -MOUSEINTLIMIT ? -MOUSEINTLIMIT : MouseSpinIntBuffer;
+                        
+                        CloudParam.Yaw.ABSTargetAngle -= MouseSpinIntBuffer;
+                    } 
+                    
+//                    CloudParam.Pitch.ABSTargetAngle -= DBUS_ReceiveData.mouse.y / MOUSEPITCHPARAM;
+//                    CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
+//                    CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
+                
+                    
                     //Pitch轴不使用预判，直接使用最新帧数据的pitch数据作为目标数据
                     //Yaw轴使用预判
                     
@@ -396,7 +421,9 @@ void Task_Control(void *Parameters)
 #if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
         }
         else
-        {
+        {       
+            //旋转控制
+            
             //Pitch轴不使用预判，直接使用最新帧数据的pitch数据作为目标数据
             //Yaw轴使用预判
             
@@ -417,7 +444,7 @@ void Task_Control(void *Parameters)
             //计算目标角速度大小（编码器单位）
             if(VisionUpdataFlag)
             {
-                ForcastOnce(400, 200, &ForcastAngle, 0);        //预判 
+                ForcastOnce(400, 150, &ForcastAngle, 0);        //预判 
                 ForcastTarget.Target.H = ForcastAngle.H;
                 ForcastTarget.TargetTick = ControlLastTick + 150;
             }

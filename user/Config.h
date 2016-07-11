@@ -3,7 +3,7 @@
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
 #define VISIONDEBUG             0           //视觉debug模式
-#define INFANTRY                1           //1萨摩       2阿拉斯加       3哈士奇        4 边牧（没名字，先这么叫吧）     5 英雄
+#define INFANTRY                4           //1萨摩       2阿拉斯加       3哈士奇        4 边牧（没名字，先这么叫吧）     5 英雄
 #define INFANTRYTYPE            3           //车类型  1 AB车，且上电默认控制车(C)   2 AB车，上电默认非控制车(F)      3 独立车
 
 #if INFANTRY == 1               //萨摩参数↓
@@ -44,7 +44,7 @@
 #define MAXSHIFTSPEED           1200        //正常平移速度
 #define SNEAKSPEED              100         //潜行速度
 #define QESPINPARAM             0.9F        //QE自旋系数（越大自旋越快，过大会发生底盘响应跟不上）
-#define FRICMOTORWORKINGSPEED   305         //摩擦轮工作速度(230)
+#define FRICMOTORWORKINGSPEED   350         //摩擦轮工作速度(230)
 #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          20.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
@@ -60,7 +60,7 @@
 #define MAXSHIFTSPEED           1200        //正常平移速度
 #define SNEAKSPEED              100         //潜行速度
 #define QESPINPARAM             0.9F        //QE自旋系数（越大自旋越快，过大会发生底盘响应跟不上）
-#define FRICMOTORWORKINGSPEED   305         //摩擦轮工作速度(230)
+#define FRICMOTORWORKINGSPEED   315         //摩擦轮工作速度(230)
 #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
 #define POKESTEPMINTIMECRACK    215         //步进最小时间间隔（ms）
 #define MOUSESPINPARAM          20.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
