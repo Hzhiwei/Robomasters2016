@@ -23,9 +23,9 @@
 #define CHASSISCURRENTSETCANID          0x40
 
 
-#if INFANTRY == 1 || INFANTRY == 2 || INFANTRY == 3 || INFANTRY == 4
+#if INFANTRY == 1 || INFANTRY == 2 || INFANTRY == 3 || INFANTRY == 4 || INFANTRY == 5
 #define CHASSISMAXPOWER                 80.0F       //底盘最大功率
-#elif INFANTRY == 5
+#elif INFANTRY == 6
 #define CHASSISMAXPOWER                 160.0F      //底盘最大功率
 #endif
 

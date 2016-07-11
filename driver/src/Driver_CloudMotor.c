@@ -64,7 +64,7 @@ void CloudMotorCurrent(int16_t Pitch, int16_t Yaw)
     SendData.SendCanTxMsg.RTR   =   CAN_RTR_Data;
     SendData.SendCanTxMsg.StdId =   COULDCONTROLID;
     
-#if INFANTRY == 1 || INFANTRY == 2 || INFANTRY == 3 || INFANTRY == 5
+#if INFANTRY == 1 || INFANTRY == 2 || INFANTRY == 3 || INFANTRY == 6
     SendData.SendCanTxMsg.Data[0] = Yaw >> 8;
     SendData.SendCanTxMsg.Data[1] = Yaw;
     SendData.SendCanTxMsg.Data[2] = Pitch >> 8;
@@ -74,7 +74,7 @@ void CloudMotorCurrent(int16_t Pitch, int16_t Yaw)
     SendData.SendCanTxMsg.Data[6] = 0;
     SendData.SendCanTxMsg.Data[7] = 0;
     
-#elif INFANTRY == 4
+#elif INFANTRY == 4 || INFANTRY == 5
     SendData.SendCanTxMsg.Data[0] = (-Yaw) >> 8;
     SendData.SendCanTxMsg.Data[1] = (-Yaw);
     SendData.SendCanTxMsg.Data[2] = (-Pitch) >> 8;

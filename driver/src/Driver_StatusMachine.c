@@ -45,7 +45,6 @@ void StatusMachine_Update(void)
     static uint8_t BigSampleCounter = 0;
     static uint8_t AttackCounter = 0;
     static portTickType LastPCShutdownSignalTick = 0;
-    static ControlMode_Enum LAST_ControlMode;
     portTickType CurrentTick = xTaskGetTickCount();
     
     

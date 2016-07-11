@@ -91,11 +91,11 @@ AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t Pi
     AngleI_Struct ReturnData;
     float Distance = sqrt(X * X + Z * Z);
     float distance, radian;
-    float OneAngle;
+//    float OneAngle;
     float X0, Y0, Z0;
     
     //考虑荒地上底盘不水平情况，进行坐标轴距离变换（仅Pitch轴）
-    OneAngle = RealPitch - (PitchEncoder - PitchCenter) * 0.04395F - atan(Z / Y);
+//    OneAngle = RealPitch - (PitchEncoder - PitchCenter) * 0.04395F - atan(Z / Y);
 //    X0 = X;
 //    Y0 = sqrt(Z * Z + Y * Y) * sin(OneAngle);
 //    Z0 = sqrt(Z * Z + Y * Y) * cos(OneAngle);

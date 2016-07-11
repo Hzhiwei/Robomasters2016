@@ -414,6 +414,7 @@ void Task_Control(void *Parameters)
                 GunFric_Control(0);
             }
         }
+        //全自动模式
         else if(ControlMode == ControlMode_AUTO)
         {       
             //旋转控制
