@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Infantry_HZW.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Infantry_HZW.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Sun Jul 10 21:17:01 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Mon Jul 11 09:57:55 2016
 <BR><P>
 <H3>Maximum Stack Usage =        344 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -837,7 +837,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 </UL>
 
-<P><STRONG><a name="[b4]"></a>CloudMotorCurrent</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, driver_cloudmotor.o(i.CloudMotorCurrent))
+<P><STRONG><a name="[b4]"></a>CloudMotorCurrent</STRONG> (Thumb, 72 bytes, Stack size 16 bytes, driver_cloudmotor.o(i.CloudMotorCurrent))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = CloudMotorCurrent &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
@@ -864,7 +864,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 </UL>
 
-<P><STRONG><a name="[104]"></a>Cloud_YawAngleSet</STRONG> (Thumb, 70 bytes, Stack size 0 bytes, driver_cloudmotor.o(i.Cloud_YawAngleSet))
+<P><STRONG><a name="[104]"></a>Cloud_YawAngleSet</STRONG> (Thumb, 72 bytes, Stack size 0 bytes, driver_cloudmotor.o(i.Cloud_YawAngleSet))
 <BR><BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 </UL>
 
@@ -1286,7 +1286,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_Init
 </UL>
 
-<P><STRONG><a name="[c0]"></a>RecToPolar</STRONG> (Thumb, 650 bytes, Stack size 128 bytes, driver_vision.o(i.RecToPolar))
+<P><STRONG><a name="[c0]"></a>RecToPolar</STRONG> (Thumb, 648 bytes, Stack size 128 bytes, driver_vision.o(i.RecToPolar))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = RecToPolar &rArr; __hardfp_atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
@@ -1325,11 +1325,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StatusMachine_Update
 </UL>
 
-<P><STRONG><a name="[110]"></a>StatusMachine_InitConfig</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, driver_statusmachine.o(i.StatusMachine_InitConfig))
+<P><STRONG><a name="[110]"></a>StatusMachine_InitConfig</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, driver_statusmachine.o(i.StatusMachine_InitConfig))
 <BR><BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
 
-<P><STRONG><a name="[f5]"></a>StatusMachine_Update</STRONG> (Thumb, 398 bytes, Stack size 8 bytes, driver_statusmachine.o(i.StatusMachine_Update))
+<P><STRONG><a name="[f5]"></a>StatusMachine_Update</STRONG> (Thumb, 460 bytes, Stack size 8 bytes, driver_statusmachine.o(i.StatusMachine_Update))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = StatusMachine_Update &rArr; SendPCOrder
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetTickCount
@@ -1460,7 +1460,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> task_sysinitconfig.o(i.Task_SysInitConfig)
 </UL>
-<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 1940 bytes, Stack size 32 bytes, task_control.o(i.Task_Control))
+<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 2336 bytes, Stack size 32 bytes, task_control.o(i.Task_Control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = Task_Control &rArr; MPU9250_Update &rArr; MPU9250DMP_GetEuler &rArr; dmp_read_fifo &rArr; mpu_read_fifo_stream &rArr; mpu_reset_fifo &rArr; IIC_SendBuffer &rArr; IIC_SendByte
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU9250_Update

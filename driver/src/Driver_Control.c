@@ -24,11 +24,11 @@ void CloudPID_InitConfig(void)
 //    ABSTargetPitch = 0;
 //    ABSTargetYaw = 0;
     
-#if INFANTRYTYPE == 1
-    ABInfantryMode = ABInfantry_Master;
-#elif INFANTRYTYPE == 2
-    ABInfantryMode = ABInfantry_Slave;
-#endif
+//#if INFANTRYTYPE == 1
+//    ABInfantryMode = ABInfantry_Master;
+//#elif INFANTRYTYPE == 2
+//    ABInfantryMode = ABInfantry_Slave;
+//#endif
     
     
 #if INFANTRY == 1      //ÈøÄ¦

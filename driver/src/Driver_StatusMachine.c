@@ -25,7 +25,7 @@ void StatusMachine_InitConfig(void)
 {
     AutoMode = AutoMode_OFF;
     GunStatus = GunStatus_Stop;
-    ControlMode = ControlMode_Protect;
+    ControlMode = ControlMode_KM;
 }
 
 
@@ -38,14 +38,15 @@ void StatusMachine_InitConfig(void)
             左拨码开关2：键盘控制，右拨码开关3打开摩擦轮，鼠标右键自动射击
             QE自旋
   */
+    uint8_t FristToKM = 1;
 void StatusMachine_Update(void)
 {
     static uint8_t RateCounter = 0;
     static uint8_t BigSampleCounter = 0;
     static uint8_t AttackCounter = 0;
     static portTickType LastPCShutdownSignalTick = 0;
+    static ControlMode_Enum LAST_ControlMode;
     portTickType CurrentTick = xTaskGetTickCount();
-    
     
     
     //帧率过低停机
@@ -59,6 +60,8 @@ void StatusMachine_Update(void)
     //遥控器控制
     if(DBUS_ReceiveData.switch_left == 1)
     {
+        FristToKM = 1;
+        
         ControlMode = ControlMode_RC;
         
         //摩擦轮
@@ -81,7 +84,20 @@ void StatusMachine_Update(void)
     //键鼠控制
     else if(DBUS_ReceiveData.switch_left == 2)
     {
-        ControlMode = ControlMode_KM;
+        if(FristToKM == 1)
+        {
+            ControlMode = ControlMode_KM;
+            FristToKM = 0;
+        }
+        
+        if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
+        {
+            ControlMode = ControlMode_KM;
+        }
+        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
+        {
+            ControlMode = ControlMode_AUTO;
+        }
         
         //降低发送频率减小串口负担
         if(RateCounter == 4)
@@ -133,29 +149,31 @@ void StatusMachine_Update(void)
             RateCounter++;
         }
         
-#if INFANTRYTYPE == 1 
-        if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
-        {
-            ABInfantryMode = ABInfantry_Master;
-        }
-        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
-        {
-            ABInfantryMode = ABInfantry_Slave;
-        }
-#elif INFANTRYTYPE == 2
-        if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
-        {
-            ABInfantryMode = ABInfantry_Master;
-        }
-        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
-        {
-            ABInfantryMode = ABInfantry_Slave;
-        }
-#endif
+//#if INFANTRYTYPE == 1 
+//        if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
+//        {
+//            ABInfantryMode = ABInfantry_Master;
+//        }
+//        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
+//        {
+//            ABInfantryMode = ABInfantry_Slave;
+//        }
+//#elif INFANTRYTYPE == 2
+//        if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
+//        {
+//            ABInfantryMode = ABInfantry_Master;
+//        }
+//        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
+//        {
+//            ABInfantryMode = ABInfantry_Slave;
+//        }
+//#endif
     }
     //保护模式
     else
     {
+        FristToKM = 1;
+        
         ControlMode = ControlMode_Protect;
         
         //关机

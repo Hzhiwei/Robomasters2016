@@ -37,6 +37,7 @@ typedef enum
     ControlMode_Protect,          //保护模式，全部停止
     ControlMode_RC,               //遥控器控制（增量式）
     ControlMode_KM,               //键鼠控制
+    ControlMode_AUTO,             //自主控制
 }ControlMode_Enum;
 
 

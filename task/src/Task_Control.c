@@ -195,10 +195,6 @@ void Task_Control(void *Parameters)
         }
         else if(ControlMode == ControlMode_KM)
         {
-#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
-    if(ABInfantryMode == ABInfantry_Master)
-    {
-#endif
             //速度倍率设置
             if((DBUS_ReceiveData.keyBoard.key_code & KEY_V) & (!(LASTDBUS_ReceiveData.keyBoard.key_code & KEY_V)))
             {
@@ -417,10 +413,8 @@ void Task_Control(void *Parameters)
             {
                 GunFric_Control(0);
             }
-            
-#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
         }
-        else
+        else if(ControlMode == ControlMode_AUTO)
         {       
             //旋转控制
             
@@ -468,8 +462,6 @@ void Task_Control(void *Parameters)
             YawCurrent = VControl_YawPID(ForcastTargetEncoderOmega);
             
             CloudMotorCurrent(PitchCurrent, YawCurrent);
-        }
-#endif
         }
         else
         {

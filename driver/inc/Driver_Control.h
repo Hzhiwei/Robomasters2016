@@ -15,14 +15,14 @@
 #endif
 
 
-#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
-//AB车模式
-typedef enum
-{
-    ABInfantry_Master,      //主车，正常控制
-    ABInfantry_Slave        //从车，自动射击
-}ABInfantryMode_Enum;
-#endif
+//#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
+////AB车模式
+//typedef enum
+//{
+//    ABInfantry_Master,      //主车，正常控制
+//    ABInfantry_Slave        //从车，自动射击
+//}ABInfantryMode_Enum;
+//#endif
 
 
 //PID数据结构
@@ -56,10 +56,10 @@ __DRIVER_CONTROL_EXT PID_Type ChassisIPID, ChassisOPID;
 //预判速度PID
 __DRIVER_CONTROL_EXT PID_Type ForcastYawSpeedPID;
 
-#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
-//AB车模式
-__DRIVER_CONTROL_EXT ABInfantryMode_Enum ABInfantryMode;
-#endif
+//#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
+////AB车模式
+//__DRIVER_CONTROL_EXT ABInfantryMode_Enum ABInfantryMode;
+//#endif
 
 
 void CloudPID_InitConfig(void);
