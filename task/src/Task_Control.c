@@ -34,6 +34,8 @@ void Task_Control(void *Parameters)
     uint16_t dmpresetCounter = 0;
     AngleI_Struct ForcastAngle;     //预判结果
     int16_t PitchCurrent = 0, YawCurrent = 0;
+    portTickType LastVisionDataUpdateTick = 0;
+    portTickType LastAUTOShotTick = 0;
     
     for(;;)
     {
@@ -63,34 +65,106 @@ void Task_Control(void *Parameters)
 ////        //遥控器控制
         if(ControlMode == ControlMode_RC)
         {
+//            Chassis_Control(0);
+            
+      //全自动测试
+            
+//            
+//            //Pitch轴不使用预判，直接使用最新帧数据的pitch数据作为目标数据
+//            //Yaw轴使用预判
+//            
+//            //Pitch轴直接使用最新数据
+//            CloudParam.Pitch.AngleMode = AngleMode_Encoder;         //编码器模式
+//            
+//            ForcastAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
+//                                        EnemyDataBuffer[EnemyDataBufferPoint].Y, 
+//                                        EnemyDataBuffer[EnemyDataBufferPoint].Z, 
+//                                        Position.Euler.Pitch,
+//                                        CloudParam.Pitch.RealEncoderAngle,
+//                                        1);
+//            
+//            CloudParam.Pitch.EncoderTargetAngle = ForcastAngle.V + PitchCenter;
+//            PitchCurrent = Control_PitchPID();
+//            
+//            //Yaw轴速度跟随
+//            //计算目标角速度大小（编码器单位）
+//            if(VisionUpdataFlag)
+//            {
+//                LastVisionDataUpdateTick = ControlLastTick;
+//                ForcastOnce(400, 150, &ForcastAngle, 0);        //预判 
+//                ForcastTarget.Target.H = ForcastAngle.H;
+//                ForcastTarget.TargetTick = ControlLastTick + 150;
+//            }
+//            
+//            if(ForcastTarget.TargetTick > ControlLastTick)
+//            {
+//                if(ForcastTarget.TargetTick - ControlLastTick > 30)
+//                {
+//                    ForcastTargetEncoderOmega = ((float)ForcastAngle.H + YawCenter - CloudParam.Yaw.RealEncoderAngle) * 1000 / ((int)ForcastTarget.TargetTick - ControlLastTick);
+//                    if((ForcastTargetEncoderOmega < 500) && (ForcastTargetEncoderOmega > -500))
+//                    {
+//                        ForcastTargetEncoderOmega /= 3.5F;
+//                    }
+//                }
+//            }
+//            else
+//            {
+//                ForcastTargetEncoderOmega = 0;
+//            }
+//            
+//            YawCurrent = VControl_YawPID(ForcastTargetEncoderOmega);
+//            
+//            CloudMotorCurrent(PitchCurrent, YawCurrent);
+//            
+//            //底盘追随
+//            if(ControlLastTick - LastVisionDataUpdateTick < 300)
+//            {
+//                CloudParam.Yaw.ABSTargetAngle = SuperGyoAngle + (ForcastAngle.H * 0.04395);
+//                Chassis_Control(1, 1);
+//            }
+//            else if(ControlLastTick - LastVisionDataUpdateTick < 2500)
+//            {
+//                Chassis_Control(1, 0);
+//            }
+//            //丢帧2500s自旋开始
+//            else
+//            {
+//                CloudParam.Yaw.ABSTargetAngle += 1;
+//                Chassis_Control(1, 0);
+//            }
+//            
+//            //视觉帧标志位置0
+//            VisionUpdataFlag = 0;
+            
+            
 //      手动
-            CloudParam.Yaw.ABSTargetAngle -= DBUS_ReceiveData.ch3 / 600.0F;
-            Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
-            
-            CloudParam.Pitch.ABSTargetAngle += DBUS_ReceiveData.ch4 / 250.0F;
-            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
-            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
-            CloudParam.Pitch.AngleMode = AngleMode_ABS;
-            
-            Cloud_Adjust(1);
-            
-            //摩擦轮
-            if(GunStatus == GunStatus_Motor)
-            {
-                GunFric_Control(1);
-            }
-            else if(GunStatus == GunStatus_Shot)
-            {
-                GunFric_Control(1);
-                PokeMotor_Step();
-            }
-            else
-            {
-                GunFric_Control(0);
-            }
-            
-            Chassis_SpeedSet(DBUS_ReceiveData.ch2 * 900 / 660, DBUS_ReceiveData.ch1 * 900 / 660);
-            Chassis_Control(1);
+//            CloudParam.Yaw.ABSTargetAngle -= DBUS_ReceiveData.ch3 / 1500.0F;
+//            Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
+//            
+//            CloudParam.Pitch.ABSTargetAngle += DBUS_ReceiveData.ch4 / 250.0F;
+//            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
+//            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
+//            CloudParam.Pitch.AngleMode = AngleMode_ABS;
+//            
+//            Cloud_Adjust(1);
+//            
+//            //摩擦轮
+//            if(GunStatus == GunStatus_Motor)
+//            {
+//                GunFric_Control(1);
+//            }
+//            else if(GunStatus == GunStatus_Shot)
+//            {
+//                GunFric_Control(1);
+//                PokeMotor_Step();
+//            }
+//            else
+//            {
+//                GunFric_Control(0);
+//            }
+//            
+//            Chassis_SpeedSet(DBUS_ReceiveData.ch2 * 900 / 660, DBUS_ReceiveData.ch1 * 900 / 660);
+//            Chassis_Control(1, 0);
 
 
 ////      大符模式
@@ -164,34 +238,36 @@ void Task_Control(void *Parameters)
 //            }
             
 /******************     直接跟随的搓逼模式，战五的渣渣    **********************/
-//            if(EnemyDataBuffer[EnemyDataBufferPoint].ID)
-//            {
-//                AutoTargetAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
-//                                            EnemyDataBuffer[EnemyDataBufferPoint].Y,
-//                                            EnemyDataBuffer[EnemyDataBufferPoint].Z,
-//                                            Position.Euler.Pitch,
-//                                            CloudParam.Pitch.RealEncoderAngle,
-//                                            0);
-//                
-//                Cloud_YawAngleSet(AutoTargetAngle.H, 1);
-//                Cloud_PitchAngleSet(AutoTargetAngle.V, 1);
-//            
-//                Cloud_Adjust(1);
-//                    
-//                if(DBUS_ReceiveData.switch_right == 3)
-//                {
-//                    GunFric_Control(1);
-//                }
-//                else if(DBUS_ReceiveData.switch_right == 2)
-//                {
-//                    GunFric_Control(1);
-//                    PokeMotor_Step();
-//                }
-//                else
-//                {
-//                    GunFric_Control(0);
-//                }
-//            }
+            if(EnemyDataBuffer[EnemyDataBufferPoint].ID)
+            {
+                AutoTargetAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
+                                            EnemyDataBuffer[EnemyDataBufferPoint].Y,
+                                            EnemyDataBuffer[EnemyDataBufferPoint].Z,
+                                            Position.Euler.Pitch,
+                                            CloudParam.Pitch.RealEncoderAngle,
+                                            0);
+                
+                Cloud_YawAngleSet(AutoTargetAngle.H, 1);
+                Cloud_PitchAngleSet(AutoTargetAngle.V, 1);
+            
+                
+                
+                Cloud_Adjust(1);
+                    
+                if(DBUS_ReceiveData.switch_right == 3)
+                {
+                    GunFric_Control(1);
+                }
+                else if(DBUS_ReceiveData.switch_right == 2)
+                {
+                    GunFric_Control(1);
+                    PokeMotor_Step();
+                }
+                else
+                {
+                    GunFric_Control(0);
+                }
+            }
         }
         else if(ControlMode == ControlMode_KM)
         {
@@ -250,7 +326,7 @@ void Task_Control(void *Parameters)
                 YSpeed = 0;
             }
             Chassis_SpeedSet(XSpeed, YSpeed);
-            Chassis_Control(1);
+            Chassis_Control(1, 0);
             
             //补给站模式
             if(DBUS_ReceiveData.keyBoard.key_code & KEY_CTRL)
@@ -416,8 +492,15 @@ void Task_Control(void *Parameters)
         }
         //全自动模式
         else if(ControlMode == ControlMode_AUTO)
-        {       
-            //旋转控制
+        {
+            if(DBUS_ReceiveData.switch_right == 3)
+            {
+                GunFric_Control(1);
+            }
+            else
+            {
+                GunFric_Control(0);
+            }
             
             //Pitch轴不使用预判，直接使用最新帧数据的pitch数据作为目标数据
             //Yaw轴使用预判
@@ -439,9 +522,16 @@ void Task_Control(void *Parameters)
             //计算目标角速度大小（编码器单位）
             if(VisionUpdataFlag)
             {
+                LastVisionDataUpdateTick = ControlLastTick;
                 ForcastOnce(400, 150, &ForcastAngle, 0);        //预判 
                 ForcastTarget.Target.H = ForcastAngle.H;
                 ForcastTarget.TargetTick = ControlLastTick + 150;
+                
+                if((ControlLastTick - LastAUTOShotTick >= AUTOSHOTTICKCRACK) && (DBUS_ReceiveData.switch_right == 3))
+                {
+                    PokeMotor_Step();
+                    LastAUTOShotTick = ControlLastTick;
+                }
             }
             
             if(ForcastTarget.TargetTick > ControlLastTick)
@@ -463,6 +553,33 @@ void Task_Control(void *Parameters)
             YawCurrent = VControl_YawPID(ForcastTargetEncoderOmega);
             
             CloudMotorCurrent(PitchCurrent, YawCurrent);
+            
+            //底盘追随
+            if(ControlLastTick - LastVisionDataUpdateTick < 300)
+            {
+                CloudParam.Yaw.ABSTargetAngle = SuperGyoAngle + (ForcastAngle.H * 0.04395);
+                Chassis_Control(1, 1);
+            }
+            else if(ControlLastTick - LastVisionDataUpdateTick < 1000)
+            {
+                Chassis_Control(1, 0);
+            }
+            //丢帧2500s自旋开始
+            else
+            {
+                if(ForcastAngle.H > 0)
+                {
+                    CloudParam.Yaw.ABSTargetAngle += 0.5;
+                }
+                else
+                {
+                    CloudParam.Yaw.ABSTargetAngle -= 0.5;
+                }
+                Chassis_Control(1, 0);
+            }
+            
+            //视觉帧标志位置0
+            VisionUpdataFlag = 0;
         }
         else
         {

@@ -266,9 +266,9 @@ void Chassis_MotorDebug(void)
   * @param  0 Í£»ú        1 Õý³£
   * @retval void
   */
-void Chassis_Control(uint8_t mode)
+void Chassis_Control(uint8_t mode, uint8_t PIDChoie)
 {
-    Control_ChassisPID();
+    Control_ChassisPID(PIDChoie);
     Chassis_Adjust();
     Chassis_SendMotorParam(mode);
 }

@@ -107,6 +107,25 @@ void CloudPID_InitConfig(void)
     ChassisIPID.IMax = 0;
     ChassisIPID.PIDMax = 600;
     ChassisIPID.LastTick = 0;
+    
+    ChassisAUTOOPID.CurrentError = 0;
+    ChassisAUTOOPID.LastError = 0;
+    ChassisAUTOOPID.P = 10.3;
+    ChassisAUTOOPID.I = 0;
+    ChassisAUTOOPID.D = 0;
+    ChassisAUTOOPID.IMax = 0;
+    ChassisAUTOOPID.PIDMax = 500;
+    ChassisAUTOOPID.LastTick = 0;
+    
+    ChassisAUTOIPID.CurrentError = 0;
+    ChassisAUTOIPID.LastError = 0;
+    ChassisAUTOIPID.P = 1.2;
+    ChassisAUTOIPID.I = 0;
+    ChassisAUTOIPID.D = 0;
+    ChassisAUTOIPID.IMax = 0;
+    ChassisAUTOIPID.PIDMax = 600;
+    ChassisAUTOIPID.LastTick = 0;
+    
 #elif INFANTRY == 2        //阿拉斯加
 	YawOPID.LastError = 0;
 	YawOPID.P = 17;
@@ -168,21 +187,39 @@ void CloudPID_InitConfig(void)
     
     ChassisOPID.CurrentError = 0;
     ChassisOPID.LastError = 0;
-    ChassisOPID.P = 7.2;
-    ChassisOPID.I = 0;
+    ChassisOPID.P = 9;
+    ChassisOPID.I = 0.3;
     ChassisOPID.D = 0;
-    ChassisOPID.IMax = 0;
+    ChassisOPID.IMax = 50;
     ChassisOPID.PIDMax = 500;
     ChassisOPID.LastTick = 0;
     
     ChassisIPID.CurrentError = 0;
     ChassisIPID.LastError = 0;
-    ChassisIPID.P = 1.6;
+    ChassisIPID.P = 1.8;
     ChassisIPID.I = 0;
     ChassisIPID.D = 0;
     ChassisIPID.IMax = 0;
     ChassisIPID.PIDMax = 600;
     ChassisIPID.LastTick = 0;
+    
+    ChassisAUTOOPID.CurrentError = 0;
+    ChassisAUTOOPID.LastError = 0;
+    ChassisAUTOOPID.P = 12;
+    ChassisAUTOOPID.I = 0;
+    ChassisAUTOOPID.D = 0;
+    ChassisAUTOOPID.IMax = 0;
+    ChassisAUTOOPID.PIDMax = 500;
+    ChassisAUTOOPID.LastTick = 0;
+    
+    ChassisAUTOIPID.CurrentError = 0;
+    ChassisAUTOIPID.LastError = 0;
+    ChassisAUTOIPID.P = 1;
+    ChassisAUTOIPID.I = 0;
+    ChassisAUTOIPID.D = 0;
+    ChassisAUTOIPID.IMax = 0;
+    ChassisAUTOIPID.PIDMax = 600;
+    ChassisAUTOIPID.LastTick = 0;
 #elif INFANTRY == 3        //哈士奇
 	YawOPID.LastError = 0;
 	YawOPID.P = 12;
@@ -261,6 +298,24 @@ void CloudPID_InitConfig(void)
     ChassisIPID.PIDMax = 800;
     ChassisIPID.LastTick = 0;
     
+    ChassisAUTOOPID.CurrentError = 0;
+    ChassisAUTOOPID.LastError = 0;
+    ChassisAUTOOPID.P = 10;
+    ChassisAUTOOPID.I = 0;
+    ChassisAUTOOPID.D = 0;
+    ChassisAUTOOPID.IMax = 0;
+    ChassisAUTOOPID.PIDMax = 500;
+    ChassisAUTOOPID.LastTick = 0;
+    
+    ChassisAUTOIPID.CurrentError = 0;
+    ChassisAUTOIPID.LastError = 0;
+    ChassisAUTOIPID.P = 1;
+    ChassisAUTOIPID.I = 0;
+    ChassisAUTOIPID.D = 0;
+    ChassisAUTOIPID.IMax = 0;
+    ChassisAUTOIPID.PIDMax = 800;
+    ChassisAUTOIPID.LastTick = 0;
+    
 #elif INFANTRY == 4     //边牧（没名字，先这么叫吧）
 
 	YawOPID.LastError = 0;
@@ -280,10 +335,10 @@ void CloudPID_InitConfig(void)
 	YawIPID.LastTick = 0;
     
 	ForcastYawSpeedPID.LastError = 0;
-	ForcastYawSpeedPID.P = 0.1F;
-	ForcastYawSpeedPID.I = 0.1;
-	ForcastYawSpeedPID.D = 0.5;
-	ForcastYawSpeedPID.IMax = 300;
+	ForcastYawSpeedPID.P = 0.29F;
+	ForcastYawSpeedPID.I = 0.1F;
+	ForcastYawSpeedPID.D = 2.5F;
+	ForcastYawSpeedPID.IMax = 50;
 	ForcastYawSpeedPID.PIDMax = 5000;
 	ForcastYawSpeedPID.LastTick = 0;
 	
@@ -339,6 +394,24 @@ void CloudPID_InitConfig(void)
     ChassisIPID.IMax = 0;
     ChassisIPID.PIDMax = 600;
     ChassisIPID.LastTick = 0;
+    
+    ChassisAUTOOPID.CurrentError = 0;
+    ChassisAUTOOPID.LastError = 0;
+    ChassisAUTOOPID.P = 10.3;
+    ChassisAUTOOPID.I = 0;
+    ChassisAUTOOPID.D = 0;
+    ChassisAUTOOPID.IMax = 0;
+    ChassisAUTOOPID.PIDMax = 500;
+    ChassisAUTOOPID.LastTick = 0;
+    
+    ChassisAUTOIPID.CurrentError = 0;
+    ChassisAUTOIPID.LastError = 0;
+    ChassisAUTOIPID.P = 1;
+    ChassisAUTOIPID.I = 0;
+    ChassisAUTOIPID.D = 0;
+    ChassisAUTOIPID.IMax = 0;
+    ChassisAUTOIPID.PIDMax = 600;
+    ChassisAUTOIPID.LastTick = 0;
     
 #elif INFANTRY == 5     //狗蛋
 
@@ -419,6 +492,24 @@ void CloudPID_InitConfig(void)
     ChassisIPID.PIDMax = 600;
     ChassisIPID.LastTick = 0;
     
+    ChassisAUTOOPID.CurrentError = 0;
+    ChassisAUTOOPID.LastError = 0;
+    ChassisAUTOOPID.P = 10.3;
+    ChassisAUTOOPID.I = 0;
+    ChassisAUTOOPID.D = 0;
+    ChassisAUTOOPID.IMax = 0;
+    ChassisAUTOOPID.PIDMax = 500;
+    ChassisAUTOOPID.LastTick = 0;
+    
+    ChassisAUTOIPID.CurrentError = 0;
+    ChassisAUTOIPID.LastError = 0;
+    ChassisAUTOIPID.P = 1;
+    ChassisAUTOIPID.I = 0;
+    ChassisAUTOIPID.D = 0;
+    ChassisAUTOIPID.IMax = 0;
+    ChassisAUTOIPID.PIDMax = 600;
+    ChassisAUTOIPID.LastTick = 0;
+    
 #elif INFANTRY == 6     //英雄
 
 	YawOPID.LastError = 0;
@@ -496,6 +587,24 @@ void CloudPID_InitConfig(void)
     ChassisIPID.IMax = 0;
     ChassisIPID.PIDMax = 600;
     ChassisIPID.LastTick = 0;
+    
+    ChassisAUTOOPID.CurrentError = 0;
+    ChassisAUTOOPID.LastError = 0;
+    ChassisAUTOOPID.P = 13;
+    ChassisAUTOOPID.I = 0;
+    ChassisAUTOOPID.D = 0;
+    ChassisAUTOOPID.IMax = 0;
+    ChassisAUTOOPID.PIDMax = 500;
+    ChassisAUTOOPID.LastTick = 0;
+    
+    ChassisAUTOIPID.CurrentError = 0;
+    ChassisAUTOIPID.LastError = 0;
+    ChassisAUTOIPID.P = 2.1;
+    ChassisAUTOIPID.I = 0;
+    ChassisAUTOIPID.D = 0;
+    ChassisAUTOIPID.IMax = 0;
+    ChassisAUTOIPID.PIDMax = 600;
+    ChassisAUTOIPID.LastTick = 0;
 #endif
 }
 
@@ -659,42 +768,80 @@ int16_t Control_PokeIPID(void)
 
 /**
   * @brief  底盘角速度PID
-  * @param  void
+  * @param  0 正常PID         1 自动跟踪PID
   * @retval void
   */
-void Control_ChassisPID(void)
+void Control_ChassisPID(uint8_t PIDChoie)
 {
-    /************************************       外环PID       ************************************/
-    ChassisOPID.CurrentError = CloudParam.Yaw.ABSTargetAngle - SuperGyoAngle;
-    
-    ChassisOPID.Pout = ChassisOPID.P * ChassisOPID.CurrentError;
-    
-    ChassisOPID.Iout = ChassisOPID.I * ChassisOPID.CurrentError;
-    ChassisOPID.Iout = ChassisOPID.Iout > ChassisOPID.IMax ? ChassisOPID.IMax : ChassisOPID.Iout;
-    ChassisOPID.Iout = ChassisOPID.Iout < -ChassisOPID.IMax ? -ChassisOPID.IMax : ChassisOPID.Iout;
-    
-    ChassisOPID.Dout = ChassisOPID.D * (ChassisOPID.CurrentError - ChassisOPID.LastError);
-    
-    ChassisOPID.PIDout = ChassisOPID.Pout + ChassisOPID.Iout + ChassisOPID.Dout;
-    ChassisOPID.PIDout = ChassisOPID.PIDout > ChassisOPID.PIDMax ? ChassisOPID.PIDMax : ChassisOPID.PIDout;
-    ChassisOPID.PIDout = ChassisOPID.PIDout < -ChassisOPID.PIDMax ? -ChassisOPID.PIDMax : ChassisOPID.PIDout;
-    
-    /************************************       内环PID       ************************************/
-    ChassisIPID.CurrentError = ChassisOPID.PIDout - SuperGyoOmega;
-    
-    ChassisIPID.Pout = ChassisIPID.P * ChassisIPID.CurrentError;
-    
-    ChassisIPID.Iout = ChassisIPID.I * ChassisIPID.CurrentError;
-    ChassisIPID.Iout = ChassisIPID.Iout > ChassisIPID.IMax ? ChassisIPID.IMax : ChassisIPID.Iout;
-    ChassisIPID.Iout = ChassisIPID.Iout < -ChassisIPID.IMax ? -ChassisIPID.IMax : ChassisIPID.Iout;
-    
-    ChassisIPID.Dout = ChassisIPID.D * (ChassisIPID.CurrentError - ChassisIPID.LastError);
-    
-    ChassisIPID.PIDout = -(ChassisIPID.Pout + ChassisIPID.Iout + ChassisIPID.Dout);
-    ChassisIPID.PIDout = ChassisIPID.PIDout > ChassisIPID.PIDMax ? ChassisIPID.PIDMax : ChassisIPID.PIDout;
-    ChassisIPID.PIDout = ChassisIPID.PIDout < -ChassisIPID.PIDMax ? -ChassisIPID.PIDMax : ChassisIPID.PIDout;
-    
-    ChassisParam.Omega = ChassisIPID.PIDout;
+    //正常PID 
+    if(PIDChoie == 0)
+    {
+        /************************************       外环PID       ************************************/
+        ChassisOPID.CurrentError = CloudParam.Yaw.ABSTargetAngle - SuperGyoAngle;
+        
+        ChassisOPID.Pout = ChassisOPID.P * ChassisOPID.CurrentError;
+        
+        ChassisOPID.Iout = ChassisOPID.I * ChassisOPID.CurrentError;
+        ChassisOPID.Iout = ChassisOPID.Iout > ChassisOPID.IMax ? ChassisOPID.IMax : ChassisOPID.Iout;
+        ChassisOPID.Iout = ChassisOPID.Iout < -ChassisOPID.IMax ? -ChassisOPID.IMax : ChassisOPID.Iout;
+        
+        ChassisOPID.Dout = ChassisOPID.D * (ChassisOPID.CurrentError - ChassisOPID.LastError);
+        
+        ChassisOPID.PIDout = ChassisOPID.Pout + ChassisOPID.Iout + ChassisOPID.Dout;
+        ChassisOPID.PIDout = ChassisOPID.PIDout > ChassisOPID.PIDMax ? ChassisOPID.PIDMax : ChassisOPID.PIDout;
+        ChassisOPID.PIDout = ChassisOPID.PIDout < -ChassisOPID.PIDMax ? -ChassisOPID.PIDMax : ChassisOPID.PIDout;
+        
+        /************************************       内环PID       ************************************/
+        ChassisIPID.CurrentError = ChassisOPID.PIDout - SuperGyoOmega;
+        
+        ChassisIPID.Pout = ChassisIPID.P * ChassisIPID.CurrentError;
+        
+        ChassisIPID.Iout = ChassisIPID.I * ChassisIPID.CurrentError;
+        ChassisIPID.Iout = ChassisIPID.Iout > ChassisIPID.IMax ? ChassisIPID.IMax : ChassisIPID.Iout;
+        ChassisIPID.Iout = ChassisIPID.Iout < -ChassisIPID.IMax ? -ChassisIPID.IMax : ChassisIPID.Iout;
+        
+        ChassisIPID.Dout = ChassisIPID.D * (ChassisIPID.CurrentError - ChassisIPID.LastError);
+        
+        ChassisIPID.PIDout = -(ChassisIPID.Pout + ChassisIPID.Iout + ChassisIPID.Dout);
+        ChassisIPID.PIDout = ChassisIPID.PIDout > ChassisIPID.PIDMax ? ChassisIPID.PIDMax : ChassisIPID.PIDout;
+        ChassisIPID.PIDout = ChassisIPID.PIDout < -ChassisIPID.PIDMax ? -ChassisIPID.PIDMax : ChassisIPID.PIDout;
+        
+        ChassisParam.Omega = ChassisIPID.PIDout;
+    }
+    else
+    {
+        /************************************       外环PID       ************************************/
+        ChassisAUTOOPID.CurrentError = CloudParam.Yaw.ABSTargetAngle - SuperGyoAngle;
+        
+        ChassisAUTOOPID.Pout = ChassisAUTOOPID.P * ChassisAUTOOPID.CurrentError;
+        
+        ChassisAUTOOPID.Iout = ChassisAUTOOPID.I * ChassisAUTOOPID.CurrentError;
+        ChassisAUTOOPID.Iout = ChassisAUTOOPID.Iout > ChassisAUTOOPID.IMax ? ChassisAUTOOPID.IMax : ChassisAUTOOPID.Iout;
+        ChassisAUTOOPID.Iout = ChassisAUTOOPID.Iout < -ChassisAUTOOPID.IMax ? -ChassisAUTOOPID.IMax : ChassisAUTOOPID.Iout;
+        
+        ChassisAUTOOPID.Dout = ChassisAUTOOPID.D * (ChassisAUTOOPID.CurrentError - ChassisAUTOOPID.LastError);
+        
+        ChassisAUTOOPID.PIDout = ChassisAUTOOPID.Pout + ChassisAUTOOPID.Iout + ChassisAUTOOPID.Dout;
+        ChassisAUTOOPID.PIDout = ChassisAUTOOPID.PIDout > ChassisAUTOOPID.PIDMax ? ChassisAUTOOPID.PIDMax : ChassisAUTOOPID.PIDout;
+        ChassisAUTOOPID.PIDout = ChassisAUTOOPID.PIDout < -ChassisAUTOOPID.PIDMax ? -ChassisAUTOOPID.PIDMax : ChassisAUTOOPID.PIDout;
+        
+        /************************************       内环PID       ************************************/
+        ChassisAUTOIPID.CurrentError = ChassisAUTOOPID.PIDout - SuperGyoOmega;
+        
+        ChassisAUTOIPID.Pout = ChassisAUTOIPID.P * ChassisAUTOIPID.CurrentError;
+        
+        ChassisAUTOIPID.Iout = ChassisAUTOIPID.I * ChassisAUTOIPID.CurrentError;
+        ChassisAUTOIPID.Iout = ChassisAUTOIPID.Iout > ChassisAUTOIPID.IMax ? ChassisAUTOIPID.IMax : ChassisAUTOIPID.Iout;
+        ChassisAUTOIPID.Iout = ChassisAUTOIPID.Iout < -ChassisAUTOIPID.IMax ? -ChassisAUTOIPID.IMax : ChassisAUTOIPID.Iout;
+        
+        ChassisAUTOIPID.Dout = ChassisAUTOIPID.D * (ChassisAUTOIPID.CurrentError - ChassisAUTOIPID.LastError);
+        
+        ChassisAUTOIPID.PIDout = -(ChassisAUTOIPID.Pout + ChassisAUTOIPID.Iout + ChassisAUTOIPID.Dout);
+        ChassisAUTOIPID.PIDout = ChassisAUTOIPID.PIDout > ChassisAUTOIPID.PIDMax ? ChassisAUTOIPID.PIDMax : ChassisAUTOIPID.PIDout;
+        ChassisAUTOIPID.PIDout = ChassisAUTOIPID.PIDout < -ChassisAUTOIPID.PIDMax ? -ChassisAUTOIPID.PIDMax : ChassisAUTOIPID.PIDout;
+        
+        ChassisParam.Omega = ChassisAUTOIPID.PIDout;
+    }
 }
 
 

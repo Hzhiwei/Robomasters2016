@@ -155,47 +155,47 @@ void Task_Monitor(void *Parameters)
 /**************************************************************************************************/
 /**************************  ↓   警告标志置位   ↓  **************************/
         //DBUS
-//        if(SysErrorStatus & 0x0001)
-//        {
-//            Bell_BarkWarning(2, MAXAWarning);
-//        }
-//        //yaw云台电机
-//        else if(SysErrorStatus & 0x0004)
-//        {
-//            Bell_BarkWarning(3, MAXAWarning);
-//        }
-//        //pitch云台电机
-//        else if(SysErrorStatus & 0x0002)
-//        {
-//            Bell_BarkWarning(4, MAXAWarning);
-//        }
-//        //底盘陀螺仪
-//        else if(SysErrorStatus & 0x0020)
-//        {
-//            Bell_BarkWarning(7, MAXAWarning);
-//        }
-//        //左前底盘电机
-//        else if(SysErrorStatus & 0x0040)
-//        {
-//            Bell_BarkWarning(8, MAXAWarning);
-//        }
-//        //右前底盘电机
-//        else if(SysErrorStatus & 0x0080)
-//        {
-//            Bell_BarkWarning(9, MAXAWarning);
-//        }
-//        //左后底盘电机
-//        else if(SysErrorStatus & 0x0100)
-//        {
-//            Bell_BarkWarning(10, MAXAWarning);
-//        }
-//        //右后底盘电机
-//        else if(SysErrorStatus & 0x0200)
-//        {
-//            Bell_BarkWarning(11, MAXAWarning);
-//        }
+        if(SysErrorStatus & 0x0001)
+        {
+            Bell_BarkWarning(2, MAXAWarning);
+        }
+        //yaw云台电机
+        else if(SysErrorStatus & 0x0004)
+        {
+            Bell_BarkWarning(3, MAXAWarning);
+        }
+        //pitch云台电机
+        else if(SysErrorStatus & 0x0002)
+        {
+            Bell_BarkWarning(4, MAXAWarning);
+        }
+        //底盘陀螺仪
+        else if(SysErrorStatus & 0x0020)
+        {
+            Bell_BarkWarning(7, MAXAWarning);
+        }
+        //左前底盘电机
+        else if(SysErrorStatus & 0x0040)
+        {
+            Bell_BarkWarning(8, MAXAWarning);
+        }
+        //右前底盘电机
+        else if(SysErrorStatus & 0x0080)
+        {
+            Bell_BarkWarning(9, MAXAWarning);
+        }
+        //左后底盘电机
+        else if(SysErrorStatus & 0x0100)
+        {
+            Bell_BarkWarning(10, MAXAWarning);
+        }
+        //右后底盘电机
+        else if(SysErrorStatus & 0x0200)
+        {
+            Bell_BarkWarning(11, MAXAWarning);
+        }
         //裁判系统
-        /*else */if(SysErrorStatus & 0x0400)
+        else if(SysErrorStatus & 0x0400)
         {
             Bell_BarkWarning(12, MAXAWarning);
         }

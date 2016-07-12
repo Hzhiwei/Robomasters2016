@@ -53,6 +53,8 @@ __DRIVER_CONTROL_EXT PID_Type PitchOPID, YawOPID, PitchIPID, YawIPID;
 __DRIVER_CONTROL_EXT PID_Type PokeIPID, PokeOPID;     
 //底盘角度PID
 __DRIVER_CONTROL_EXT PID_Type ChassisIPID, ChassisOPID; 
+//底盘自动角度PID
+__DRIVER_CONTROL_EXT PID_Type ChassisAUTOIPID, ChassisAUTOOPID; 
 //预判速度PID
 __DRIVER_CONTROL_EXT PID_Type ForcastYawSpeedPID;
 
@@ -66,7 +68,7 @@ void CloudPID_InitConfig(void);
 int16_t Control_YawPID(void);
 int16_t Control_PitchPID(void);
 int16_t Control_PokeIPID(void);
-void Control_ChassisPID(void);
+void Control_ChassisPID(uint8_t PIDChoie);
 int16_t VControl_YawPID(float TargetOmega);
 
 
