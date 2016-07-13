@@ -80,6 +80,7 @@ __DRIVER_CHASSIS_EXT uint16_t ChassisFrameCounter[4];
 __DRIVER_CHASSIS_EXT uint16_t ChassisFrameRate[4];  
 
 
+
 void Chassis_InitConfig(void);
 void Chassis_Adjust(void);
 void Chassis_SendMotorParam(uint8_t mode);

@@ -285,7 +285,7 @@ void Task_Control(void *Parameters)
             }
             
             //前后
-            if((DBUS_ReceiveData.keyBoard.key_code & KEY_W) && (DBUS_ReceiveData.keyBoard.key_code & KEY_CTRL))
+            if((DBUS_ReceiveData.keyBoard.key_code & KEY_W) && (SneakMode))
             {
                 //潜行模式（进补给站）
                 XSpeed = SNEAKSPEED;
@@ -329,7 +329,7 @@ void Task_Control(void *Parameters)
             Chassis_Control(1, 0);
             
             //补给站模式
-            if(DBUS_ReceiveData.keyBoard.key_code & KEY_CTRL)
+            if(SneakMode)
             {
                 Steering_Control(1);//舱门控制
                 
@@ -569,11 +569,11 @@ void Task_Control(void *Parameters)
             {
                 if(ForcastAngle.H > 0)
                 {
-                    CloudParam.Yaw.ABSTargetAngle += 0.5;
+                    CloudParam.Yaw.ABSTargetAngle += 0.5F;
                 }
                 else
                 {
-                    CloudParam.Yaw.ABSTargetAngle -= 0.5;
+                    CloudParam.Yaw.ABSTargetAngle -= 0.5F;
                 }
                 Chassis_Control(1, 0);
             }
@@ -583,6 +583,7 @@ void Task_Control(void *Parameters)
         }
         else
         {
+            Steering_Control(0);
             Cloud_Adjust(0);
             Chassis_MotorDebug();       //电机调试模式，速度0，电流700
             GunFric_Control(0);

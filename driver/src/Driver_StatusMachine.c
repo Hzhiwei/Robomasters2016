@@ -26,6 +26,7 @@ void StatusMachine_InitConfig(void)
     AutoMode = AutoMode_OFF;
     GunStatus = GunStatus_Stop;
     ControlMode = ControlMode_KM;
+    SneakMode = 0;
 }
 
 
@@ -87,6 +88,16 @@ void StatusMachine_Update(void)
         {
             ControlMode = ControlMode_KM;
             FristToKM = 0;
+        }
+        
+        //Ç±ÐÐ¿ØÖÆ
+        if(DBUS_ReceiveData.keyBoard.key_code & KEY_CTRL)
+        {
+            SneakMode = 1;
+        }
+        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_SHIFT)
+        {
+            SneakMode = 0;
         }
         
         if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)

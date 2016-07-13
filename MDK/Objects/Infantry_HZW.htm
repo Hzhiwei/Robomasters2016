@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Infantry_HZW.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Infantry_HZW.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Wed Jul 13 15:12:11 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Wed Jul 13 17:01:58 2016
 <BR><P>
 <H3>Maximum Stack Usage =        368 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -864,7 +864,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 </UL>
 
-<P><STRONG><a name="[104]"></a>Cloud_YawAngleSet</STRONG> (Thumb, 74 bytes, Stack size 0 bytes, driver_cloudmotor.o(i.Cloud_YawAngleSet))
+<P><STRONG><a name="[104]"></a>Cloud_YawAngleSet</STRONG> (Thumb, 72 bytes, Stack size 0 bytes, driver_cloudmotor.o(i.Cloud_YawAngleSet))
 <BR><BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 </UL>
 
@@ -1325,11 +1325,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StatusMachine_Update
 </UL>
 
-<P><STRONG><a name="[112]"></a>StatusMachine_InitConfig</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, driver_statusmachine.o(i.StatusMachine_InitConfig))
+<P><STRONG><a name="[112]"></a>StatusMachine_InitConfig</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, driver_statusmachine.o(i.StatusMachine_InitConfig))
 <BR><BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
 
-<P><STRONG><a name="[f5]"></a>StatusMachine_Update</STRONG> (Thumb, 460 bytes, Stack size 8 bytes, driver_statusmachine.o(i.StatusMachine_Update))
+<P><STRONG><a name="[f5]"></a>StatusMachine_Update</STRONG> (Thumb, 494 bytes, Stack size 8 bytes, driver_statusmachine.o(i.StatusMachine_Update))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = StatusMachine_Update &rArr; SendPCOrder
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetTickCount
@@ -1460,7 +1460,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> task_sysinitconfig.o(i.Task_SysInitConfig)
 </UL>
-<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 2614 bytes, Stack size 56 bytes, task_control.o(i.Task_Control))
+<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 2560 bytes, Stack size 56 bytes, task_control.o(i.Task_Control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 368<LI>Call Chain = Task_Control &rArr; MPU9250_Update &rArr; MPU9250DMP_GetEuler &rArr; dmp_read_fifo &rArr; mpu_read_fifo_stream &rArr; mpu_reset_fifo &rArr; IIC_SendBuffer &rArr; IIC_SendByte
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU9250_Update
@@ -1485,7 +1485,6 @@ Global Symbols
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
-<LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
@@ -2248,9 +2247,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[155]"></a>vListInitialise</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, list.o(i.vListInitialise))
-<BR><BR>[Called By]<UL><LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseTaskLists
-<LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReset
+<BR><BR>[Called By]<UL><LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReset
 <LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckForValidListAndQueue
+<LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseTaskLists
 </UL>
 
 <P><STRONG><a name="[161]"></a>vListInitialiseItem</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, list.o(i.vListInitialiseItem))
@@ -2551,13 +2550,13 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 144 + Unknown Stack Size
 <LI>Call Chain = xTaskGenericCreate &rArr; prvAllocateTCBAndStack &rArr; pvPortMalloc &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseTaskLists
-<LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseTCBVariables
+<BR>[Calls]<UL><LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseTCBVariables
 <LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAllocateTCBAndStack
 <LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
 <LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[184]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pxPortInitialiseStack
 <LI><a href="#[175]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
+<LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseTaskLists
 </UL>
 <BR>[Called By]<UL><LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
@@ -2796,7 +2795,6 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_dsub
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RecToPolar
-<LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 <LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
 <LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_asin

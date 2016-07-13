@@ -45,6 +45,8 @@ typedef enum
 __DRIVER_STATUSMACHINE_EXT  AutoMode_Enum           AutoMode;
 __DRIVER_STATUSMACHINE_EXT  GunStatus_Enum          GunStatus;
 __DRIVER_STATUSMACHINE_EXT  ControlMode_Enum        ControlMode;
+//Ç±ÐÐÄ£Ê½
+__DRIVER_STATUSMACHINE_EXT uint8_t SneakMode;  
 
 
 void StatusMachine_InitConfig(void);
