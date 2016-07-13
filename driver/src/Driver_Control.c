@@ -147,7 +147,7 @@ void CloudPID_InitConfig(void)
 	ForcastYawSpeedPID.P = 1;
 	ForcastYawSpeedPID.I = 0.2;
 	ForcastYawSpeedPID.D = 3.7;
-	ForcastYawSpeedPID.IMax = 100;
+	ForcastYawSpeedPID.IMax = 50;
 	ForcastYawSpeedPID.PIDMax = 5000;
 	ForcastYawSpeedPID.LastTick = 0;
 	
@@ -345,9 +345,9 @@ void CloudPID_InitConfig(void)
 	
 	PitchOPID.LastError = 0;
 	PitchOPID.P = 11;
-	PitchOPID.I = 0;
+	PitchOPID.I = 0.1;
 	PitchOPID.D = 0;
-	PitchOPID.IMax = 0;
+	PitchOPID.IMax = 75;
 	PitchOPID.PIDMax = 8000;
 	PitchOPID.LastTick = 0;
 	

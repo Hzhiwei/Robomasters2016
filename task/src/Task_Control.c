@@ -138,33 +138,33 @@ void Task_Control(void *Parameters)
             
             
 //      手动
-//            CloudParam.Yaw.ABSTargetAngle -= DBUS_ReceiveData.ch3 / 1500.0F;
-//            Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
-//            
-//            CloudParam.Pitch.ABSTargetAngle += DBUS_ReceiveData.ch4 / 250.0F;
-//            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
-//            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
-//            CloudParam.Pitch.AngleMode = AngleMode_ABS;
-//            
-//            Cloud_Adjust(1);
-//            
-//            //摩擦轮
-//            if(GunStatus == GunStatus_Motor)
-//            {
-//                GunFric_Control(1);
-//            }
-//            else if(GunStatus == GunStatus_Shot)
-//            {
-//                GunFric_Control(1);
-//                PokeMotor_Step();
-//            }
-//            else
-//            {
-//                GunFric_Control(0);
-//            }
-//            
-//            Chassis_SpeedSet(DBUS_ReceiveData.ch2 * 900 / 660, DBUS_ReceiveData.ch1 * 900 / 660);
-//            Chassis_Control(1, 0);
+            CloudParam.Yaw.ABSTargetAngle -= DBUS_ReceiveData.ch3 / 900.0F;
+            Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
+            
+            CloudParam.Pitch.ABSTargetAngle += DBUS_ReceiveData.ch4 / 250.0F;
+            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : CloudParam.Pitch.ABSTargetAngle;
+            CloudParam.Pitch.ABSTargetAngle = CloudParam.Pitch.ABSTargetAngle < ABSPITCHDOWNLIMIT ? ABSPITCHDOWNLIMIT : CloudParam.Pitch.ABSTargetAngle;
+            CloudParam.Pitch.AngleMode = AngleMode_ABS;
+            
+            Cloud_Adjust(1);
+            
+            //摩擦轮
+            if(GunStatus == GunStatus_Motor)
+            {
+                GunFric_Control(1);
+            }
+            else if(GunStatus == GunStatus_Shot)
+            {
+                GunFric_Control(1);
+                PokeMotor_Step();
+            }
+            else
+            {
+                GunFric_Control(0);
+            }
+            
+            Chassis_SpeedSet(DBUS_ReceiveData.ch2 * 900 / 660, DBUS_ReceiveData.ch1 * 900 / 660);
+            Chassis_Control(1, 0);
 
 
 ////      大符模式
@@ -238,36 +238,36 @@ void Task_Control(void *Parameters)
 //            }
             
 /******************     直接跟随的搓逼模式，战五的渣渣    **********************/
-            if(EnemyDataBuffer[EnemyDataBufferPoint].ID)
-            {
-                AutoTargetAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
-                                            EnemyDataBuffer[EnemyDataBufferPoint].Y,
-                                            EnemyDataBuffer[EnemyDataBufferPoint].Z,
-                                            Position.Euler.Pitch,
-                                            CloudParam.Pitch.RealEncoderAngle,
-                                            0);
-                
-                Cloud_YawAngleSet(AutoTargetAngle.H, 1);
-                Cloud_PitchAngleSet(AutoTargetAngle.V, 1);
-            
-                
-                
-                Cloud_Adjust(1);
-                    
-                if(DBUS_ReceiveData.switch_right == 3)
-                {
-                    GunFric_Control(1);
-                }
-                else if(DBUS_ReceiveData.switch_right == 2)
-                {
-                    GunFric_Control(1);
-                    PokeMotor_Step();
-                }
-                else
-                {
-                    GunFric_Control(0);
-                }
-            }
+//            if(EnemyDataBuffer[EnemyDataBufferPoint].ID)
+//            {
+//                AutoTargetAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, 
+//                                            EnemyDataBuffer[EnemyDataBufferPoint].Y,
+//                                            EnemyDataBuffer[EnemyDataBufferPoint].Z,
+//                                            Position.Euler.Pitch,
+//                                            CloudParam.Pitch.RealEncoderAngle,
+//                                            1);
+//                
+//                Cloud_YawAngleSet(AutoTargetAngle.H, 1);
+//                Cloud_PitchAngleSet(AutoTargetAngle.V, 1);
+//            
+//                
+//                
+//                Cloud_Adjust(1);
+//                    
+//                if(DBUS_ReceiveData.switch_right == 3)
+//                {
+//                    GunFric_Control(1);
+//                }
+//                else if(DBUS_ReceiveData.switch_right == 2)
+//                {
+//                    GunFric_Control(1);
+//                    PokeMotor_Step();
+//                }
+//                else
+//                {
+//                    GunFric_Control(0);
+//                }
+//            }
         }
         else if(ControlMode == ControlMode_KM)
         {

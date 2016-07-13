@@ -249,14 +249,14 @@ void Chassis_MotorDebug(void)
     xQueueSend(Queue_CANSend, &SendData, 10);
     
     SendData.SendCanTxMsg.StdId =   CHASSISCURRENTSETCANID;
-    SendData.SendCanTxMsg.Data[1] = 0x02;
-    SendData.SendCanTxMsg.Data[0] = 0xBC;
-    SendData.SendCanTxMsg.Data[3] = 0x02;
-    SendData.SendCanTxMsg.Data[2] = 0xBC;
-    SendData.SendCanTxMsg.Data[5] = 0x02;
-    SendData.SendCanTxMsg.Data[4] = 0xBC;
-    SendData.SendCanTxMsg.Data[7] = 0x02;
-    SendData.SendCanTxMsg.Data[6] = 0xBC;
+    SendData.SendCanTxMsg.Data[1] = /* 02 */ 0;
+    SendData.SendCanTxMsg.Data[0] = /* BC */ 0;
+    SendData.SendCanTxMsg.Data[3] = /* 02 */ 0;
+    SendData.SendCanTxMsg.Data[2] = /* BC */ 0;
+    SendData.SendCanTxMsg.Data[5] = /* 02 */ 0;
+    SendData.SendCanTxMsg.Data[4] = /* BC */ 0;
+    SendData.SendCanTxMsg.Data[7] = /* 02 */ 0;
+    SendData.SendCanTxMsg.Data[6] = /* BC */ 0;
     xQueueSend(Queue_CANSend, &SendData, 10);
 }
 
