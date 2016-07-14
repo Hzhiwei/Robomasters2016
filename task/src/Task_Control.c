@@ -272,7 +272,7 @@ void Task_Control(void *Parameters)
         else if(ControlMode == ControlMode_KM)
         {
             //速度倍率设置
-            if((DBUS_ReceiveData.keyBoard.key_code & KEY_V) & (!(LASTDBUS_ReceiveData.keyBoard.key_code & KEY_V)))
+            if((DBUS_ReceiveData.keyBoard.key_code & KEY_V) && (!(LASTDBUS_ReceiveData.keyBoard.key_code & KEY_V)))
             {
                 if(ChassisParam.SpeedLevel == ChassisSpeedLevel_Hight)
                 {

@@ -74,9 +74,19 @@ void CloudMotorCurrent(int16_t Pitch, int16_t Yaw)
     SendData.SendCanTxMsg.Data[6] = 0;
     SendData.SendCanTxMsg.Data[7] = 0;
     
-#elif INFANTRY == 4 || INFANTRY == 5
+#elif INFANTRY == 4
     SendData.SendCanTxMsg.Data[0] = (-Yaw) >> 8;
     SendData.SendCanTxMsg.Data[1] = (-Yaw);
+    SendData.SendCanTxMsg.Data[2] = (-Pitch) >> 8;
+    SendData.SendCanTxMsg.Data[3] = (-Pitch);
+    SendData.SendCanTxMsg.Data[4] = 0;
+    SendData.SendCanTxMsg.Data[5] = 0;
+    SendData.SendCanTxMsg.Data[6] = 0;
+    SendData.SendCanTxMsg.Data[7] = 0;
+    
+#elif INFANTRY == 5
+    SendData.SendCanTxMsg.Data[0] = (Yaw) >> 8;
+    SendData.SendCanTxMsg.Data[1] = (Yaw);
     SendData.SendCanTxMsg.Data[2] = (-Pitch) >> 8;
     SendData.SendCanTxMsg.Data[3] = (-Pitch);
     SendData.SendCanTxMsg.Data[4] = 0;

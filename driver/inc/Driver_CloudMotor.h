@@ -54,9 +54,9 @@
 #define PitchUPLimit            5400
 #define PitchDOWNLimit          4600
 #define PitchCenter             4862
-#define YawLEFTLimit            4630
-#define YawRIGHTLimit           2230
-#define YawCenter               3440
+#define YawLEFTLimit            10400
+#define YawRIGHTLimit           8400
+#define YawCenter               9270
 #define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
 #define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
 #elif INFANTRY == 6     //英雄

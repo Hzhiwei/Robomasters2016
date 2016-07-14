@@ -179,6 +179,7 @@ void CAN2_RX0_IRQHandler(void)
     static uint8_t FristGyroData = 0;
     static float GyroOffset = 0;
     u8Todouble dataTrans;
+    uint16_t YawPassZeroBuffer;
     
     #if CANPORT == 1
     CAN_Receive(CAN1, 0, &CanRxData);
@@ -191,7 +192,19 @@ void CAN2_RX0_IRQHandler(void)
         case    YAWMOTORCANID  :
         {
             CloudParam.Yaw.FrameCounter++;
+#if INFANTRY == 5
+            YawPassZeroBuffer = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
+            if(YawPassZeroBuffer < 4000)
+            {
+                CloudParam.Yaw.RealEncoderAngle = YawPassZeroBuffer + 8191;
+            }
+            else
+            {
+                CloudParam.Yaw.RealEncoderAngle = YawPassZeroBuffer;
+            }
+#else
             CloudParam.Yaw.RealEncoderAngle = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
+#endif
             break;
         }
         case    PITCHMOTORCANID  :
