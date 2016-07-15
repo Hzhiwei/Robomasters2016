@@ -179,7 +179,10 @@ void CAN2_RX0_IRQHandler(void)
     static uint8_t FristGyroData = 0;
     static float GyroOffset = 0;
     u8Todouble dataTrans;
+    
+#if INFANTRY == 5
     uint16_t YawPassZeroBuffer;
+#endif
     
     #if CANPORT == 1
     CAN_Receive(CAN1, 0, &CanRxData);

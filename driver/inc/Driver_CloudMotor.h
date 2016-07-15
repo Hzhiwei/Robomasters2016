@@ -25,10 +25,10 @@
 #define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
 #elif INFANTRY == 2     //阿拉斯加
 #define PitchUPLimit            3500
-#define PitchDOWNLimit          2600
+#define PitchDOWNLimit          2500
 #define PitchCenter             2888
-#define YawLEFTLimit            5500
-#define YawRIGHTLimit           3000
+#define YawLEFTLimit            5000
+#define YawRIGHTLimit           3250
 #define YawCenter               4100
 #define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
 #define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
