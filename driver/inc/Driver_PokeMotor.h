@@ -25,7 +25,8 @@
 typedef enum
 {
     PokeMotorParam_Working,                        //正常
-    PokeMotorParam_Stuck                           //卡弹或正在反转处理卡弹
+    PokeMotorParam_StuckDealing,                   //正在反转处理卡弹
+    PokeMotorParam_Stuck                           //卡弹
 }PokeChassisParam_Enum;  
     
     

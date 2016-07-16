@@ -54,6 +54,8 @@ void StatusMachine_Update(void)
     {
         ControlMode = ControlMode_Protect;
         
+        SneakMode = 0;
+        
         return;
     }
     
@@ -80,6 +82,8 @@ void StatusMachine_Update(void)
         
         //自动射击关闭
         AutoMode = AutoMode_OFF;
+        
+        SneakMode = 0;
     }
     //键鼠控制
     else if(DBUS_ReceiveData.switch_left == 2)
@@ -183,6 +187,7 @@ void StatusMachine_Update(void)
     else
     {
         FristToKM = 1;
+        SneakMode = 0;
         
         ControlMode = ControlMode_Protect;
         

@@ -68,9 +68,7 @@ void PokeMotor_Step(void)
     portTickType CurrentTick = xTaskGetTickCount();
     
     if((PokeMotorParam.Status == PokeMotorParam_Working) && 
-        (CurrentTick - PokeMotorParam.LastShotTick >= POKESTEPMINTIMECRACK) && 
-        (PokeMotorParam.RealLocation - PokeMotorParam.TargetLocation >= -30) &&
-        (PokeMotorParam.RealLocation - PokeMotorParam.TargetLocation <= 30))
+        (CurrentTick - PokeMotorParam.LastShotTick >= POKESTEPMINTIMECRACK))
     {
         PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation - POKELINESPERSTEP;
         PokeMotorParam.LastShotTick = CurrentTick;
@@ -87,22 +85,47 @@ void PokeMotor_Step(void)
 void PokeMotor_Adjust(void)
 {
     int16_t PokeCurrent;
+    static portTickType LastStruckDealTick = 0;
+    
+    portTickType CurrentTick = xTaskGetTickCount();
     
     PokeMotorParam.RealSpeed = POKEENCODERCenter - TIM3->CNT;
     TIM3->CNT = POKEENCODERCenter;
     
     //误差小于30线
-    if((PokeOPID.CurrentError < 30) && (PokeOPID.CurrentError > -30))
+    if(((PokeOPID.CurrentError < 30) && (PokeOPID.CurrentError > -30)))
     {
         PokeMotorParam.Status = PokeMotorParam_Working;
     }
     
-    //根据积分判断是否卡弹，当积分达到80%上限时认为卡弹,并反转指定角度
-    if(((PokeIPID.Iout > PokeIPID.IMax * 0.85F) || (PokeIPID.Iout < -PokeIPID.IMax * 0.85F)) && (PokeMotorParam.Status == PokeMotorParam_Working))
+//    if((PokeIPID.Iout < PokeIPID.IMax * 0.2F) && (PokeIPID.Iout < -PokeIPID.IMax * 0.2F))
+//    {
+//        PokeMotorParam.Status = PokeMotorParam_StuckDealing;
+//    }
+    
+//    //根据积分判断是否卡弹，当积分达到80%上限时认为卡弹,并反转指定角度
+//    if(((PokeIPID.Iout > PokeIPID.IMax * 0.85F) || (PokeIPID.Iout < -PokeIPID.IMax * 0.85F)) && ((PokeMotorParam.Status == PokeMotorParam_Working) || (PokeMotorParam.Status == PokeMotorParam_StuckDealing)))
+//    {
+//        PokeMotorParam.Status = PokeMotorParam_Stuck;
+//        
+////        PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + ((PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation) ? (-POKESTRUCKDEALLINES) : POKESTRUCKDEALLINES);
+//        PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + ((PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation) ? (-POKESTRUCKDEALLINES) : POKESTRUCKDEALLINES);
+//    }
+    
+    if(((PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation) && (PokeIPID.Iout > PokeIPID.IMax * 0.85F)) || ((PokeMotorParam.TargetLocation < PokeMotorParam.RealLocation) && (PokeIPID.Iout < -PokeIPID.IMax * 0.85F)))
     {
         PokeMotorParam.Status = PokeMotorParam_Stuck;
-        
-        PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + ((PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation) ? (-POKESTRUCKDEALLINES) : POKESTRUCKDEALLINES);
+        if(CurrentTick - LastStruckDealTick >= 400)
+        {
+            if((PokeMotorParam.TargetLocation != PokeMotorParam.RealLocation))
+            {
+                PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + ((PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation) ? (-POKESTRUCKDEALLINES) : POKESTRUCKDEALLINES);
+            }
+            else
+            {
+                PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + ((PokeOPID.PIDout > 0) ? (-POKESTRUCKDEALLINES) : POKESTRUCKDEALLINES);
+            }
+        }
     }
     
     PokeMotorParam.RealLocation += PokeMotorParam.RealSpeed;

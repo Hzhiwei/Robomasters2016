@@ -21,13 +21,14 @@
   * @param  ubused
   * @retval void
   */
-    float PitchSum = 0, YawSum = 0;
     
-    AngleI_Struct AutoTargetAngle;      //自动射击目标角度
-    int16_t ForcastTargetEncoderOmega;
     
 void Task_Control(void *Parameters)
 {
+//    float PitchSum = 0, YawSum = 0;
+    AngleI_Struct AutoTargetAngle;      //自动射击目标角度
+    
+    int16_t ForcastTargetEncoderOmega;
     int16_t XSpeed, YSpeed;
     portTickType ControlLastTick = 0;
     float MouseSpinIntBuffer = 0;
@@ -36,6 +37,9 @@ void Task_Control(void *Parameters)
     int16_t PitchCurrent = 0, YawCurrent = 0;
     portTickType LastVisionDataUpdateTick = 0;
     portTickType LastAUTOShotTick = 0;
+    uint8_t FristToFullAutoMode = 0;        //局部第一次进入全自动模式
+    uint8_t FullAutoChassisDir = 0;         //全自动自旋方向       0顺时针      1逆时针
+    float FullAutoChassisCenter = 0;        //全自动模式基准位置
     
     for(;;)
     {
@@ -65,6 +69,7 @@ void Task_Control(void *Parameters)
 ////        //遥控器控制
         if(ControlMode == ControlMode_RC)
         {
+            FristToFullAutoMode = 0;
 //            Chassis_Control(0);
             
       //全自动测试
@@ -161,10 +166,11 @@ void Task_Control(void *Parameters)
             else
             {
                 GunFric_Control(0);
-            }
+            }   
             
             Chassis_SpeedSet(DBUS_ReceiveData.ch2 * 900 / 660, DBUS_ReceiveData.ch1 * 900 / 660);
             Chassis_Control(1, 0);
+            Steering_Control(2);
 
 
 ////      大符模式
@@ -249,8 +255,6 @@ void Task_Control(void *Parameters)
 //                
 //                Cloud_YawAngleSet(AutoTargetAngle.H, 1);
 //                Cloud_PitchAngleSet(AutoTargetAngle.V, 1);
-//            
-//                
 //                
 //                Cloud_Adjust(1);
 //                    
@@ -268,9 +272,12 @@ void Task_Control(void *Parameters)
 //                    GunFric_Control(0);
 //                }
 //            }
+//            Steering_Control(2);
         }
         else if(ControlMode == ControlMode_KM)
         {
+            FristToFullAutoMode = 0;
+            
             //速度倍率设置
             if((DBUS_ReceiveData.keyBoard.key_code & KEY_V) && (!(LASTDBUS_ReceiveData.keyBoard.key_code & KEY_V)))
             {
@@ -347,6 +354,7 @@ void Task_Control(void *Parameters)
             else
             {
                 Steering_Control(0);
+                
                 //自动射击
                 if(DBUS_ReceiveData.mouse.press_right)
                 {
@@ -354,11 +362,11 @@ void Task_Control(void *Parameters)
                     //旋转控制
                     if(DBUS_ReceiveData.keyBoard.key_code & KEY_E)
                     {
-                        CloudParam.Yaw.ABSTargetAngle -= QESPINPARAM;
+                        CloudParam.Yaw.ABSTargetAngle = SuperGyoAngle - QESPINPARAM;
                     }
                     else if(DBUS_ReceiveData.keyBoard.key_code & KEY_Q)
                     {
-                        CloudParam.Yaw.ABSTargetAngle += QESPINPARAM;
+                        CloudParam.Yaw.ABSTargetAngle = SuperGyoAngle - QESPINPARAM;
                     }
                     else
                     {
@@ -442,12 +450,12 @@ void Task_Control(void *Parameters)
                     //旋转控制
                     if(DBUS_ReceiveData.keyBoard.key_code & KEY_E)
                     {
-                        CloudParam.Yaw.ABSTargetAngle -= QESPINPARAM;
+                        CloudParam.Yaw.ABSTargetAngle = SuperGyoAngle - QESPINPARAM;
                         Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
                     }
                     else if(DBUS_ReceiveData.keyBoard.key_code & KEY_Q)
                     {
-                        CloudParam.Yaw.ABSTargetAngle += QESPINPARAM;
+                        CloudParam.Yaw.ABSTargetAngle = SuperGyoAngle + QESPINPARAM;
                         Cloud_YawAngleSet(CloudParam.Yaw.ABSTargetAngle, 0);
                     }
                     else
@@ -493,6 +501,14 @@ void Task_Control(void *Parameters)
         //全自动模式
         else if(ControlMode == ControlMode_AUTO)
         {
+            Steering_Control(0);
+            
+            if(FristToFullAutoMode == 0)
+            {
+                FullAutoChassisCenter = SuperGyoAngle;
+                FristToFullAutoMode = 1;
+            }
+            
             if(DBUS_ReceiveData.switch_right == 3)
             {
                 GunFric_Control(1);
@@ -555,35 +571,46 @@ void Task_Control(void *Parameters)
             CloudMotorCurrent(PitchCurrent, YawCurrent);
             
             //底盘追随
-            if(ControlLastTick - LastVisionDataUpdateTick < 300)
+            if(ControlLastTick - LastVisionDataUpdateTick < 300)    //300MS内有新帧
             {
                 CloudParam.Yaw.ABSTargetAngle = SuperGyoAngle + (ForcastAngle.H * 0.04395);
                 Chassis_Control(1, 1);
             }
-            else if(ControlLastTick - LastVisionDataUpdateTick < 1000)
+            else if(ControlLastTick - LastVisionDataUpdateTick < LOSTTARGETTICKAUTO)
             {
                 Chassis_Control(1, 0);
             }
-            //丢帧2500s自旋开始
+            //丢帧指定时间自旋开始
             else
             {
-                if(ForcastAngle.H > 0)
+                if(FullAutoChassisDir)
                 {
-                    CloudParam.Yaw.ABSTargetAngle += 0.5F;
+                    CloudParam.Yaw.ABSTargetAngle -= FULLAUTOCHASSISSPEED;
+                    if(SuperGyoAngle < FullAutoChassisCenter - FULLAUTOCHASSISANGLE)
+                    {
+                        FullAutoChassisDir = 0;
+                    }
                 }
                 else
                 {
-                    CloudParam.Yaw.ABSTargetAngle -= 0.5F;
+                    CloudParam.Yaw.ABSTargetAngle += FULLAUTOCHASSISSPEED;
+                    if(SuperGyoAngle > FullAutoChassisCenter + FULLAUTOCHASSISANGLE)
+                    {
+                        FullAutoChassisDir = 1;
+                    }
                 }
+                
                 Chassis_Control(1, 0);
             }
             
             //视觉帧标志位置0
             VisionUpdataFlag = 0;
+            FristToFullAutoMode = 1;
         }
         else
         {
-            Steering_Control(0);
+            Steering_Control(2);
+            FristToFullAutoMode = 0;
             Cloud_Adjust(0);
             Chassis_MotorDebug();       //电机调试模式，速度0，电流700
             GunFric_Control(0);

@@ -49,10 +49,10 @@ void CloudPID_InitConfig(void)
 	YawIPID.LastTick = 0;
 	
 	ForcastYawSpeedPID.LastError = 0;
-	ForcastYawSpeedPID.P = 6;
+	ForcastYawSpeedPID.P = 0.7;
 	ForcastYawSpeedPID.I = 0.2F;
-	ForcastYawSpeedPID.D = 2;
-	ForcastYawSpeedPID.IMax = 1000;
+	ForcastYawSpeedPID.D = 2.3;
+	ForcastYawSpeedPID.IMax = 100;
 	ForcastYawSpeedPID.PIDMax = 5000;
 	ForcastYawSpeedPID.LastTick = 0;
 	
@@ -155,7 +155,7 @@ void CloudPID_InitConfig(void)
 	PitchOPID.P = 15;
 	PitchOPID.I = 0.02;
 	PitchOPID.D = 0;
-	PitchOPID.IMax = 500;
+	PitchOPID.IMax = 100;
 	PitchOPID.PIDMax = 8000;
 	PitchOPID.LastTick = 0;
 	
@@ -223,9 +223,9 @@ void CloudPID_InitConfig(void)
 #elif INFANTRY == 3        //¹þÊ¿Ææ
 	YawOPID.LastError = 0;
 	YawOPID.P = 12;
-	YawOPID.I = 0;
+	YawOPID.I = 3;
 	YawOPID.D = 0;
-	YawOPID.IMax = 0;
+	YawOPID.IMax = 300;
 	YawOPID.PIDMax = 5000;
 	YawOPID.LastTick = 0;
 	
@@ -233,7 +233,7 @@ void CloudPID_InitConfig(void)
 	YawIPID.P = 2.7;
 	YawIPID.I = 0.2;
 	YawIPID.D = 0;
-	YawIPID.IMax = 100;
+	YawIPID.IMax = 0;
 	YawIPID.PIDMax = 5000;
 	YawIPID.LastTick = 0;
     
@@ -248,9 +248,10 @@ void CloudPID_InitConfig(void)
 	
 	PitchOPID.LastError = 0;
 	PitchOPID.P = 11;
-	PitchOPID.I = 0;
+	PitchOPID.I = 0.02
+    ;
 	PitchOPID.D = 0;
-	PitchOPID.IMax = 0;
+	PitchOPID.IMax = 100;
 	PitchOPID.PIDMax = 8000;
 	PitchOPID.LastTick = 0;
 	
