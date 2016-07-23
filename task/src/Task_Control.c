@@ -55,7 +55,8 @@ void Task_Control(void *Parameters)
 /**************************************************************************************************/
 /*********************  ↓  根据状态机控制  ↓ *********************/
         
-        
+        Cloud_YawAngleSet(-DBUS_ReceiveData.ch3 / 11.0F, AngleMode_ABS);
+		Cloud_PitchAngleSet(DBUS_ReceiveData.ch4 / 6.0F);
         
         if(ControlMode != ControlMode_Protect)
         {

@@ -6,6 +6,7 @@
 #include "Driver_DBUS.h"
 #include "Driver_vision.h"
 #include "Driver_Control.h"
+#include "Driver_mpu9250.h"
 #include "Driver_CloudMotor.h"
 #include "Driver_StatusMachine.h"
 #include "Driver_SuperGyroscope.h"
@@ -48,6 +49,8 @@ void StatusMachine_Update(void)
     
     //Yaw轴实际绝对角度
     CloudParam.Yaw.RealABSAngle = SuperGyoParam.Angle + ((int16_t)CloudParam.Yaw.RealEncoderAngle - YawEncoderCenter) * 0.043945F;
+    //Pitch轴实际绝对角度
+    CloudParam.Pitch.RealABSAngle = Position.Euler.Pitch;
     
     //帧率过低停机
     if(DBUSFrameRate < 3)

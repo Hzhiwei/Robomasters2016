@@ -22,22 +22,40 @@ void CloudPID_InitConfig(void)
     
 #elif INFANTRY == 2     //阿拉斯加
     
-    YawOPID.P = 0;
-    YawOPID.I = 0;
+    PitchOPID.P = 8;
+    PitchOPID.I = 0.5;
+    PitchOPID.D = 0;
+    PitchOPID.CurrentError = 0;
+    PitchOPID.LastError = 0;
+    PitchOPID.LastTick = 0;
+    PitchOPID.IMax = 10;
+    PitchOPID.PIDMax = 400;
+    
+    PitchIPID.P = 50;
+    PitchIPID.I = 5;
+    PitchIPID.D = 0;
+    PitchIPID.CurrentError = 0;
+    PitchIPID.LastError = 0;
+    PitchIPID.LastTick = 0;
+    PitchIPID.IMax = 300;
+    PitchIPID.PIDMax = 5000;
+    
+    YawOPID.P = 16;
+    YawOPID.I = 0.1;
     YawOPID.D = 0;
     YawOPID.CurrentError = 0;
     YawOPID.LastError = 0;
     YawOPID.LastTick = 0;
-    YawOPID.IMax = 0;
-    YawOPID.PIDMax = 0;
+    YawOPID.IMax = 5;
+    YawOPID.PIDMax = 300;
     
-    YawIPID.P = 100;
+    YawIPID.P = 80;
     YawIPID.I = 20;
     YawIPID.D = 0;
     YawIPID.CurrentError = 0;
     YawIPID.LastError = 0;
     YawIPID.LastTick = 0;
-    YawIPID.IMax = 1000;
+    YawIPID.IMax = 300;
     YawIPID.PIDMax = 5000;
     
 #elif INFANTRY == 3     //哈士奇
@@ -81,7 +99,7 @@ int16_t Control_YawPID(void)
 	
 /***************************************	内环	******************************************/
 	YawIPID.CurrentError = YawOPID.PIDout - (Position.Real.OZ - SuperGyoParam.Omega);	
-	YawIPID.CurrentError = -DBUS_ReceiveData.ch4 - (Position.Real.OZ - SuperGyoParam.Omega);
+//	YawIPID.CurrentError = -DBUS_ReceiveData.ch3 - (Position.Real.OZ - SuperGyoParam.Omega);
 	
 	YawIPID.Pout = YawIPID.P * YawIPID.CurrentError;
 	
@@ -140,7 +158,7 @@ int16_t Control_PitchPID(void)
 	
 /***************************************	内环	******************************************/
 	PitchIPID.CurrentError = PitchOPID.PIDout - Position.Real.OX;	
-//	PitchIPID.CurrentError =  - Position.MotorEncoderOmega.X;
+//	PitchIPID.CurrentError = DBUS_ReceiveData.ch4 - Position.Real.OX;
 	
 	PitchIPID.Pout = PitchIPID.P * PitchIPID.CurrentError;
 	

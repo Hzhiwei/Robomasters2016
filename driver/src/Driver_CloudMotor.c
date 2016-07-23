@@ -114,14 +114,19 @@ void Cloud_Adjust(uint8_t mode)
   */
 void Cloud_YawAngleSet(float Target, AngleMode_Enum mode)
 {
-    if(mode == AngleMode_ABS)
+    float LimitBuffer;
+    
+    if(mode == AngleMode_OPP)
     {
-        CloudParam.Yaw.TargetABSAngle = Target;
+        Target += SuperGyoParam.Angle;
     }
-    else
-    {
-        CloudParam.Yaw.TargetABSAngle = Target + SuperGyoParam.Angle;
-    }
+    
+    LimitBuffer = SuperGyoParam.Angle + (YawEncoderLEFTLimit - YawEncoderCenter) * 0.043945F;
+    Target = Target > LimitBuffer ? LimitBuffer : Target;
+    LimitBuffer = SuperGyoParam.Angle - (YawEncoderCenter - YawEncoderRIGHTLimit) * 0.043945F;
+    Target = Target < LimitBuffer ? LimitBuffer : Target;
+    
+    CloudParam.Yaw.TargetABSAngle = Target;
 }
 
 
@@ -138,11 +143,11 @@ void Cloud_PitchAngleSet(float Target)
     
     MachineABSLimit = Position.Euler.Pitch + (PitchEncoderUPLimit - PitchEncoderCenter) * 0.043945F;
     MixedLimit = MachineABSLimit > PitchABSUPLimit ? PitchABSUPLimit : MachineABSLimit;
-    Target = MixedLimit > Target ? MixedLimit : MixedLimit;
+    Target = Target > MixedLimit ? MixedLimit : Target;
     
     MachineABSLimit = Position.Euler.Pitch - (PitchEncoderCenter - PitchEncoderDOWNLimit) * 0.043945F;
     MixedLimit = MachineABSLimit > PitchABSDOWNLimit ? MachineABSLimit : PitchABSDOWNLimit;
-    Target = MixedLimit < Target ? Target : MixedLimit;
+    Target = Target < MixedLimit ? MixedLimit : Target;
     
     CloudParam.Pitch.TargetABSAngle = Target;
 }

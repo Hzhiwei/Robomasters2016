@@ -171,6 +171,7 @@ void CAN2_RX0_IRQHandler(void)
     u8Todouble dataTrans;
     
     uint16_t YawPassZeroBuffer;
+    uint16_t PitchPassZeroBuffer;
     
 #if CANPORT == 1
     CAN_Receive(CAN1, 0, &CanRxData);
@@ -198,7 +199,16 @@ void CAN2_RX0_IRQHandler(void)
         case    PITCHMOTORCANID  :
         {
             CloudParam.Pitch.FrameCounter++;
-            CloudParam.Pitch.RealEncoderAngle = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
+            
+            PitchPassZeroBuffer = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
+            if(PitchPassZeroBuffer < PitchEncoderPassZeroBoundary)
+            {
+                CloudParam.Pitch.RealEncoderAngle = PitchPassZeroBuffer + 8191;
+            }
+            else
+            {
+                CloudParam.Pitch.RealEncoderAngle = PitchPassZeroBuffer;
+            }
             break;
         }
         case    SUPERGYROSCOPECANIC :
