@@ -15,16 +15,6 @@
 #endif
 
 
-//#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
-////AB车模式
-//typedef enum
-//{
-//    ABInfantry_Master,      //主车，正常控制
-//    ABInfantry_Slave        //从车，自动射击
-//}ABInfantryMode_Enum;
-//#endif
-
-
 //PID数据结构
 typedef struct
 {
@@ -68,7 +58,7 @@ void CloudPID_InitConfig(void);
 int16_t Control_YawPID(void);
 int16_t Control_PitchPID(void);
 int16_t Control_PokeIPID(void);
-void Control_ChassisPID(uint8_t PIDChoie);
+void Control_ChassisPID(void);
 int16_t VControl_YawPID(float TargetOmega);
 
 

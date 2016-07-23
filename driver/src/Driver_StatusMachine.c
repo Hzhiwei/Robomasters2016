@@ -6,7 +6,9 @@
 #include "Driver_DBUS.h"
 #include "Driver_vision.h"
 #include "Driver_Control.h"
+#include "Driver_CloudMotor.h"
 #include "Driver_StatusMachine.h"
+#include "Driver_SuperGyroscope.h"
 
 
 /*
@@ -42,12 +44,10 @@ void StatusMachine_InitConfig(void)
     uint8_t FristToKM = 1;
 void StatusMachine_Update(void)
 {
-    static uint8_t RateCounter = 0;
-    static uint8_t BigSampleCounter = 0;
-    static uint8_t AttackCounter = 0;
-    static portTickType LastPCShutdownSignalTick = 0;
     portTickType CurrentTick = xTaskGetTickCount();
     
+    //Yaw轴实际绝对角度
+    CloudParam.Yaw.RealABSAngle = SuperGyoParam.Angle + ((int16_t)CloudParam.Yaw.RealEncoderAngle - YawEncoderCenter) * 0.043945F;
     
     //帧率过低停机
     if(DBUSFrameRate < 3)
@@ -59,153 +59,14 @@ void StatusMachine_Update(void)
         return;
     }
     
-    //遥控器控制
-    if(DBUS_ReceiveData.switch_left == 1)
-    {
-        FristToKM = 1;
-        
-        ControlMode = ControlMode_RC;
-        
-        //摩擦轮
-        if(DBUS_ReceiveData.switch_right == 3)
-        {
-            GunStatus = GunStatus_Motor;
-        }
-        else if(DBUS_ReceiveData.switch_right == 2)
-        {
-            GunStatus = GunStatus_Shot;
-        }
-        else
-        {
-            GunStatus = GunStatus_Stop;
-        }
-        
-        //自动射击关闭
-        AutoMode = AutoMode_OFF;
-        
-        SneakMode = 0;
-    }
-    //键鼠控制
-    else if(DBUS_ReceiveData.switch_left == 2)
-    {
-        if(FristToKM == 1)
-        {
-            ControlMode = ControlMode_KM;
-            FristToKM = 0;
-        }
-        
-        //潜行控制
-        if(DBUS_ReceiveData.keyBoard.key_code & KEY_CTRL)
-        {
-            SneakMode = 1;
-        }
-        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_SHIFT)
-        {
-            SneakMode = 0;
-        }
-        
-        if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
-        {
-            ControlMode = ControlMode_KM;
-        }
-        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
-        {
-            ControlMode = ControlMode_AUTO;
-        }
-        
-        //降低发送频率减小串口负担
-        if(RateCounter == 4)
-        {
-            //敌方目标红色
-            if((DBUS_ReceiveData.ch1 > 600) && 
-                (DBUS_ReceiveData.ch2 > 600) &&
-                (DBUS_ReceiveData.ch3 < -600) &&
-                (DBUS_ReceiveData.ch4 > 600))
-            {
-                SendEnemyColor('R');
-            }
-            //敌方目标蓝色
-            else if((DBUS_ReceiveData.ch1 < -600) && 
-                (DBUS_ReceiveData.ch2 > 600) &&
-                (DBUS_ReceiveData.ch3 > 600) &&
-                (DBUS_ReceiveData.ch4 > 600))
-            {
-                SendEnemyColor('B');
-            }
-            //大符模式
-            else if(DBUS_ReceiveData.keyBoard.key_code & KEY_X)
-            {
-                AttackCounter = 0;
-                
-                if(BigSampleCounter < VisiolModeChangeDataSendNum)
-                {
-                    VisionType = VisionType_BigSample;
-                    SendPCOrder(PCOrder_BigSample);
-                    BigSampleCounter++;
-                }
-            }
-            //自动射击模式（主机，单主控并不是）
-            else
-            {
-                BigSampleCounter = 0;
-                
-                if(AttackCounter < VisiolModeChangeDataSendNum)
-                {
-                    VisionType = VisionType_Attack;
-                    SendPCOrder(PCOrder_Attack);
-                    AttackCounter++;
-                }
-            }
-            RateCounter = 0;
-        }
-        else
-        {
-            RateCounter++;
-        }
-        
-//#if INFANTRYTYPE == 1 
-//        if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
-//        {
-//            ABInfantryMode = ABInfantry_Master;
-//        }
-//        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
-//        {
-//            ABInfantryMode = ABInfantry_Slave;
-//        }
-//#elif INFANTRYTYPE == 2
-//        if(DBUS_ReceiveData.keyBoard.key_code & KEY_F)
-//        {
-//            ABInfantryMode = ABInfantry_Master;
-//        }
-//        else if(DBUS_ReceiveData.keyBoard.key_code & KEY_C)
-//        {
-//            ABInfantryMode = ABInfantry_Slave;
-//        }
-//#endif
-    }
     //保护模式
+    if(DBUS_ReceiveData.switch_left == 3)
+    {
+        ControlMode = ControlMode_RC;
+    }
     else
     {
-        FristToKM = 1;
-        SneakMode = 0;
-        
         ControlMode = ControlMode_Protect;
-        
-        //关机
-        if((DBUS_ReceiveData.ch1 > 600) && 
-            (DBUS_ReceiveData.ch2 < -600) &&
-            (DBUS_ReceiveData.ch3 < -600) &&
-            (DBUS_ReceiveData.ch4 > 600))
-        {
-            if(LastPCShutdownSignalTick + 5000 < CurrentTick)
-            {
-                SendPCOrder(PCOrder_Shutdown);
-            }
-        }
-        else
-        {
-            LastPCShutdownSignalTick = CurrentTick;
-        }
     }
 }
 

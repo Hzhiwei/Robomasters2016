@@ -1,4 +1,5 @@
 
+
 #ifndef __DRIVER_MPU9250_H
 #define __DRIVER_MPU9250_H
 
@@ -30,14 +31,6 @@ typedef struct
         //温度实际数据
         float T;
     }Real;
-    
-    //转化为编码器的 线/s 的角速度数据
-    struct
-    {
-        int16_t X;
-        int16_t Y;
-        int16_t Z;
-    }MotorEncoderOmega;
     
     //结算实际对地欧拉角
     struct

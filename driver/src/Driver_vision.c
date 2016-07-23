@@ -115,7 +115,7 @@ AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t Pi
     else
     {
     //考虑重力加速度
-        radian = (atan(((AFG * distance * distance) / (GUNSpeed * GUNSpeed) - Y0) / sqrt(Y0 * Y0 + distance * distance)) - atan(Y0 / distance)) / 2;
+        radian = (atan(((ACCofGravity * distance * distance) / (GUNSpeed * GUNSpeed) - Y0) / sqrt(Y0 * Y0 + distance * distance)) - atan(Y0 / distance)) / 2;
         ReturnData.V = radian * 1303.7973F;
     }
     
@@ -253,7 +253,7 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *Fo
     if(TimeMode)
     {
         distance = sqrt(EnemyDataBuffer[EnemyDataBufferPoint].X * EnemyDataBuffer[EnemyDataBufferPoint].X + EnemyDataBuffer[EnemyDataBufferPoint].Y * EnemyDataBuffer[EnemyDataBufferPoint].Y);
-        ForcastTime = distance * 1000 / GUNSpeed + ProgonsisCompensate;
+        ForcastTime = distance * 1000 / GUNSpeed;
     }
     
     if(ForcastCore(SampleTime, ForcastTime, &ForcastPoint) == 0)        //二次拟合成功

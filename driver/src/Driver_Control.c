@@ -18,599 +18,42 @@
   */
 void CloudPID_InitConfig(void)
 {
-//    EncoderTargetPitch = PitchCenter;
-//    EncoderTargetYaw = YawCenter;
-//    PokeSpeedTarget = 0;
-//    ABSTargetPitch = 0;
-//    ABSTargetYaw = 0;
+#if INFANTRY == 1       //萨摩
     
-//#if INFANTRYTYPE == 1
-//    ABInfantryMode = ABInfantry_Master;
-//#elif INFANTRYTYPE == 2
-//    ABInfantryMode = ABInfantry_Slave;
-//#endif
+#elif INFANTRY == 2     //阿拉斯加
     
+    YawOPID.P = 0;
+    YawOPID.I = 0;
+    YawOPID.D = 0;
+    YawOPID.CurrentError = 0;
+    YawOPID.LastError = 0;
+    YawOPID.LastTick = 0;
+    YawOPID.IMax = 0;
+    YawOPID.PIDMax = 0;
     
-#if INFANTRY == 1      //萨摩
-	YawOPID.LastError = 0;
-	YawOPID.P = 7;
-	YawOPID.I = 0;
-	YawOPID.D = 0;
-	YawOPID.IMax = 0;
-	YawOPID.PIDMax = 5000;
-	YawOPID.LastTick = 0;
-	
-	YawIPID.LastError = 0;
-	YawIPID.P = 4;
-	YawIPID.I = 0.2;
-	YawIPID.D = 0;
-	YawIPID.IMax = 100;
-	YawIPID.PIDMax = 5000;
-	YawIPID.LastTick = 0;
-	
-	ForcastYawSpeedPID.LastError = 0;
-	ForcastYawSpeedPID.P = 0.7;
-	ForcastYawSpeedPID.I = 0.2F;
-	ForcastYawSpeedPID.D = 2.3;
-	ForcastYawSpeedPID.IMax = 100;
-	ForcastYawSpeedPID.PIDMax = 5000;
-	ForcastYawSpeedPID.LastTick = 0;
-	
-	PitchOPID.LastError = 0;
-	PitchOPID.P = 9;
-	PitchOPID.I = 0.02;
-	PitchOPID.D = 0;
-	PitchOPID.IMax = 500;
-	PitchOPID.PIDMax = 8000;
-	PitchOPID.LastTick = 0;
-	
-	PitchIPID.LastError = 0;
-	PitchIPID.P = 2;
-	PitchIPID.I = 0;
-	PitchIPID.D = 0;
-	PitchIPID.IMax = 0;
-	PitchIPID.PIDMax = 5000;
-	PitchIPID.LastTick = 0;
+    YawIPID.P = 100;
+    YawIPID.I = 20;
+    YawIPID.D = 0;
+    YawIPID.CurrentError = 0;
+    YawIPID.LastError = 0;
+    YawIPID.LastTick = 0;
+    YawIPID.IMax = 1000;
+    YawIPID.PIDMax = 5000;
     
-    PokeOPID.CurrentError = 0;
-    PokeOPID.LastError = 0;
-    PokeOPID.P = 0.07;
-    PokeOPID.I = 0;
-    PokeOPID.D = 0;
-    PokeOPID.IMax = 0;
-    PokeOPID.PIDMax = 130;
-    PokeOPID.LastTick = 0;
-    
-    PokeIPID.CurrentError = 0;
-    PokeIPID.LastError = 0;
-    PokeIPID.P = 3.8;
-    PokeIPID.I = 0.2;
-    PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
-    PokeIPID.PIDMax = 90;
-    PokeIPID.LastTick = 0;
-    
-    ChassisOPID.CurrentError = 0;
-    ChassisOPID.LastError = 0;
-    ChassisOPID.P = 13;
-    ChassisOPID.I = 0;
-    ChassisOPID.D = 0;
-    ChassisOPID.IMax = 0;
-    ChassisOPID.PIDMax = 500;
-    ChassisOPID.LastTick = 0;
-    
-    ChassisIPID.CurrentError = 0;
-    ChassisIPID.LastError = 0;
-    ChassisIPID.P = 2.1;
-    ChassisIPID.I = 0;
-    ChassisIPID.D = 0;
-    ChassisIPID.IMax = 0;
-    ChassisIPID.PIDMax = 600;
-    ChassisIPID.LastTick = 0;
-    
-    ChassisAUTOOPID.CurrentError = 0;
-    ChassisAUTOOPID.LastError = 0;
-    ChassisAUTOOPID.P = 10.3;
-    ChassisAUTOOPID.I = 0;
-    ChassisAUTOOPID.D = 0;
-    ChassisAUTOOPID.IMax = 0;
-    ChassisAUTOOPID.PIDMax = 500;
-    ChassisAUTOOPID.LastTick = 0;
-    
-    ChassisAUTOIPID.CurrentError = 0;
-    ChassisAUTOIPID.LastError = 0;
-    ChassisAUTOIPID.P = 1.2;
-    ChassisAUTOIPID.I = 0;
-    ChassisAUTOIPID.D = 0;
-    ChassisAUTOIPID.IMax = 0;
-    ChassisAUTOIPID.PIDMax = 600;
-    ChassisAUTOIPID.LastTick = 0;
-    
-#elif INFANTRY == 2        //阿拉斯加
-	YawOPID.LastError = 0;
-	YawOPID.P = 17;
-	YawOPID.I = 0;
-	YawOPID.D = 0;
-	YawOPID.IMax = 0;
-	YawOPID.PIDMax = 5000;
-	YawOPID.LastTick = 0;
-	
-	YawIPID.LastError = 0;
-	YawIPID.P = 4;
-	YawIPID.I = 0.2;
-	YawIPID.D = 0;
-	YawIPID.IMax = 100;
-	YawIPID.PIDMax = 5000;
-	YawIPID.LastTick = 0;
-	
-	ForcastYawSpeedPID.LastError = 0;
-	ForcastYawSpeedPID.P = 1;
-	ForcastYawSpeedPID.I = 0.2;
-	ForcastYawSpeedPID.D = 3.7;
-	ForcastYawSpeedPID.IMax = 50;
-	ForcastYawSpeedPID.PIDMax = 5000;
-	ForcastYawSpeedPID.LastTick = 0;
-	
-	PitchOPID.LastError = 0;
-	PitchOPID.P = 15;
-	PitchOPID.I = 0.02;
-	PitchOPID.D = 0;
-	PitchOPID.IMax = 100;
-	PitchOPID.PIDMax = 8000;
-	PitchOPID.LastTick = 0;
-	
-	PitchIPID.LastError = 0;
-	PitchIPID.P = 1.8;
-	PitchIPID.I = 0;
-	PitchIPID.D = 0;
-	PitchIPID.IMax = 0;
-	PitchIPID.PIDMax = 5000;
-	PitchIPID.LastTick = 0;
-    
-    PokeOPID.CurrentError = 0;
-    PokeOPID.LastError = 0;
-    PokeOPID.P = 0.07;
-    PokeOPID.I = 0;
-    PokeOPID.D = 0;
-    PokeOPID.IMax = 0;
-    PokeOPID.PIDMax = 130;
-    PokeOPID.LastTick = 0;
-    
-    PokeIPID.CurrentError = 0;
-    PokeIPID.LastError = 0;
-    PokeIPID.P = 3.8;
-    PokeIPID.I = 0.2;
-    PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
-    PokeIPID.PIDMax = 90;
-    PokeIPID.LastTick = 0;
-    
-    ChassisOPID.CurrentError = 0;
-    ChassisOPID.LastError = 0;
-    ChassisOPID.P = 9;
-    ChassisOPID.I = 0.3;
-    ChassisOPID.D = 0;
-    ChassisOPID.IMax = 50;
-    ChassisOPID.PIDMax = 500;
-    ChassisOPID.LastTick = 0;
-    
-    ChassisIPID.CurrentError = 0;
-    ChassisIPID.LastError = 0;
-    ChassisIPID.P = 1.8;
-    ChassisIPID.I = 0;
-    ChassisIPID.D = 0;
-    ChassisIPID.IMax = 0;
-    ChassisIPID.PIDMax = 600;
-    ChassisIPID.LastTick = 0;
-    
-    ChassisAUTOOPID.CurrentError = 0;
-    ChassisAUTOOPID.LastError = 0;
-    ChassisAUTOOPID.P = 12;
-    ChassisAUTOOPID.I = 0;
-    ChassisAUTOOPID.D = 0;
-    ChassisAUTOOPID.IMax = 0;
-    ChassisAUTOOPID.PIDMax = 500;
-    ChassisAUTOOPID.LastTick = 0;
-    
-    ChassisAUTOIPID.CurrentError = 0;
-    ChassisAUTOIPID.LastError = 0;
-    ChassisAUTOIPID.P = 1;
-    ChassisAUTOIPID.I = 0;
-    ChassisAUTOIPID.D = 0;
-    ChassisAUTOIPID.IMax = 0;
-    ChassisAUTOIPID.PIDMax = 600;
-    ChassisAUTOIPID.LastTick = 0;
-#elif INFANTRY == 3        //哈士奇
-	YawOPID.LastError = 0;
-	YawOPID.P = 12;
-	YawOPID.I = 3;
-	YawOPID.D = 0;
-	YawOPID.IMax = 300;
-	YawOPID.PIDMax = 5000;
-	YawOPID.LastTick = 0;
-	
-	YawIPID.LastError = 0;
-	YawIPID.P = 2.7;
-	YawIPID.I = 0.2;
-	YawIPID.D = 0;
-	YawIPID.IMax = 0;
-	YawIPID.PIDMax = 5000;
-	YawIPID.LastTick = 0;
-    
-	ForcastYawSpeedPID.LastError = 0;
-	ForcastYawSpeedPID.P = 0.3;
-	ForcastYawSpeedPID.I = 0.2;
-	ForcastYawSpeedPID.D = 1;
-	ForcastYawSpeedPID.IMax = 200;
-	ForcastYawSpeedPID.PIDMax = 5000;
-	ForcastYawSpeedPID.LastTick = 0;
-	
-	
-	PitchOPID.LastError = 0;
-	PitchOPID.P = 11;
-	PitchOPID.I = 0.02
-    ;
-	PitchOPID.D = 0;
-	PitchOPID.IMax = 100;
-	PitchOPID.PIDMax = 8000;
-	PitchOPID.LastTick = 0;
-	
-	PitchIPID.LastError = 0;
-	PitchIPID.P = 1.2;
-	PitchIPID.I = 0;
-	PitchIPID.D = 0;
-	PitchIPID.IMax = 0;
-	PitchIPID.PIDMax = 5000;
-	PitchIPID.LastTick = 0;
-    
-    PokeOPID.CurrentError = 0;
-    PokeOPID.LastError = 0;
-    PokeOPID.P = 0.07;
-    PokeOPID.I = 0;
-    PokeOPID.D = 0;
-    PokeOPID.IMax = 0;
-    PokeOPID.PIDMax = 130;
-    PokeOPID.LastTick = 0;
-    
-    PokeIPID.CurrentError = 0;
-    PokeIPID.LastError = 0;
-    PokeIPID.P = 3.8;
-    PokeIPID.I = 0.2;
-    PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
-    PokeIPID.PIDMax = 90;
-    PokeIPID.LastTick = 0;
-    
-    ChassisOPID.CurrentError = 0;
-    ChassisOPID.LastError = 0;
-    ChassisOPID.P = 12;
-    ChassisOPID.I = 0;
-    ChassisOPID.D = 0;
-    ChassisOPID.IMax = 0;
-    ChassisOPID.PIDMax = 500;
-    ChassisOPID.LastTick = 0;
-    
-    ChassisIPID.CurrentError = 0;
-    ChassisIPID.LastError = 0;
-    ChassisIPID.P = 1.86;
-    ChassisIPID.I = 0;
-    ChassisIPID.D = 0;
-    ChassisIPID.IMax = 0;
-    ChassisIPID.PIDMax = 800;
-    ChassisIPID.LastTick = 0;
-    
-    ChassisAUTOOPID.CurrentError = 0;
-    ChassisAUTOOPID.LastError = 0;
-    ChassisAUTOOPID.P = 10;
-    ChassisAUTOOPID.I = 0;
-    ChassisAUTOOPID.D = 0;
-    ChassisAUTOOPID.IMax = 0;
-    ChassisAUTOOPID.PIDMax = 500;
-    ChassisAUTOOPID.LastTick = 0;
-    
-    ChassisAUTOIPID.CurrentError = 0;
-    ChassisAUTOIPID.LastError = 0;
-    ChassisAUTOIPID.P = 1;
-    ChassisAUTOIPID.I = 0;
-    ChassisAUTOIPID.D = 0;
-    ChassisAUTOIPID.IMax = 0;
-    ChassisAUTOIPID.PIDMax = 800;
-    ChassisAUTOIPID.LastTick = 0;
+#elif INFANTRY == 3     //哈士奇
     
 #elif INFANTRY == 4     //边牧（没名字，先这么叫吧）
-
-	YawOPID.LastError = 0;
-	YawOPID.P = 12;
-	YawOPID.I = 0;
-	YawOPID.D = 0;
-	YawOPID.IMax = 0;
-	YawOPID.PIDMax = 5000;
-	YawOPID.LastTick = 0;
-	
-	YawIPID.LastError = 0;
-	YawIPID.P = 2.7;
-	YawIPID.I = 0.2;
-	YawIPID.D = 0;
-	YawIPID.IMax = 100;
-	YawIPID.PIDMax = 5000;
-	YawIPID.LastTick = 0;
-    
-	ForcastYawSpeedPID.LastError = 0;
-	ForcastYawSpeedPID.P = 0.29F;
-	ForcastYawSpeedPID.I = 0.1F;
-	ForcastYawSpeedPID.D = 2.5F;
-	ForcastYawSpeedPID.IMax = 50;
-	ForcastYawSpeedPID.PIDMax = 5000;
-	ForcastYawSpeedPID.LastTick = 0;
-	
-	
-	PitchOPID.LastError = 0;
-	PitchOPID.P = 11;
-	PitchOPID.I = 0.1;
-	PitchOPID.D = 0;
-	PitchOPID.IMax = 75;
-	PitchOPID.PIDMax = 8000;
-	PitchOPID.LastTick = 0;
-	
-	PitchIPID.LastError = 0;
-	PitchIPID.P = 1.2;
-	PitchIPID.I = 0;
-	PitchIPID.D = 0;
-	PitchIPID.IMax = 0;
-	PitchIPID.PIDMax = 5000;
-	PitchIPID.LastTick = 0;
-    
-    PokeOPID.CurrentError = 0;
-    PokeOPID.LastError = 0;
-    PokeOPID.P = 0.07;
-    PokeOPID.I = 0;
-    PokeOPID.D = 0;
-    PokeOPID.IMax = 0;
-    PokeOPID.PIDMax = 130;
-    PokeOPID.LastTick = 0;
-    
-    PokeIPID.CurrentError = 0;
-    PokeIPID.LastError = 0;
-    PokeIPID.P = 3.8;
-    PokeIPID.I = 0.2;
-    PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
-    PokeIPID.PIDMax = 90;
-    PokeIPID.LastTick = 0;
-    
-    ChassisOPID.CurrentError = 0;
-    ChassisOPID.LastError = 0;
-    ChassisOPID.P = 13;
-    ChassisOPID.I = 0;
-    ChassisOPID.D = 0;
-    ChassisOPID.IMax = 0;
-    ChassisOPID.PIDMax = 500;
-    ChassisOPID.LastTick = 0;
-    
-    ChassisIPID.CurrentError = 0;
-    ChassisIPID.LastError = 0;
-    ChassisIPID.P = 1.35;
-    ChassisIPID.I = 0;
-    ChassisIPID.D = 0;
-    ChassisIPID.IMax = 0;
-    ChassisIPID.PIDMax = 600;
-    ChassisIPID.LastTick = 0;
-    
-    ChassisAUTOOPID.CurrentError = 0;
-    ChassisAUTOOPID.LastError = 0;
-    ChassisAUTOOPID.P = 10.3;
-    ChassisAUTOOPID.I = 0;
-    ChassisAUTOOPID.D = 0;
-    ChassisAUTOOPID.IMax = 0;
-    ChassisAUTOOPID.PIDMax = 500;
-    ChassisAUTOOPID.LastTick = 0;
-    
-    ChassisAUTOIPID.CurrentError = 0;
-    ChassisAUTOIPID.LastError = 0;
-    ChassisAUTOIPID.P = 1;
-    ChassisAUTOIPID.I = 0;
-    ChassisAUTOIPID.D = 0;
-    ChassisAUTOIPID.IMax = 0;
-    ChassisAUTOIPID.PIDMax = 600;
-    ChassisAUTOIPID.LastTick = 0;
     
 #elif INFANTRY == 5     //狗蛋
-
-	YawOPID.LastError = 0;
-	YawOPID.P = 12;
-	YawOPID.I = 0;
-	YawOPID.D = 0;
-	YawOPID.IMax = 0;
-	YawOPID.PIDMax = 5000;
-	YawOPID.LastTick = 0;
-	
-	YawIPID.LastError = 0;
-	YawIPID.P = 2.7;
-	YawIPID.I = 0.2;
-	YawIPID.D = 0;
-	YawIPID.IMax = 100;
-	YawIPID.PIDMax = 5000;
-	YawIPID.LastTick = 0;
-    
-	ForcastYawSpeedPID.LastError = 0;
-	ForcastYawSpeedPID.P = 0.1F;
-	ForcastYawSpeedPID.I = 0.1;
-	ForcastYawSpeedPID.D = 0.5;
-	ForcastYawSpeedPID.IMax = 300;
-	ForcastYawSpeedPID.PIDMax = 5000;
-	ForcastYawSpeedPID.LastTick = 0;
-	
-	
-	PitchOPID.LastError = 0;
-	PitchOPID.P = 11;
-	PitchOPID.I = 0;
-	PitchOPID.D = 0;
-	PitchOPID.IMax = 0;
-	PitchOPID.PIDMax = 8000;
-	PitchOPID.LastTick = 0;
-	
-	PitchIPID.LastError = 0;
-	PitchIPID.P = 1.2;
-	PitchIPID.I = 0;
-	PitchIPID.D = 0;
-	PitchIPID.IMax = 0;
-	PitchIPID.PIDMax = 5000;
-	PitchIPID.LastTick = 0;
-    
-    PokeOPID.CurrentError = 0;
-    PokeOPID.LastError = 0;
-    PokeOPID.P = 0.07;
-    PokeOPID.I = 0;
-    PokeOPID.D = 0;
-    PokeOPID.IMax = 0;
-    PokeOPID.PIDMax = 130;
-    PokeOPID.LastTick = 0;
-    
-    PokeIPID.CurrentError = 0;
-    PokeIPID.LastError = 0;
-    PokeIPID.P = 3.8;
-    PokeIPID.I = 0.2;
-    PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
-    PokeIPID.PIDMax = 90;
-    PokeIPID.LastTick = 0;
-    
-    ChassisOPID.CurrentError = 0;
-    ChassisOPID.LastError = 0;
-    ChassisOPID.P = 13;
-    ChassisOPID.I = 0;
-    ChassisOPID.D = 0;
-    ChassisOPID.IMax = 0;
-    ChassisOPID.PIDMax = 500;
-    ChassisOPID.LastTick = 0;
-    
-    ChassisIPID.CurrentError = 0;
-    ChassisIPID.LastError = 0;
-    ChassisIPID.P = 1.35;
-    ChassisIPID.I = 0;
-    ChassisIPID.D = 0;
-    ChassisIPID.IMax = 0;
-    ChassisIPID.PIDMax = 600;
-    ChassisIPID.LastTick = 0;
-    
-    ChassisAUTOOPID.CurrentError = 0;
-    ChassisAUTOOPID.LastError = 0;
-    ChassisAUTOOPID.P = 10.3;
-    ChassisAUTOOPID.I = 0;
-    ChassisAUTOOPID.D = 0;
-    ChassisAUTOOPID.IMax = 0;
-    ChassisAUTOOPID.PIDMax = 500;
-    ChassisAUTOOPID.LastTick = 0;
-    
-    ChassisAUTOIPID.CurrentError = 0;
-    ChassisAUTOIPID.LastError = 0;
-    ChassisAUTOIPID.P = 1;
-    ChassisAUTOIPID.I = 0;
-    ChassisAUTOIPID.D = 0;
-    ChassisAUTOIPID.IMax = 0;
-    ChassisAUTOIPID.PIDMax = 600;
-    ChassisAUTOIPID.LastTick = 0;
     
 #elif INFANTRY == 6     //英雄
-
-	YawOPID.LastError = 0;
-	YawOPID.P = 7;
-	YawOPID.I = 0;
-	YawOPID.D = 0;
-	YawOPID.IMax = 0;
-	YawOPID.PIDMax = 5000;
-	YawOPID.LastTick = 0;
-	
-	YawIPID.LastError = 0;
-	YawIPID.P = 4;
-	YawIPID.I = 0.2;
-	YawIPID.D = 0;
-	YawIPID.IMax = 100;
-	YawIPID.PIDMax = 5000;
-	YawIPID.LastTick = 0;
-	
-	ForcastYawSpeedPID.LastError = 0;
-	ForcastYawSpeedPID.P = 6;
-	ForcastYawSpeedPID.I = 0.2F;
-	ForcastYawSpeedPID.D = 2;
-	ForcastYawSpeedPID.IMax = 1000;
-	ForcastYawSpeedPID.PIDMax = 5000;
-	ForcastYawSpeedPID.LastTick = 0;
-	
-	PitchOPID.LastError = 0;
-	PitchOPID.P = 9;
-	PitchOPID.I = 0.02;
-	PitchOPID.D = 0;
-	PitchOPID.IMax = 500;
-	PitchOPID.PIDMax = 8000;
-	PitchOPID.LastTick = 0;
-	
-	PitchIPID.LastError = 0;
-	PitchIPID.P = 2;
-	PitchIPID.I = 0;
-	PitchIPID.D = 0;
-	PitchIPID.IMax = 0;
-	PitchIPID.PIDMax = 5000;
-	PitchIPID.LastTick = 0;
     
-    PokeOPID.CurrentError = 0;
-    PokeOPID.LastError = 0;
-    PokeOPID.P = 0.07;
-    PokeOPID.I = 0;
-    PokeOPID.D = 0;
-    PokeOPID.IMax = 0;
-    PokeOPID.PIDMax = 130;
-    PokeOPID.LastTick = 0;
-    
-    PokeIPID.CurrentError = 0;
-    PokeIPID.LastError = 0;
-    PokeIPID.P = 3.8;
-    PokeIPID.I = 0.2;
-    PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
-    PokeIPID.PIDMax = 90;
-    PokeIPID.LastTick = 0;
-    
-    ChassisOPID.CurrentError = 0;
-    ChassisOPID.LastError = 0;
-    ChassisOPID.P = 13;
-    ChassisOPID.I = 0;
-    ChassisOPID.D = 0;
-    ChassisOPID.IMax = 0;
-    ChassisOPID.PIDMax = 500;
-    ChassisOPID.LastTick = 0;
-    
-    ChassisIPID.CurrentError = 0;
-    ChassisIPID.LastError = 0;
-    ChassisIPID.P = 2.1;
-    ChassisIPID.I = 0;
-    ChassisIPID.D = 0;
-    ChassisIPID.IMax = 0;
-    ChassisIPID.PIDMax = 600;
-    ChassisIPID.LastTick = 0;
-    
-    ChassisAUTOOPID.CurrentError = 0;
-    ChassisAUTOOPID.LastError = 0;
-    ChassisAUTOOPID.P = 13;
-    ChassisAUTOOPID.I = 0;
-    ChassisAUTOOPID.D = 0;
-    ChassisAUTOOPID.IMax = 0;
-    ChassisAUTOOPID.PIDMax = 500;
-    ChassisAUTOOPID.LastTick = 0;
-    
-    ChassisAUTOIPID.CurrentError = 0;
-    ChassisAUTOIPID.LastError = 0;
-    ChassisAUTOIPID.P = 2.1;
-    ChassisAUTOIPID.I = 0;
-    ChassisAUTOIPID.D = 0;
-    ChassisAUTOIPID.IMax = 0;
-    ChassisAUTOIPID.PIDMax = 600;
-    ChassisAUTOIPID.LastTick = 0;
 #endif
 }
 
 
 /**
+  * @note   modified
   * @brief  Yaw轴PID
   * @param  void
   * @retval 
@@ -619,7 +62,7 @@ int16_t Control_YawPID(void)
 {
 	portTickType CurrentTick = xTaskGetTickCount(); 
 /***************************************	外环	******************************************/
-	YawOPID.CurrentError = CloudParam.Yaw.EncoderTargetAngle - CloudParam.Yaw.RealEncoderAngle;
+	YawOPID.CurrentError = CloudParam.Yaw.TargetABSAngle - CloudParam.Yaw.RealABSAngle;
 	
 	YawOPID.Pout = YawOPID.P * YawOPID.CurrentError;
 	
@@ -627,7 +70,7 @@ int16_t Control_YawPID(void)
 	YawOPID.Iout = YawOPID.Iout > YawOPID.IMax ? YawOPID.IMax : YawOPID.Iout;
 	YawOPID.Iout = YawOPID.Iout < -YawOPID.IMax ? -YawOPID.IMax : YawOPID.Iout;
 	
-	YawOPID.Dout = -YawOPID.D * (SuperGyoMotorEncoderOmega - Position.MotorEncoderOmega.Z);
+	YawOPID.Dout = -YawOPID.D * (SuperGyoParam.Omega - Position.Real.OZ);
 	
 	YawOPID.PIDout = (YawOPID.Pout + YawOPID.Iout + YawOPID.Dout);
 	
@@ -637,8 +80,8 @@ int16_t Control_YawPID(void)
 	YawOPID.LastError = YawOPID.CurrentError;
 	
 /***************************************	内环	******************************************/
-	YawIPID.CurrentError = YawOPID.PIDout - (Position.MotorEncoderOmega.Z - SuperGyoMotorEncoderOmega);	
-//	YawIPID.CurrentError =  - (Position.MotorEncoderOmega.Z - SuperGyoMotorEncoderOmega);
+	YawIPID.CurrentError = YawOPID.PIDout - (Position.Real.OZ - SuperGyoParam.Omega);	
+	YawIPID.CurrentError = -DBUS_ReceiveData.ch4 - (Position.Real.OZ - SuperGyoParam.Omega);
 	
 	YawIPID.Pout = YawIPID.P * YawIPID.CurrentError;
 	
@@ -668,6 +111,7 @@ int16_t Control_YawPID(void)
 
 
 /**
+  * @note   modified
   * @brief  Pitch轴PID
   * @param  void
   * @retval void
@@ -677,7 +121,7 @@ int16_t Control_PitchPID(void)
 	portTickType CurrentTick = xTaskGetTickCount(); 
 /***************************************	外环	******************************************/
 
-	PitchOPID.CurrentError = CloudParam.Pitch.EncoderTargetAngle - CloudParam.Pitch.RealEncoderAngle;
+	PitchOPID.CurrentError = CloudParam.Pitch.TargetABSAngle - CloudParam.Pitch.RealABSAngle;
 	
 	PitchOPID.Pout = PitchOPID.P * PitchOPID.CurrentError;
 	
@@ -685,7 +129,7 @@ int16_t Control_PitchPID(void)
 	PitchOPID.Iout = PitchOPID.Iout > PitchOPID.IMax ? PitchOPID.IMax : PitchOPID.Iout;
 	PitchOPID.Iout = PitchOPID.Iout < -PitchOPID.IMax ? -PitchOPID.IMax : PitchOPID.Iout;
 	
-	PitchOPID.Dout = -PitchOPID.D * Position.MotorEncoderOmega.X;
+	PitchOPID.Dout = -PitchOPID.D * Position.Real.OX;
 	
 	PitchOPID.PIDout = PitchOPID.Pout + PitchOPID.Iout + PitchOPID.Dout;
 	
@@ -695,7 +139,7 @@ int16_t Control_PitchPID(void)
 	PitchOPID.LastError = PitchOPID.CurrentError;
 	
 /***************************************	内环	******************************************/
-	PitchIPID.CurrentError = PitchOPID.PIDout - Position.MotorEncoderOmega.X;	
+	PitchIPID.CurrentError = PitchOPID.PIDout - Position.Real.OX;	
 //	PitchIPID.CurrentError =  - Position.MotorEncoderOmega.X;
 	
 	PitchIPID.Pout = PitchIPID.P * PitchIPID.CurrentError;
@@ -767,121 +211,84 @@ int16_t Control_PokeIPID(void)
 }
 
 
-/**
-  * @brief  底盘角速度PID
+/** 
+  * @note   modified
+  * @brief  底盘角度PID
   * @param  0 正常PID         1 自动跟踪PID
   * @retval void
   */
-void Control_ChassisPID(uint8_t PIDChoie)
+void Control_ChassisPID(void)
 {
-    //正常PID 
-    if(PIDChoie == 0)
-    {
-        /************************************       外环PID       ************************************/
-        ChassisOPID.CurrentError = CloudParam.Yaw.ABSTargetAngle - SuperGyoAngle;
-        
-        ChassisOPID.Pout = ChassisOPID.P * ChassisOPID.CurrentError;
-        
-        ChassisOPID.Iout = ChassisOPID.I * ChassisOPID.CurrentError;
-        ChassisOPID.Iout = ChassisOPID.Iout > ChassisOPID.IMax ? ChassisOPID.IMax : ChassisOPID.Iout;
-        ChassisOPID.Iout = ChassisOPID.Iout < -ChassisOPID.IMax ? -ChassisOPID.IMax : ChassisOPID.Iout;
-        
-        ChassisOPID.Dout = ChassisOPID.D * (ChassisOPID.CurrentError - ChassisOPID.LastError);
-        
-        ChassisOPID.PIDout = ChassisOPID.Pout + ChassisOPID.Iout + ChassisOPID.Dout;
-        ChassisOPID.PIDout = ChassisOPID.PIDout > ChassisOPID.PIDMax ? ChassisOPID.PIDMax : ChassisOPID.PIDout;
-        ChassisOPID.PIDout = ChassisOPID.PIDout < -ChassisOPID.PIDMax ? -ChassisOPID.PIDMax : ChassisOPID.PIDout;
-        
-        /************************************       内环PID       ************************************/
-        ChassisIPID.CurrentError = ChassisOPID.PIDout - SuperGyoOmega;
-        
-        ChassisIPID.Pout = ChassisIPID.P * ChassisIPID.CurrentError;
-        
-        ChassisIPID.Iout = ChassisIPID.I * ChassisIPID.CurrentError;
-        ChassisIPID.Iout = ChassisIPID.Iout > ChassisIPID.IMax ? ChassisIPID.IMax : ChassisIPID.Iout;
-        ChassisIPID.Iout = ChassisIPID.Iout < -ChassisIPID.IMax ? -ChassisIPID.IMax : ChassisIPID.Iout;
-        
-        ChassisIPID.Dout = ChassisIPID.D * (ChassisIPID.CurrentError - ChassisIPID.LastError);
-        
-        ChassisIPID.PIDout = -(ChassisIPID.Pout + ChassisIPID.Iout + ChassisIPID.Dout);
-        ChassisIPID.PIDout = ChassisIPID.PIDout > ChassisIPID.PIDMax ? ChassisIPID.PIDMax : ChassisIPID.PIDout;
-        ChassisIPID.PIDout = ChassisIPID.PIDout < -ChassisIPID.PIDMax ? -ChassisIPID.PIDMax : ChassisIPID.PIDout;
-        
-        ChassisParam.Omega = ChassisIPID.PIDout;
-    }
-    else
-    {
-        /************************************       外环PID       ************************************/
-        ChassisAUTOOPID.CurrentError = CloudParam.Yaw.ABSTargetAngle - SuperGyoAngle;
-        
-        ChassisAUTOOPID.Pout = ChassisAUTOOPID.P * ChassisAUTOOPID.CurrentError;
-        
-        ChassisAUTOOPID.Iout = ChassisAUTOOPID.I * ChassisAUTOOPID.CurrentError;
-        ChassisAUTOOPID.Iout = ChassisAUTOOPID.Iout > ChassisAUTOOPID.IMax ? ChassisAUTOOPID.IMax : ChassisAUTOOPID.Iout;
-        ChassisAUTOOPID.Iout = ChassisAUTOOPID.Iout < -ChassisAUTOOPID.IMax ? -ChassisAUTOOPID.IMax : ChassisAUTOOPID.Iout;
-        
-        ChassisAUTOOPID.Dout = ChassisAUTOOPID.D * (ChassisAUTOOPID.CurrentError - ChassisAUTOOPID.LastError);
-        
-        ChassisAUTOOPID.PIDout = ChassisAUTOOPID.Pout + ChassisAUTOOPID.Iout + ChassisAUTOOPID.Dout;
-        ChassisAUTOOPID.PIDout = ChassisAUTOOPID.PIDout > ChassisAUTOOPID.PIDMax ? ChassisAUTOOPID.PIDMax : ChassisAUTOOPID.PIDout;
-        ChassisAUTOOPID.PIDout = ChassisAUTOOPID.PIDout < -ChassisAUTOOPID.PIDMax ? -ChassisAUTOOPID.PIDMax : ChassisAUTOOPID.PIDout;
-        
-        /************************************       内环PID       ************************************/
-        ChassisAUTOIPID.CurrentError = ChassisAUTOOPID.PIDout - SuperGyoOmega;
-        
-        ChassisAUTOIPID.Pout = ChassisAUTOIPID.P * ChassisAUTOIPID.CurrentError;
-        
-        ChassisAUTOIPID.Iout = ChassisAUTOIPID.I * ChassisAUTOIPID.CurrentError;
-        ChassisAUTOIPID.Iout = ChassisAUTOIPID.Iout > ChassisAUTOIPID.IMax ? ChassisAUTOIPID.IMax : ChassisAUTOIPID.Iout;
-        ChassisAUTOIPID.Iout = ChassisAUTOIPID.Iout < -ChassisAUTOIPID.IMax ? -ChassisAUTOIPID.IMax : ChassisAUTOIPID.Iout;
-        
-        ChassisAUTOIPID.Dout = ChassisAUTOIPID.D * (ChassisAUTOIPID.CurrentError - ChassisAUTOIPID.LastError);
-        
-        ChassisAUTOIPID.PIDout = -(ChassisAUTOIPID.Pout + ChassisAUTOIPID.Iout + ChassisAUTOIPID.Dout);
-        ChassisAUTOIPID.PIDout = ChassisAUTOIPID.PIDout > ChassisAUTOIPID.PIDMax ? ChassisAUTOIPID.PIDMax : ChassisAUTOIPID.PIDout;
-        ChassisAUTOIPID.PIDout = ChassisAUTOIPID.PIDout < -ChassisAUTOIPID.PIDMax ? -ChassisAUTOIPID.PIDMax : ChassisAUTOIPID.PIDout;
-        
-        ChassisParam.Omega = ChassisAUTOIPID.PIDout;
-    }
-}
-
-
-/**
-  * @brief  预判自动追踪专用速度PID
-  * @param  目标角速度（编码器线单位）
-  * @retval 输出电流值
-  */
-int16_t VControl_YawPID(float TargetOmega)
-{
-	portTickType CurrentTick = xTaskGetTickCount(); 
+    /************************************       外环PID       ************************************/
+    ChassisOPID.CurrentError = ChassisParam.TargetABSAngle - SuperGyoParam.Angle;
     
-    ForcastYawSpeedPID.CurrentError = TargetOmega * 22.7556F - (Position.MotorEncoderOmega.Z - SuperGyoMotorEncoderOmega);
-	
-	ForcastYawSpeedPID.Pout = ForcastYawSpeedPID.P * ForcastYawSpeedPID.CurrentError;
-	
-	ForcastYawSpeedPID.Iout += ForcastYawSpeedPID.I * ForcastYawSpeedPID.CurrentError;
-	ForcastYawSpeedPID.Iout = ForcastYawSpeedPID.Iout > ForcastYawSpeedPID.IMax ? ForcastYawSpeedPID.IMax : ForcastYawSpeedPID.Iout;
-	ForcastYawSpeedPID.Iout = ForcastYawSpeedPID.Iout < -ForcastYawSpeedPID.IMax ? -ForcastYawSpeedPID.IMax : ForcastYawSpeedPID.Iout;
-	
-	if(ForcastYawSpeedPID.LastTick != CurrentTick)
-	{
-		ForcastYawSpeedPID.Dout = ForcastYawSpeedPID.D * (ForcastYawSpeedPID.CurrentError - ForcastYawSpeedPID.LastError) * 5 / (CurrentTick - ForcastYawSpeedPID.LastTick);
-	}
-	else
-	{
-		ForcastYawSpeedPID.Dout = ForcastYawSpeedPID.D * (ForcastYawSpeedPID.CurrentError - ForcastYawSpeedPID.LastError);
-	}
-	
-	ForcastYawSpeedPID.PIDout = (ForcastYawSpeedPID.Pout + ForcastYawSpeedPID.Iout + ForcastYawSpeedPID.Dout);
-	
-	ForcastYawSpeedPID.PIDout = ForcastYawSpeedPID.PIDout > ForcastYawSpeedPID.PIDMax ? ForcastYawSpeedPID.PIDMax : ForcastYawSpeedPID.PIDout;
-	ForcastYawSpeedPID.PIDout = ForcastYawSpeedPID.PIDout < -ForcastYawSpeedPID.PIDMax ? -ForcastYawSpeedPID.PIDMax : ForcastYawSpeedPID.PIDout;
-	
-	ForcastYawSpeedPID.LastError = ForcastYawSpeedPID.CurrentError;
-	ForcastYawSpeedPID.LastTick = CurrentTick;
-	
-	return (short)ForcastYawSpeedPID.PIDout;
+    ChassisOPID.Pout = ChassisOPID.P * ChassisOPID.CurrentError;
+    
+    ChassisOPID.Iout = ChassisOPID.I * ChassisOPID.CurrentError;
+    ChassisOPID.Iout = ChassisOPID.Iout > ChassisOPID.IMax ? ChassisOPID.IMax : ChassisOPID.Iout;
+    ChassisOPID.Iout = ChassisOPID.Iout < -ChassisOPID.IMax ? -ChassisOPID.IMax : ChassisOPID.Iout;
+    
+    ChassisOPID.Dout = ChassisOPID.D * (ChassisOPID.CurrentError - ChassisOPID.LastError);
+    
+    ChassisOPID.PIDout = ChassisOPID.Pout + ChassisOPID.Iout + ChassisOPID.Dout;
+    ChassisOPID.PIDout = ChassisOPID.PIDout > ChassisOPID.PIDMax ? ChassisOPID.PIDMax : ChassisOPID.PIDout;
+    ChassisOPID.PIDout = ChassisOPID.PIDout < -ChassisOPID.PIDMax ? -ChassisOPID.PIDMax : ChassisOPID.PIDout;
+    
+    /************************************       内环PID       ************************************/
+    ChassisIPID.CurrentError = ChassisOPID.PIDout - SuperGyoParam.Omega ;
+    
+    ChassisIPID.Pout = ChassisIPID.P * ChassisIPID.CurrentError;
+    
+    ChassisIPID.Iout = ChassisIPID.I * ChassisIPID.CurrentError;
+    ChassisIPID.Iout = ChassisIPID.Iout > ChassisIPID.IMax ? ChassisIPID.IMax : ChassisIPID.Iout;
+    ChassisIPID.Iout = ChassisIPID.Iout < -ChassisIPID.IMax ? -ChassisIPID.IMax : ChassisIPID.Iout;
+    
+    ChassisIPID.Dout = ChassisIPID.D * (ChassisIPID.CurrentError - ChassisIPID.LastError);
+    
+    ChassisIPID.PIDout = -(ChassisIPID.Pout + ChassisIPID.Iout + ChassisIPID.Dout);
+    ChassisIPID.PIDout = ChassisIPID.PIDout > ChassisIPID.PIDMax ? ChassisIPID.PIDMax : ChassisIPID.PIDout;
+    ChassisIPID.PIDout = ChassisIPID.PIDout < -ChassisIPID.PIDMax ? -ChassisIPID.PIDMax : ChassisIPID.PIDout;
+    
+    ChassisParam.TargetOmega = ChassisIPID.PIDout;
 }
+
+
+///**
+//  * @brief  预判自动追踪专用速度PID
+//  * @param  目标角速度（编码器线单位）
+//  * @retval 输出电流值
+//  */
+//int16_t VControl_YawPID(float TargetOmega)
+//{
+//	portTickType CurrentTick = xTaskGetTickCount(); 
+//    
+//    ForcastYawSpeedPID.CurrentError = TargetOmega * 22.7556F - (Position.MotorEncoderOmega.Z - SuperGyoMotorEncoderOmega);
+//	
+//	ForcastYawSpeedPID.Pout = ForcastYawSpeedPID.P * ForcastYawSpeedPID.CurrentError;
+//	
+//	ForcastYawSpeedPID.Iout += ForcastYawSpeedPID.I * ForcastYawSpeedPID.CurrentError;
+//	ForcastYawSpeedPID.Iout = ForcastYawSpeedPID.Iout > ForcastYawSpeedPID.IMax ? ForcastYawSpeedPID.IMax : ForcastYawSpeedPID.Iout;
+//	ForcastYawSpeedPID.Iout = ForcastYawSpeedPID.Iout < -ForcastYawSpeedPID.IMax ? -ForcastYawSpeedPID.IMax : ForcastYawSpeedPID.Iout;
+//	
+//	if(ForcastYawSpeedPID.LastTick != CurrentTick)
+//	{
+//		ForcastYawSpeedPID.Dout = ForcastYawSpeedPID.D * (ForcastYawSpeedPID.CurrentError - ForcastYawSpeedPID.LastError) * 5 / (CurrentTick - ForcastYawSpeedPID.LastTick);
+//	}
+//	else
+//	{
+//		ForcastYawSpeedPID.Dout = ForcastYawSpeedPID.D * (ForcastYawSpeedPID.CurrentError - ForcastYawSpeedPID.LastError);
+//	}
+//	
+//	ForcastYawSpeedPID.PIDout = (ForcastYawSpeedPID.Pout + ForcastYawSpeedPID.Iout + ForcastYawSpeedPID.Dout);
+//	
+//	ForcastYawSpeedPID.PIDout = ForcastYawSpeedPID.PIDout > ForcastYawSpeedPID.PIDMax ? ForcastYawSpeedPID.PIDMax : ForcastYawSpeedPID.PIDout;
+//	ForcastYawSpeedPID.PIDout = ForcastYawSpeedPID.PIDout < -ForcastYawSpeedPID.PIDMax ? -ForcastYawSpeedPID.PIDMax : ForcastYawSpeedPID.PIDout;
+//	
+//	ForcastYawSpeedPID.LastError = ForcastYawSpeedPID.CurrentError;
+//	ForcastYawSpeedPID.LastTick = CurrentTick;
+//	
+//	return (short)ForcastYawSpeedPID.PIDout;
+//}
 
 
 

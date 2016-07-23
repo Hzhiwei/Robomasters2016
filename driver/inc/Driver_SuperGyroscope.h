@@ -24,14 +24,17 @@ typedef union u8Tofloat
 }u8Todouble;
 
 
-//底盘陀螺仪角度
-__DRIVER_SUPERGYROSCOPE_EXT float SuperGyoAngle;
-//底盘陀螺仪上次角度
-__DRIVER_SUPERGYROSCOPE_EXT float LastSuperGyoAngle;
-//底盘陀螺仪角速度
-__DRIVER_SUPERGYROSCOPE_EXT float SuperGyoOmega;
-//底盘陀螺仪角速度转为编码器单位
-__DRIVER_SUPERGYROSCOPE_EXT float SuperGyoMotorEncoderOmega;
+//底盘陀螺仪数据结构体
+typedef struct
+{
+    float Angle;
+    float Omega;
+    float Offset;
+}SuperGyoParam_Struct;
+
+
+//底盘陀螺仪数据
+__DRIVER_SUPERGYROSCOPE_EXT SuperGyoParam_Struct SuperGyoParam;
 //底盘陀螺仪数据帧计数
 __DRIVER_SUPERGYROSCOPE_EXT float SuperGyoFrameCounter;
 //底盘陀螺仪数据帧帧率

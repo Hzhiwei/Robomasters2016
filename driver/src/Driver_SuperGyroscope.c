@@ -12,8 +12,8 @@
 void SuperGyo_InitConfig(void)
 {
     SuperGyoFrameCounter = 0;
-    
-    SuperGyoOmega = 0;
+    SuperGyoParam.Angle = 0;
+    SuperGyoParam.Omega = 0;
 }
 
 

@@ -15,59 +15,80 @@
 
 //角度限幅
 #if INFANTRY == 1       //萨摩
-#define PitchUPLimit            5600
-#define PitchDOWNLimit          4500
-#define PitchCenter             4844
-#define YawLEFTLimit            5600
-#define YawRIGHTLimit           3800
-#define YawCenter               4650
-#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
-#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
+
+    #define PitchEncoderUPLimit             5600            //云台机械上限编码器值
+    #define PitchEncoderDOWNLimit           4500            //云台机械下限编码器值
+    #define PitchEncoderCenter              4844            //云台Pitch水平编码器值
+    #define YawEncoderLEFTLimit             5600            //云台机械左极限编码器值
+    #define YawEncoderRIGHTLimit            3800            //云台机械右极限编码器值
+    #define YawEncoderCenter                4650            //云台Yaw中编码器值
+
+    #define PitchABSUPLimit                 60.0F           //操作绝对角度上极限
+    #define PitchABSDOWNLimit               -40.0F          //操作绝对角度下极限
+    
+    #define PitchEncoderPassZeroBoundary    0               //Pitch电机编码器分界值（距此值判断过零
+    #define YawEncoderPassZeroBoundary      0               //Pitch电机编码器分界值（距此值判断过零
+
 #elif INFANTRY == 2     //阿拉斯加
-#define PitchUPLimit            3500
-#define PitchDOWNLimit          2500
-#define PitchCenter             2888
-#define YawLEFTLimit            5000
-#define YawRIGHTLimit           3250
-#define YawCenter               4100
-#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
-#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
+
+    #define PitchEncoderUPLimit             3500
+    #define PitchEncoderDOWNLimit           2500
+    #define PitchEncoderCenter              2888
+    #define YawEncoderLEFTLimit             5000
+    #define YawEncoderRIGHTLimit            3250
+    #define YawEncoderCenter                4100
+    
+    #define PitchABSUPLimit                 60.0F 
+    #define PitchABSDOWNLimit               -40.0F
+    
+    #define PitchEncoderPassZeroBoundary    0
+    #define YawEncoderPassZeroBoundary      0
+
 #elif INFANTRY == 3     //哈士奇
-#define PitchUPLimit            4400
-#define PitchDOWNLimit          3500
-#define PitchCenter             3897
-#define YawLEFTLimit            4600
-#define YawRIGHTLimit           2220
-#define YawCenter               3380
-#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
-#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
+
+    #define PitchEncoderUPLimit             4400
+    #define PitchEncoderDOWNLimit           3500
+    #define PitchEncoderCenter              3897
+    #define YawEncoderLEFTLimit             4600
+    #define YawEncoderRIGHTLimit            2220
+    #define YawEncoderCenter                3380
+    
+    #define PitchABSUPLimit                 60.0F 
+    #define PitchABSDOWNLimit               -40.0F
+    
+    #define PitchEncoderPassZeroBoundary    0
+    #define YawEncoderPassZeroBoundary      0
+
 #elif INFANTRY == 4     //边牧
-#define PitchUPLimit            5400
-#define PitchDOWNLimit          4430
-#define PitchCenter             4862
-#define YawLEFTLimit            4630
-#define YawRIGHTLimit           2230
-#define YawCenter               3440
-#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
-#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
+
+    #define PitchEncoderUPLimit             5400
+    #define PitchEncoderDOWNLimit           4430
+    #define PitchEncoderCenter              4862
+    #define YawEncoderLEFTLimit             4630
+    #define YawEncoderRIGHTLimit            2230
+    #define YawEncoderCenter                3440
+                
+    #define PitchABSUPLimit                 60.0F 
+    #define PitchABSDOWNLimit               -40.0F
+    
+    #define PitchEncoderPassZeroBoundary    0
+    #define YawEncoderPassZeroBoundary      0
+
 #elif INFANTRY == 5     //狗蛋
-#define PitchUPLimit            5400
-#define PitchDOWNLimit          4600
-#define PitchCenter             4862
-#define YawLEFTLimit            10400
-#define YawRIGHTLimit           8400
-#define YawCenter               9270
-#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
-#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
-#elif INFANTRY == 6     //英雄
-#define PitchUPLimit            7850
-#define PitchDOWNLimit          7060
-#define PitchCenter             7377
-#define YawLEFTLimit            3980
-#define YawRIGHTLimit           2560
-#define YawCenter               3327
-#define ABSPITCHUPLIMIT         60.0F          //pitch绝对角度上限幅
-#define ABSPITCHDOWNLIMIT       -40.0F         //pitch绝对角度下限幅
+
+    #define PitchEncoderUPLimit             5400
+    #define PitchEncoderDOWNLimit           4600
+    #define PitchEncoderCenter              4862
+    #define YawEncoderLEFTLimit             10400
+    #define YawEncoderRIGHTLimit            8400
+    #define YawEncoderCenter                9270
+                
+    #define PitchABSUPLimit                 60.0F 
+    #define PitchABSDOWNLimit               -40.0F
+    
+    #define PitchEncoderPassZeroBoundary    4000
+    #define YawEncoderPassZeroBoundary      0
+
 #endif
 
 
@@ -83,18 +104,17 @@
 //角度类型枚举
 typedef enum
 {
-    AngleMode_Encoder,
-    AngleMode_ABS
+    AngleMode_OPP,          //相对角度
+    AngleMode_ABS           //绝对角度
 }AngleMode_Enum;
 
 
 //云台电机参数结构体
 typedef struct
 {
-    uint16_t EncoderTargetAngle;                //目标角度（编码器值）
-    float   ABSTargetAngle;                     //目标角度（实际值）
-    uint16_t RealEncoderAngle;                  //电机实际角度（编码器值）    
-    AngleMode_Enum AngleMode;                   //角度模式，指明目标角度使用绝对角度还是相对角度
+    uint16_t RealEncoderAngle;                  //电机角度编码器值  
+    float RealABSAngle;                         //实际角度（绝对值）
+    float TargetABSAngle;                       //目标角度（绝对值）
     uint16_t FrameCounter;                      //帧率计数器
     uint16_t FrameRate;                         //帧率
 }ClourMotorParam_Struct;
@@ -112,12 +132,11 @@ typedef struct
 __CLOUDMOTOR_EXT CloudParam_Struct CloudParam;
 
 
-
 void CloudMotor_InitConfig(void);
 void CloudMotorCurrent(int16_t Pitch, int16_t Yaw);
 void Cloud_Adjust(uint8_t mode);
-void Cloud_YawAngleSet(float Target, uint8_t mode);
-void Cloud_PitchAngleSet(float Target, uint8_t mode);
+void Cloud_YawAngleSet(float Target, AngleMode_Enum mode);
+void Cloud_PitchAngleSet(float Target);
 
 
 #endif

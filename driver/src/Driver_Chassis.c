@@ -35,9 +35,10 @@ void Chassis_InitConfig(void)
     
     ChassisMaxSumCurrent = 2380.0F;
     
-    ChassisParam.VX = 0;
-    ChassisParam.VY = 0;
-    ChassisParam.Omega = 0;
+    ChassisParam.TargetVX = 0;
+    ChassisParam.TargetVY = 0;
+    ChassisParam.TargetOmega = 0;
+    ChassisParam.TargetABSAngle = 0;
     ChassisParam.SpeedLevel = ChassisSpeedLevel_Hight;
     
     for(int i = 0; i < 4; i++)
@@ -55,7 +56,7 @@ void Chassis_InitConfig(void)
   */
 void Chassis_OmegaSet(float Target)
 {
-    ChassisParam.Omega = Target;
+    ChassisParam.TargetOmega = Target;
 }
 
 
@@ -67,84 +68,17 @@ void Chassis_OmegaSet(float Target)
   */
 void Chassis_SpeedSet(float XSpeed, float YSpeed)
 {
-    XSpeed = XSpeed > MaxWheelSpeed ? MaxWheelSpeed : XSpeed;
+    XSpeed = XSpeed > MaxWheelSpeed
+    ? MaxWheelSpeed : XSpeed;
     XSpeed = XSpeed < -MaxWheelSpeed ? -MaxWheelSpeed : XSpeed;
     
     YSpeed = YSpeed > MaxWheelSpeed ? MaxWheelSpeed : YSpeed;
     YSpeed = YSpeed < -MaxWheelSpeed ? -MaxWheelSpeed : YSpeed;
     
-    ChassisParam.VX = XSpeed;
-    ChassisParam.VY = YSpeed;
+    ChassisParam.TargetVX = XSpeed;
+    ChassisParam.TargetVY = YSpeed;
 }
 
-
-
-/**
-  * @brief  底盘调节
-  * @param  void  
-  * @retval void
-  */
-void Chassis_Adjust(void)
-{
-    int16_t WheelSpeed[4];
-    int16_t PowerSum;
-    
-    int16_t ABSSpeed[4];
-    
-    //麦轮解算
-    MecanumCalculate(ChassisParam.VX, ChassisParam.VY, ChassisParam.Omega, WheelSpeed);
-    
-    ChassisParam.LF.TargetSpeed = WheelSpeed[0];
-    ChassisParam.RF.TargetSpeed = WheelSpeed[1];
-    ChassisParam.LB.TargetSpeed = WheelSpeed[2];
-    ChassisParam.RB.TargetSpeed = WheelSpeed[3];
-//    
-//    ABSSpeed[0] = (ChassisParam.LF.TargetSpeed > 0 ? ChassisParam.LF.TargetSpeed : -ChassisParam.LF.TargetSpeed);
-//    ABSSpeed[1] = (ChassisParam.RF.TargetSpeed > 0 ? ChassisParam.RF.TargetSpeed : -ChassisParam.RF.TargetSpeed);
-//    ABSSpeed[2] = (ChassisParam.LB.TargetSpeed > 0 ? ChassisParam.LB.TargetSpeed : -ChassisParam.LB.TargetSpeed);
-//    ABSSpeed[3] = (ChassisParam.RB.TargetSpeed > 0 ? ChassisParam.RB.TargetSpeed : -ChassisParam.RB.TargetSpeed);
-//    
-//    //功率分配
-//    PowerSum = ABSSpeed[0] + ABSSpeed[1] + ABSSpeed[2] + ABSSpeed[3];
-//    
-//    if(PowerSum > 0)
-//    {
-//        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[0] / PowerSum;
-//        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[1] / PowerSum;
-//        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[2] / PowerSum;
-//        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[3] / PowerSum;
-//    }
-//    else
-//    {
-//        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent / 4;
-//        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent / 4;
-//        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent / 4;
-//        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent / 4;
-//    }
-
-    ABSSpeed[0] = (ChassisParam.LF.NeedCurrent > 0 ? ChassisParam.LF.NeedCurrent : -ChassisParam.LF.NeedCurrent);
-    ABSSpeed[1] = (ChassisParam.RF.NeedCurrent > 0 ? ChassisParam.RF.NeedCurrent : -ChassisParam.RF.NeedCurrent);
-    ABSSpeed[2] = (ChassisParam.LB.NeedCurrent > 0 ? ChassisParam.LB.NeedCurrent : -ChassisParam.LB.NeedCurrent);
-    ABSSpeed[3] = (ChassisParam.RB.NeedCurrent > 0 ? ChassisParam.RB.NeedCurrent : -ChassisParam.RB.NeedCurrent);
-    
-    //功率分配
-    PowerSum = ABSSpeed[0] + ABSSpeed[1] + ABSSpeed[2] + ABSSpeed[3];
-    
-    if(PowerSum > 0)
-    {
-        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[0] / PowerSum;
-        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[1] / PowerSum;
-        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[2] / PowerSum;
-        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[3] / PowerSum;
-    }
-    else
-    {
-        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent / 4;
-        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent / 4;
-        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent / 4;
-        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent / 4;
-    }
-}
 
 
 /**
@@ -156,11 +90,11 @@ void Chassis_SendMotorParam(uint8_t mode)
 {
     static  CanSend_Type   SendData;
     
-    #if CANPORT == 1
+#if CANPORT == 1
     SendData.CANx = 1;
-    #else
+#else
     SendData.CANx = 2;
-    #endif
+#endif
     
     SendData.SendCanTxMsg.DLC   =   8;
     SendData.SendCanTxMsg.IDE   =   CAN_ID_STD;
@@ -217,7 +151,6 @@ void Chassis_SendMotorParam(uint8_t mode)
 }
 
 
-
 /**
   * @brief  电机调试模式，电流700，速度0
   * @param  void
@@ -227,11 +160,11 @@ void Chassis_MotorDebug(void)
 {
     static  CanSend_Type   SendData;
     
-    #if CANPORT == 1
+#if CANPORT == 1
     SendData.CANx = 1;
-    #else
+#else
     SendData.CANx = 2;
-    #endif
+#endif
     
     SendData.SendCanTxMsg.DLC   =   8;
     SendData.SendCanTxMsg.IDE   =   CAN_ID_STD;
@@ -268,9 +201,54 @@ void Chassis_MotorDebug(void)
   */
 void Chassis_Control(uint8_t mode, uint8_t PIDChoie)
 {
-    Control_ChassisPID(PIDChoie);
+    Control_ChassisPID();
     Chassis_Adjust();
     Chassis_SendMotorParam(mode);
+}
+
+
+/**
+  * @brief  底盘调节
+  * @param  void  
+  * @retval void
+  */
+void Chassis_Adjust(void)                                  
+{
+    int16_t WheelSpeed[4];
+    int16_t PowerSum;
+    
+    int16_t ABSSpeed[4];
+    
+    //麦轮解算
+    MecanumCalculate(ChassisParam.TargetVX, ChassisParam.TargetVY, ChassisParam.TargetOmega, WheelSpeed);
+    
+    ChassisParam.LF.TargetSpeed = WheelSpeed[0];
+    ChassisParam.RF.TargetSpeed = WheelSpeed[1];
+    ChassisParam.LB.TargetSpeed = WheelSpeed[2];
+    ChassisParam.RB.TargetSpeed = WheelSpeed[3];
+
+    ABSSpeed[0] = (ChassisParam.LF.NeedCurrent > 0 ? ChassisParam.LF.NeedCurrent : -ChassisParam.LF.NeedCurrent);
+    ABSSpeed[1] = (ChassisParam.RF.NeedCurrent > 0 ? ChassisParam.RF.NeedCurrent : -ChassisParam.RF.NeedCurrent);
+    ABSSpeed[2] = (ChassisParam.LB.NeedCurrent > 0 ? ChassisParam.LB.NeedCurrent : -ChassisParam.LB.NeedCurrent);
+    ABSSpeed[3] = (ChassisParam.RB.NeedCurrent > 0 ? ChassisParam.RB.NeedCurrent : -ChassisParam.RB.NeedCurrent);
+    
+    //功率分配
+    PowerSum = ABSSpeed[0] + ABSSpeed[1] + ABSSpeed[2] + ABSSpeed[3];
+    
+    if(PowerSum > 0)
+    {
+        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[0] / PowerSum;
+        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[1] / PowerSum;
+        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[2] / PowerSum;
+        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[3] / PowerSum;
+    }
+    else
+    {
+        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent / 4;
+        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent / 4;
+        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent / 4;
+        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent / 4;
+    }
 }
 
 

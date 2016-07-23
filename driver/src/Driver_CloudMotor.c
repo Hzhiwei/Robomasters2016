@@ -11,32 +11,25 @@
 #include "Handler.h"
 
 
-/*******************
-电机参数见头文件宏定义
-*******************/
-
-
-
 /**
+  * @note   modified
   * @brief  电机初始化
   * @param  void
   * @retval void
   */
 void CloudMotor_InitConfig(void)
 {
-    CloudParam.Pitch.EncoderTargetAngle = PitchCenter;
-    CloudParam.Pitch.ABSTargetAngle     = 0;
-    CloudParam.Pitch.AngleMode          = AngleMode_Encoder;
-    CloudParam.Pitch.FrameCounter       = 0;
-    CloudParam.Pitch.FrameRate          = 0;
-    CloudParam.Pitch.RealEncoderAngle   = PitchCenter;
+    CloudParam.Pitch.FrameCounter = 0;
+    CloudParam.Pitch.FrameRate = 0;
+    CloudParam.Pitch.RealABSAngle = 0;
+    CloudParam.Pitch.RealEncoderAngle = PitchEncoderCenter;
+    CloudParam.Pitch.TargetABSAngle = 0;
     
-    CloudParam.Yaw.EncoderTargetAngle   = YawCenter;
-    CloudParam.Yaw.ABSTargetAngle       = 0;
-    CloudParam.Yaw.AngleMode            = AngleMode_Encoder;
-    CloudParam.Yaw.FrameCounter         = 0;
-    CloudParam.Yaw.FrameRate            = 0;
-    CloudParam.Yaw.RealEncoderAngle     = YawCenter;
+    CloudParam.Yaw.FrameCounter = 0;
+    CloudParam.Yaw.FrameRate = 0;
+    CloudParam.Yaw.RealABSAngle = 0;
+    CloudParam.Yaw.RealEncoderAngle = YawEncoderCenter;
+    CloudParam.Yaw.TargetABSAngle = 0;
     
     CloudParam.Lock = 1;
 }
@@ -52,49 +45,33 @@ void CloudMotorCurrent(int16_t Pitch, int16_t Yaw)
 {
     static CanSend_Type   SendData;
     
-    #if CANPORT == 1
+#if CANPORT == 1
     SendData.CANx = 1;
-    #else
+#else
     SendData.CANx = 2;
-    #endif
-    
+#endif
     
     SendData.SendCanTxMsg.DLC   =   8;
     SendData.SendCanTxMsg.IDE   =   CAN_ID_STD;
     SendData.SendCanTxMsg.RTR   =   CAN_RTR_Data;
     SendData.SendCanTxMsg.StdId =   COULDCONTROLID;
     
-#if INFANTRY == 1 || INFANTRY == 2 || INFANTRY == 3 || INFANTRY == 6
+#if YAWMOTORCURRENTPLUSDIR == 1
     SendData.SendCanTxMsg.Data[0] = Yaw >> 8;
     SendData.SendCanTxMsg.Data[1] = Yaw;
-    SendData.SendCanTxMsg.Data[2] = Pitch >> 8;
-    SendData.SendCanTxMsg.Data[3] = Pitch;
-    SendData.SendCanTxMsg.Data[4] = 0;
-    SendData.SendCanTxMsg.Data[5] = 0;
-    SendData.SendCanTxMsg.Data[6] = 0;
-    SendData.SendCanTxMsg.Data[7] = 0;
-    
-#elif INFANTRY == 4
+#else
     SendData.SendCanTxMsg.Data[0] = (-Yaw) >> 8;
     SendData.SendCanTxMsg.Data[1] = (-Yaw);
-    SendData.SendCanTxMsg.Data[2] = (-Pitch) >> 8;
-    SendData.SendCanTxMsg.Data[3] = (-Pitch);
-    SendData.SendCanTxMsg.Data[4] = 0;
-    SendData.SendCanTxMsg.Data[5] = 0;
-    SendData.SendCanTxMsg.Data[6] = 0;
-    SendData.SendCanTxMsg.Data[7] = 0;
-    
-#elif INFANTRY == 5
-    SendData.SendCanTxMsg.Data[0] = (Yaw) >> 8;
-    SendData.SendCanTxMsg.Data[1] = (Yaw);
-    SendData.SendCanTxMsg.Data[2] = (-Pitch) >> 8;
-    SendData.SendCanTxMsg.Data[3] = (-Pitch);
-    SendData.SendCanTxMsg.Data[4] = 0;
-    SendData.SendCanTxMsg.Data[5] = 0;
-    SendData.SendCanTxMsg.Data[6] = 0;
-    SendData.SendCanTxMsg.Data[7] = 0;
 #endif
     
+#if PITCHMOTORCURRENTPLUSDIR == 1
+    SendData.SendCanTxMsg.Data[2] = Pitch >> 8;
+    SendData.SendCanTxMsg.Data[3] = Pitch;
+#else
+    SendData.SendCanTxMsg.Data[2] = (-Pitch) >> 8;
+    SendData.SendCanTxMsg.Data[3] = (-Pitch);
+#endif
+
     xQueueSend(Queue_CANSend, &SendData, 10);
 }
 
@@ -112,22 +89,6 @@ void Cloud_Adjust(uint8_t mode)
     //未锁定
     if(mode)
     {
-        //Yaw绝对角度目标模式
-        if(CloudParam.Yaw.AngleMode == AngleMode_ABS)
-        {
-            CloudParam.Yaw.EncoderTargetAngle = (CloudParam.Yaw.ABSTargetAngle - SuperGyoAngle) * 22.7556F + YawCenter;
-            CloudParam.Yaw.EncoderTargetAngle = CloudParam.Yaw.EncoderTargetAngle > YawLEFTLimit ? YawLEFTLimit : CloudParam.Yaw.EncoderTargetAngle;
-            CloudParam.Yaw.EncoderTargetAngle = CloudParam.Yaw.EncoderTargetAngle < YawRIGHTLimit ? YawRIGHTLimit : CloudParam.Yaw.EncoderTargetAngle;
-        }
-        
-        //Pitch绝对角度目标模式
-        if(CloudParam.Pitch.AngleMode == AngleMode_ABS)
-        {
-            CloudParam.Pitch.EncoderTargetAngle = (CloudParam.Pitch.ABSTargetAngle - Position.Euler.Pitch) * 22.7556F + CloudParam.Pitch.RealEncoderAngle;
-            CloudParam.Pitch.EncoderTargetAngle = CloudParam.Pitch.EncoderTargetAngle > PitchUPLimit ? PitchUPLimit : CloudParam.Pitch.EncoderTargetAngle;
-            CloudParam.Pitch.EncoderTargetAngle = CloudParam.Pitch.EncoderTargetAngle < PitchDOWNLimit ? PitchDOWNLimit : CloudParam.Pitch.EncoderTargetAngle;
-        }
-        
         PitchMotorCurrent = Control_PitchPID();
         YawMotorCurrent = Control_YawPID();
     }
@@ -144,64 +105,46 @@ void Cloud_Adjust(uint8_t mode)
 
 
 /**
-  * @brief  云台Yaw度及模式设置
+  * @note   modified
+  * @brief  云台Yaw角度设置
   * @param  目标角度
-  * @param  模式  0 绝对角度          1 相对角度（编码器角度,左正右负,中间为0）
+  * @param  模式
   * @retval void
+
   */
-void Cloud_YawAngleSet(float Target, uint8_t mode)
+void Cloud_YawAngleSet(float Target, AngleMode_Enum mode)
 {
-    int16_t Buffer;
-    
-    if(mode)
+    if(mode == AngleMode_ABS)
     {
-        CloudParam.Yaw.AngleMode = AngleMode_Encoder;
-        
-        Buffer = (int16_t)Target + YawCenter;
-        Buffer = Buffer > YawLEFTLimit ? YawLEFTLimit : Buffer;
-        Buffer = Buffer < YawRIGHTLimit ? YawRIGHTLimit : Buffer;
-        
-        CloudParam.Yaw.EncoderTargetAngle = Buffer;
+        CloudParam.Yaw.TargetABSAngle = Target;
     }
     else
     {
-        CloudParam.Yaw.AngleMode = AngleMode_ABS;
-        
-        CloudParam.Yaw.ABSTargetAngle = Target;
+        CloudParam.Yaw.TargetABSAngle = Target + SuperGyoParam.Angle;
     }
 }
 
 
 /**
+  * @note   modified
   * @brief  云台Pitch角度及模式设置
-  * @param  目标角度
-  * @param  模式  0 绝对角度          1 相对角度（编码器角度,上正下负,中间为0）
+  * @param  目标角度(绝对角度）
   * @retval void
+  * @note   Pitch一直使用绝对角度控制
   */
-void Cloud_PitchAngleSet(float Target, uint8_t mode)
+void Cloud_PitchAngleSet(float Target)
 {
-    int16_t EncoderBuffer;
-    float ABSBuffer;
+    float MachineABSLimit, MixedLimit;
     
-    if(mode)
-    {
-        CloudParam.Pitch.AngleMode = AngleMode_Encoder;
-        
-        EncoderBuffer = (int16_t)Target + PitchCenter;
-        EncoderBuffer = EncoderBuffer > PitchUPLimit ? PitchUPLimit : EncoderBuffer;
-        EncoderBuffer = EncoderBuffer < PitchDOWNLimit ? PitchDOWNLimit : EncoderBuffer;
-        CloudParam.Pitch.EncoderTargetAngle = EncoderBuffer;
-    }
-    else
-    {
-        CloudParam.Pitch.AngleMode = AngleMode_ABS;
-        
-        ABSBuffer = Target;
-        ABSBuffer = ABSBuffer > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : ABSBuffer;
-        ABSBuffer = ABSBuffer > ABSPITCHUPLIMIT ? ABSPITCHUPLIMIT : ABSBuffer;
-        
-        CloudParam.Pitch.ABSTargetAngle = ABSBuffer;
-    }
+    MachineABSLimit = Position.Euler.Pitch + (PitchEncoderUPLimit - PitchEncoderCenter) * 0.043945F;
+    MixedLimit = MachineABSLimit > PitchABSUPLimit ? PitchABSUPLimit : MachineABSLimit;
+    Target = MixedLimit > Target ? MixedLimit : MixedLimit;
+    
+    MachineABSLimit = Position.Euler.Pitch - (PitchEncoderCenter - PitchEncoderDOWNLimit) * 0.043945F;
+    MixedLimit = MachineABSLimit > PitchABSDOWNLimit ? MachineABSLimit : PitchABSDOWNLimit;
+    Target = MixedLimit < Target ? Target : MixedLimit;
+    
+    CloudParam.Pitch.TargetABSAngle = Target;
 }
 
 

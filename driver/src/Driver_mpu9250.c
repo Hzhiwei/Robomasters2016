@@ -1,8 +1,8 @@
 
 #define __MPU9250_GLOBALS
 
+#include "Config.h"
 #include "Driver_mpu9250.h"
-//#include "BSP_SPI.h"
 #include "OSinclude.h"
 #include "mpu9250dmp.h"
 
@@ -14,9 +14,23 @@
   */
 void MPU9250_InitConfig(void)
 {
-    Omega_Offset.X = -2.2F;
-    Omega_Offset.Y = 1.28F;
-    Omega_Offset.Z = -1.1F;
+#if INFANTRY == 1       //萨摩
+    
+#elif INFANTRY == 2     //阿拉斯加
+    
+    Omega_Offset.X = -0.54F;
+    Omega_Offset.Y = -0.4F;
+    Omega_Offset.Z = 0.46F;
+    
+#elif INFANTRY == 3     //哈士奇
+    
+#elif INFANTRY == 4     //边牧（没名字，先这么叫吧）
+    
+#elif INFANTRY == 5     //狗蛋
+    
+#elif INFANTRY == 6     //英雄
+    
+#endif
 }
 
 
@@ -41,14 +55,9 @@ uint8_t MPU9250_Update(void)
     Position.Euler.Roll = Roll;
     Position.Euler.Yaw = Yaw;
     
-    Position.Real.OX = OX - Omega_Offset.X;
-    Position.Real.OY = OY - Omega_Offset.Y;
-    Position.Real.OZ = OZ - Omega_Offset.Z;
-    
-    //角速度反向使之与电机统一
-    Position.MotorEncoderOmega.X = -Position.Real.OX * 22.7556F;
-    Position.MotorEncoderOmega.Y = -Position.Real.OY * 22.7556F;
-    Position.MotorEncoderOmega.Z = -Position.Real.OZ * 22.7556F;
+    Position.Real.OX = -(OX - Omega_Offset.X);
+    Position.Real.OY = -(OY - Omega_Offset.Y);
+    Position.Real.OZ = -(OZ - Omega_Offset.Z);
     
     return 0;
 }

@@ -1,4 +1,5 @@
 .\objects\driver_mpu9250.o: ..\driver\src\Driver_mpu9250.c
+.\objects\driver_mpu9250.o: ..\user\Config.h
 .\objects\driver_mpu9250.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\driver_mpu9250.o: ..\core\stm32f4xx.h
 .\objects\driver_mpu9250.o: ..\core\core_cm4.h

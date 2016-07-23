@@ -23,11 +23,7 @@
 #define CHASSISCURRENTSETCANID          0x40
 
 
-#if INFANTRY == 1 || INFANTRY == 2 || INFANTRY == 3 || INFANTRY == 4 || INFANTRY == 5
 #define CHASSISMAXPOWER                 80.0F       //底盘最大功率
-#elif INFANTRY == 6
-#define CHASSISMAXPOWER                 160.0F      //底盘最大功率
-#endif
 
 
 #ifdef  __DRIVER_CHASSIS_GLOBALS
@@ -64,9 +60,10 @@ typedef struct
     OneMotorParam_Struct LB;
     OneMotorParam_Struct RB;
     ChassisSpeedLevel_Enum SpeedLevel;
-    float VX;
-    float VY;
-    float Omega;
+    float TargetVX;
+    float TargetVY;
+    float TargetOmega;
+    float TargetABSAngle;
 }ChassisParam_Struct;
 
 

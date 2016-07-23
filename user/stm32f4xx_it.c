@@ -150,26 +150,17 @@ void DebugMon_Handler(void)
 
 
 
-uint8_t temp;
-
+//CAN接收数据存储缓存
 CanRxMsg CanRxData;
 
+//用于清空串口标志位的临时变量
+uint8_t UARTtemp;
 
-//CAN1数据接收中断（包括底盘陀螺仪）
-//void CAN1_RX0_IRQHandler(void)
-//{
-//    //接受CAN1数据
-//    CAN_Receive(CAN1, 0, &CanRxData1);
-//    
-//    switch(CanRxData1.StdId)
-//    {
-//    }
-//    
-//	CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
-//}
-
-
-//CAN2数据就接受中断（包括云台电机数据，3510摩擦轮数据）
+/**
+  * @brief  CAN数据接收中断服务函数
+  * @param  void
+  * @retval void
+  */
 #if CANPORT == 1
 void CAN1_RX0_IRQHandler(void)
 #else
@@ -177,27 +168,24 @@ void CAN2_RX0_IRQHandler(void)
 #endif
 {
     static uint8_t FristGyroData = 0;
-    static float GyroOffset = 0;
     u8Todouble dataTrans;
     
-#if INFANTRY == 5
     uint16_t YawPassZeroBuffer;
-#endif
     
-    #if CANPORT == 1
+#if CANPORT == 1
     CAN_Receive(CAN1, 0, &CanRxData);
-    #else
+#else
     CAN_Receive(CAN2, 0, &CanRxData);
-    #endif
+#endif
     
     switch(CanRxData.StdId)
     {
         case    YAWMOTORCANID  :
         {
             CloudParam.Yaw.FrameCounter++;
-#if INFANTRY == 5
+            
             YawPassZeroBuffer = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
-            if(YawPassZeroBuffer < 4000)
+            if(YawPassZeroBuffer < YawEncoderPassZeroBoundary)
             {
                 CloudParam.Yaw.RealEncoderAngle = YawPassZeroBuffer + 8191;
             }
@@ -205,9 +193,6 @@ void CAN2_RX0_IRQHandler(void)
             {
                 CloudParam.Yaw.RealEncoderAngle = YawPassZeroBuffer;
             }
-#else
-            CloudParam.Yaw.RealEncoderAngle = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
-#endif
             break;
         }
         case    PITCHMOTORCANID  :
@@ -227,12 +212,12 @@ void CAN2_RX0_IRQHandler(void)
             
             if(FristGyroData)
             {
-                SuperGyoAngle = dataTrans.floatdata - GyroOffset;
+                SuperGyoParam.Angle = dataTrans.floatdata - SuperGyoParam.Offset;
             }
             else
             {
-                SuperGyoAngle = 0;
-                GyroOffset = dataTrans.floatdata;
+                SuperGyoParam.Angle = 0;
+                SuperGyoParam.Offset = dataTrans.floatdata;
                 FristGyroData = 1;
             }
             
@@ -240,8 +225,8 @@ void CAN2_RX0_IRQHandler(void)
             dataTrans.uint8_tdata[1] = CanRxData.Data[5];
             dataTrans.uint8_tdata[2] = CanRxData.Data[6];
             dataTrans.uint8_tdata[3] = CanRxData.Data[7];
-            SuperGyoOmega = dataTrans.floatdata;
-            SuperGyoMotorEncoderOmega = 1.388889F * SuperGyoOmega;
+            SuperGyoParam.Omega = dataTrans.floatdata;
+            
             break;
         }
         case    LFCHASSISCANID  :
@@ -294,11 +279,30 @@ void CAN2_RX0_IRQHandler(void)
 }
 
 
+/**
+  * @brief  不使用的CAN端口，也要写中断服务函数，否则会死机
+  * @param  void
+  * @retval void
+  */
+
+#if CANPORT == 1
+void CAN2_RX0_IRQHandler(void)
+{
+	CAN_ITConfig(CAN2, CAN_IT_FMP0, ENABLE);
+}
+#else
+void CAN1_RX0_IRQHandler(void)
+{
+	CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
+}
+#endif
+
+
 //DBUS空闲中断
 void UART5_IRQHandler(void)
 {
-    temp = UART5->DR;
-    temp = UART5->SR;
+    UARTtemp = UART5->DR;
+    UARTtemp = UART5->SR;
     
     DMA_Cmd(DMA1_Stream0, DISABLE);
     
@@ -322,8 +326,8 @@ void UART4_IRQHandler(void)
 {
     FormatTrans FT;
     
-    temp = UART4->DR;
-    temp = UART4->SR;
+    UARTtemp = UART4->DR;
+    UARTtemp = UART4->SR;
     
     DMA_Cmd(DMA1_Stream2, DISABLE);
     
@@ -369,7 +373,7 @@ void USART1_IRQHandler(void)
     uint8_t i, Sum = 0;
     FormatTrans Buffer;
     
-    temp = USART1->SR;          //与USART1->DR读取配合清除ORD位
+    UARTtemp = USART1->SR;          //与USART1->DR读取配合清除ORD位
     
     PCDataBufferPoint = (PCDataBufferPoint + 1) % PCDATALENGTH;
     PCDataBuffer[PCDataBufferPoint] = USART1->DR;
