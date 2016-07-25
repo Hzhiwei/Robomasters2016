@@ -3,6 +3,7 @@
 
 
 #include "stm32f4xx.h"
+#include "OSinclude.h"
 
 
 //DBUS接收数据帧长度
@@ -50,11 +51,12 @@ typedef struct {
 	
 	struct 
 	{
-		uint16_t key_code;
 /**********************************************************************************
    * 键盘通道:15   14   13   12   11   10   9   8   7   6     5     4   3   2   1
    *          V    C    X	  Z    G    F    R   E   Q  CTRL  SHIFT  D   A   S   W
 ************************************************************************************/
+		uint16_t key_code;              //原始键值
+        uint16_t jumpkey_code;          //跳变后的键值
 	}keyBoard;
 }DBUSDecoding_Type;
 
@@ -84,6 +86,9 @@ __DBUS_EXT DBUSConnectStatus_Type DBUSConnectStatus;	//DBUS连接状态
 
 void DBUS_InitConfig(void);
 void DBUS_DataDecoding(void);
+void DBUS_ButtonCheckJump(portTickType CurrentTick);
+uint8_t DBUS_CheckPush(uint16_t Key);
+uint8_t DBUS_CheckJump(uint16_t Key);
 
 
 #endif

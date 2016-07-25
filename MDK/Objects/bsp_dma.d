@@ -36,8 +36,6 @@
 .\objects\bsp_dma.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\bsp_dma.o: ..\lib\std\inc\stm32f4xx_fsmc.h
 .\objects\bsp_dma.o: ..\driver\inc\Driver_DBUS.h
-.\objects\bsp_dma.o: ..\driver\inc\Driver_Judge.h
-.\objects\bsp_dma.o: ..\driver\inc\Driver_vision.h
 .\objects\bsp_dma.o: ..\user\OSinclude.h
 .\objects\bsp_dma.o: ..\lib\freertos\inc\FreeRTOS.h
 .\objects\bsp_dma.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
@@ -53,4 +51,6 @@
 .\objects\bsp_dma.o: ..\lib\freertos\inc\queue.h
 .\objects\bsp_dma.o: ..\lib\freertos\inc\semphr.h
 .\objects\bsp_dma.o: ..\lib\freertos\inc\event_groups.h
+.\objects\bsp_dma.o: ..\driver\inc\Driver_Judge.h
+.\objects\bsp_dma.o: ..\driver\inc\Driver_vision.h
 .\objects\bsp_dma.o: ..\driver\inc\Driver_mpu9250.h

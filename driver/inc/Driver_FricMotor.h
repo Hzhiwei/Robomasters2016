@@ -11,16 +11,6 @@
 #define __DRIVER_FRICMOTOR_EXT extern
 #endif
 
-typedef enum
-{
-    FricStatus_Stop,
-    FricStatus_Working,
-    FricStatus_Crazy,
-}FricStatus_Enum;
-
-
-__DRIVER_FRICMOTOR_EXT FricStatus_Enum FricStatus;
-
 
 void FricMotor_InitConfig(void);
 void GunFric_Control(uint8_t Control);

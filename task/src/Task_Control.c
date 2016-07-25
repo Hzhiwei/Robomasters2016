@@ -17,6 +17,10 @@
 #include "Driver_SuperGyroscope.h"
 
 
+//状态切换标志位
+static uint8_t JumpToRCFlag = 1, JumpToKMFlag = 1, JumpToProtectFlag = 1;
+    
+    
 /**
   * @brief  控制任务（周期5ms）
   * @param  ubused
@@ -26,7 +30,6 @@ void Task_Control(void *Parameters)
 {
     portTickType CurrentControlTick = 0;                //当前系统时间
     uint32_t dmpresetCounter;                            //dmp重启计数器
-	uint8_t JumpToRCFlag = 1, JumpToKMFlag = 1, JumpToProtectFlag = 1;
     
     for(;;)
     {
@@ -58,12 +61,16 @@ void Task_Control(void *Parameters)
         StatusMachine_Update();
 /*********************  ↑  状态机状态更新  ↑ *********************/
 /**************************************************************************************************/
+/*********************  ↓  按键按下跳变检测  ↓ *********************/
+        DBUS_ButtonCheckJump(CurrentControlTick);
+/*********************  ↑  状态机状态更新  ↑ *********************/
+/**************************************************************************************************/
 /*********************  ↓  根据状态机控制  ↓ *********************/
         
 #if DEBUGECONTROLRC == 1
 		
-        PokeMotor_Adjust();
-		
+        PokeMotor_Adjust(1);
+		PokeMotor_Step();
 #else
 		
         if(ControlMode_RC == ControlMode)
@@ -136,15 +143,17 @@ void Task_Control(void *Parameters)
   */
 static void Control_RCMode(void)
 {
+    //云台控制
     Cloud_YawAngleSet(CloudParam.Yaw.TargetABSAngle - DBUS_ReceiveData.ch3 / 500.0F, AngleMode_ABS);
     Cloud_PitchAngleSet(CloudParam.Pitch.TargetABSAngle + DBUS_ReceiveData.ch4 / 120.0F);
-    
     Cloud_Adjust(1);
     
+    //底盘控制
     Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
     Chassis_SpeedSet(DBUS_ReceiveData.ch2, DBUS_ReceiveData.ch1);
     Chassis_Adjust(1);
 	
+    //摩擦轮控制
 	if(FricStatus_Working == FricStatus)
 	{
 		GunFric_Control(1);
@@ -153,7 +162,15 @@ static void Control_RCMode(void)
 	{
 		GunFric_Control(0);
 	}
+    
+    //拨弹电机控制
+    PokeMotor_Adjust(1);
+    if(DBUS_ReceiveData.switch_right == 2)
+    {
+        PokeMotor_Step();
+    }
 	
+    //舵机舱门控制
 	Steering_Control(2);
 }
 
@@ -178,7 +195,9 @@ static void Control_ProtectMode(void)
 {
     Cloud_Adjust(0);
     Chassis_Adjust(0);
+	GunFric_Control(0);
 	Steering_Control(2);
+    PokeMotor_Adjust(0);
 }
 
 

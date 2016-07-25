@@ -27,10 +27,9 @@ ctrl + shift关闭摩擦轮
   */
 void StatusMachine_InitConfig(void)
 {
-    AutoMode = AutoMode_OFF;
-    GunStatus = GunStatus_Stop;
     ControlMode = ControlMode_KM;
-    SneakMode = 0;
+    FricStatus = FricStatus_Stop;
+    KMSubschema = KMSubschema_Normal;
 }
 
 
@@ -54,9 +53,6 @@ void StatusMachine_Update(void)
     if(DBUSFrameRate < 3)
     {
         ControlMode = ControlMode_Protect;
-        
-        SneakMode = 0;
-        
         return;
     }
     
@@ -72,11 +68,12 @@ void StatusMachine_Update(void)
     else
     {
         ControlMode = ControlMode_Protect;
-    }
+    } 
     
-    //摩擦轮状态
+    //控制子模式
     if(ControlMode == ControlMode_RC)
     {
+/*******************************************  ↓  摩擦轮  ↓  *******************************************/
         if((DBUS_ReceiveData.switch_right == 3) || (DBUS_ReceiveData.switch_right == 2))
         {
             FricStatus = FricStatus_Working;
@@ -85,10 +82,12 @@ void StatusMachine_Update(void)
         {
             FricStatus = FricStatus_Stop;
         }
+/*******************************************  ↑  摩擦轮  ↑  *******************************************/
     }
+    //键鼠模式
     else if(ControlMode == ControlMode_KM)
     {
-        //摩擦轮工作
+/*******************************************  ↓  摩擦轮  ↓  *******************************************/
         if((DBUS_ReceiveData.switch_right == 3) || (DBUS_ReceiveData.switch_right == 2))
         {
             if(DBUS_ReceiveData.keyBoard.key_code & KEY_Z)
@@ -107,15 +106,50 @@ void StatusMachine_Update(void)
         {
             FricStatus = FricStatus_Stop;
         }
-    }
+/*******************************************  ↑  摩擦轮  ↑  *******************************************/
+/*******************************************  ↓   模式   ↓  *******************************************/
+        //无论什么时候按下CTRL键回归手动Normal模式
+        if(DBUS_CheckPush(KEY_CTRL))
+        {
+            KMSubschema = KMSubschema_Normal;
+        }
         
-    
-    
-    
-    
-    
-    
-    
+        //只允许在Normal模式下进行模式切换
+        if(KMSubschema == KMSubschema_Normal)
+        {
+            //补给站模式
+            if(DBUS_CheckPush(KEY_SHIFT))
+            {
+                KMSubschema = KMSubschema_Supply;
+            }
+            //摇摆模式
+            else if(DBUS_CheckPush(KEY_F))
+            {
+                KMSubschema = KMSubschema_Swing;
+            }
+            //大符模式
+            else if(DBUS_CheckPush(KEY_X))
+            {
+                KMSubschema = KMSubschema_Bigsample;
+            }
+            //全自动模式
+            else if(DBUS_CheckPush(KEY_C))
+            {
+                KMSubschema = KMSubschema_Fullauto;
+            }
+            //圈圈模式
+            else if(DBUS_CheckPush(KEY_G))
+            {
+                KMSubschema = KMSubschema_Circle;
+            }
+            //半自动模式
+            else if(DBUS_ReceiveData.mouse.press_right)
+            {
+                KMSubschema = KMSubschema_Halfauto;
+            }
+        }
+/*******************************************  ↑   模式   ↑  *******************************************/
+    }
 }
 
 

@@ -24,9 +24,8 @@
 //拨弹电机状态枚举
 typedef enum
 {
-    PokeMotorParam_Working,                        //正常
-    PokeMotorParam_StuckDealing,                   //正在反转处理卡弹
-    PokeMotorParam_Stuck                           //卡弹
+    PokeMotorParam_Suit,                        //达到目标位置
+    PokeMotorParam_Adjusting,                      //正调整状态，包括正常工作和堵转反转处理
 }PokeChassisParam_Enum;  
     
     
@@ -36,7 +35,7 @@ typedef struct
     int16_t RealSpeed;              //拨弹电机速度
     long RealLocation;              //拨弹电机实际位置
     long TargetLocation;            //拨弹电机目标位置
-    PokeChassisParam_Enum Status;    //状态
+    PokeChassisParam_Enum Status;   //状态
     portTickType LastShotTick;      //上次发射时间
 }PokeMotorParam_Struct;
 
@@ -48,7 +47,7 @@ __DRIVER_POKEMOTOR_EXT PokeMotorParam_Struct PokeMotorParam;
 void PokeMotor_InitConfig(void);
 void PokeMotorCurrent(int16_t Current);
 void PokeMotor_Step(void);
-void PokeMotor_Adjust(void);
+void PokeMotor_Adjust(uint8_t mode);
 
 
 

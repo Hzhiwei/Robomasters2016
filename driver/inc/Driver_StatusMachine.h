@@ -15,38 +15,42 @@
 #define __DRIVER_STATUSMACHINE_EXT extern
 #endif
 
-//枪状态
+//摩擦轮状态
 typedef enum
 {
-    GunStatus_Stop,                 //枪停止
-    GunStatus_Motor,                //仅开启摩擦轮
-    GunStatus_Shot,                 //发射
-}GunStatus_Enum;
-
-//自动模式开关
-typedef enum
-{
-    AutoMode_ON,                    //自动模式开
-    AutoMode_OFF,                   //自动模式关
-}AutoMode_Enum;
+    FricStatus_Stop,
+    FricStatus_Working,
+    FricStatus_Crazy,
+}FricStatus_Enum;
 
 
 //控制模式
 typedef enum
 {
-    ControlMode_Protect,          //保护模式，全部停止
-    ControlMode_RC,               //遥控器控制（增量式）
-    ControlMode_KM,               //键鼠控制
-    ControlMode_AUTO,             //自主控制
+    ControlMode_Protect,            //保护模式，全部停止 
+    ControlMode_RC,                 //遥控器控制（增量式）
+    ControlMode_KM,                 //键鼠控制
 }ControlMode_Enum;
 
 
+//键鼠模式子模式
+typedef enum
+{
+    KMSubschema_Normal,         //正常模式（全手动模式）
+    KMSubschema_Supply,         //补给站模式
+    KMSubschema_Swing,          //底盘摇动模式
+    KMSubschema_Halfauto,       //半自动射击模式
+    KMSubschema_Bigsample,      //大符模式
+    KMSubschema_Fullauto,       //全自动模式
+    KMSubschema_Circle,         //自主转圈
+}KMSubschema_Enum;
+
+
+
 //状态量
-__DRIVER_STATUSMACHINE_EXT  AutoMode_Enum           AutoMode;
-__DRIVER_STATUSMACHINE_EXT  GunStatus_Enum          GunStatus;
-__DRIVER_STATUSMACHINE_EXT  ControlMode_Enum        ControlMode;
-//潜行模式
-__DRIVER_STATUSMACHINE_EXT uint8_t SneakMode;  
+__DRIVER_STATUSMACHINE_EXT ControlMode_Enum         ControlMode;
+__DRIVER_STATUSMACHINE_EXT FricStatus_Enum          FricStatus;
+__DRIVER_STATUSMACHINE_EXT KMSubschema_Enum         KMSubschema;
 
 
 void StatusMachine_InitConfig(void);

@@ -36,8 +36,6 @@
 .\objects\driver_control.o: ..\lib\std\inc\stm32f4xx_dac.h
 .\objects\driver_control.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\driver_control.o: ..\lib\std\inc\stm32f4xx_fsmc.h
-.\objects\driver_control.o: ..\driver\inc\Driver_Chassis.h
-.\objects\driver_control.o: ..\driver\inc\Driver_Control.h
 .\objects\driver_control.o: ..\user\OSinclude.h
 .\objects\driver_control.o: ..\lib\freertos\inc\FreeRTOS.h
 .\objects\driver_control.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
@@ -53,6 +51,8 @@
 .\objects\driver_control.o: ..\lib\freertos\inc\queue.h
 .\objects\driver_control.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_control.o: ..\lib\freertos\inc\event_groups.h
+.\objects\driver_control.o: ..\driver\inc\Driver_Chassis.h
+.\objects\driver_control.o: ..\driver\inc\Driver_Control.h
 .\objects\driver_control.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\driver_control.o: ..\driver\inc\Driver_PokeMotor.h
 .\objects\driver_control.o: ..\driver\inc\Driver_CloudMotor.h

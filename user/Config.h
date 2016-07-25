@@ -4,7 +4,7 @@
 #define __CONFIG_H
 
 
-#define DEBUGECONTROLRC             1           //debug模式遥控控制
+#define DEBUGECONTROLRC             0           //debug模式遥控控制
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
 #define INFANTRY                    2           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋
@@ -31,7 +31,7 @@
 #elif INFANTRY == 2               //阿拉斯加参数↓
 
     #define FRICMOTORWORKINGSPEED   260         //摩擦轮工作速度(230)
-    #define POKESTRUCKDEALLINES     300         //拨弹电机卡弹后反转处理线数
+    #define POKESTRUCKDEALLINES     50          //拨弹电机卡弹后反转处理线数
     #define CHASSISMAXPOWERRATE     0.82F       //底盘限制极限功率（80W）比例(例如此值为0.9，则实际限制功率为0.9*80=72W）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
     #define POKESTEPMINTIMECRACK    265         //步进最小时间间隔（ms）

@@ -15,8 +15,6 @@ void FricMotor_InitConfig(void)
     //速度初始化为0
     TIM8->CCR1 = 1000;
     TIM8->CCR2 = 1000;
-    
-    FricStatus = FricStatus_Stop;
 }
 
 
