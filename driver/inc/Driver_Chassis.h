@@ -79,13 +79,13 @@ __DRIVER_CHASSIS_EXT uint16_t ChassisFrameRate[4];
 
 
 void Chassis_InitConfig(void);
-void Chassis_Adjust(void);
-void Chassis_SendMotorParam(uint8_t mode);
-static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed);
-void Chassis_OmegaSet(float Target);
 void Chassis_SpeedSet(float XSpeed, float YSpeed);
-void Chassis_Control(uint8_t mode, uint8_t PIDChoie);
+void Chassis_TargetDirectionSet(float Target);
+void Chassis_Adjust(uint8_t mode);
+void Chassis_SendMotorParam(uint8_t mode);
 void Chassis_MotorDebug(void);
+static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed);
+
 
 
 #endif

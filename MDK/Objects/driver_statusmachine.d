@@ -54,6 +54,7 @@
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_vision.h
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_Control.h
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_mpu9250.h
+.\objects\driver_statusmachine.o: ..\driver\inc\Driver_FricMotor.h
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_StatusMachine.h
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_SuperGyroscope.h

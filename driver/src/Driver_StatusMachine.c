@@ -7,6 +7,7 @@
 #include "Driver_vision.h"
 #include "Driver_Control.h"
 #include "Driver_mpu9250.h"
+#include "Driver_FricMotor.h"
 #include "Driver_CloudMotor.h"
 #include "Driver_StatusMachine.h"
 #include "Driver_SuperGyroscope.h"
@@ -43,16 +44,13 @@ void StatusMachine_InitConfig(void)
             QE自旋
   */
     uint8_t FristToKM = 1;
+
+
 void StatusMachine_Update(void)
 {
     portTickType CurrentTick = xTaskGetTickCount();
     
-    //Yaw轴实际绝对角度
-    CloudParam.Yaw.RealABSAngle = SuperGyoParam.Angle + ((int16_t)CloudParam.Yaw.RealEncoderAngle - YawEncoderCenter) * 0.043945F;
-    //Pitch轴实际绝对角度
-    CloudParam.Pitch.RealABSAngle = Position.Euler.Pitch;
-    
-    //帧率过低停机
+    //帧率过低进保护
     if(DBUSFrameRate < 3)
     {
         ControlMode = ControlMode_Protect;
@@ -62,15 +60,62 @@ void StatusMachine_Update(void)
         return;
     }
     
-    //保护模式
-    if(DBUS_ReceiveData.switch_left == 3)
+    //基本模式
+    if(DBUS_ReceiveData.switch_left == 1)
     {
         ControlMode = ControlMode_RC;
+    }
+    else if(DBUS_ReceiveData.switch_left == 2)
+    {
+        ControlMode = ControlMode_KM;
     }
     else
     {
         ControlMode = ControlMode_Protect;
     }
+    
+    //摩擦轮状态
+    if(ControlMode == ControlMode_RC)
+    {
+        if((DBUS_ReceiveData.switch_right == 3) || (DBUS_ReceiveData.switch_right == 2))
+        {
+            FricStatus = FricStatus_Working;
+        }
+        else
+        {
+            FricStatus = FricStatus_Stop;
+        }
+    }
+    else if(ControlMode == ControlMode_KM)
+    {
+        //摩擦轮工作
+        if((DBUS_ReceiveData.switch_right == 3) || (DBUS_ReceiveData.switch_right == 2))
+        {
+            if(DBUS_ReceiveData.keyBoard.key_code & KEY_Z)
+            {
+                //暴击模式
+                FricStatus = FricStatus_Crazy;
+            }
+            else
+            {
+                //正常工作
+                FricStatus = FricStatus_Working;
+            }
+        }
+        //右拨码开关由其他状态至1时关闭
+        else if((DBUS_ReceiveData.switch_right == 1) && (LASTDBUS_ReceiveData.switch_right != 1))
+        {
+            FricStatus = FricStatus_Stop;
+        }
+    }
+        
+    
+    
+    
+    
+    
+    
+    
 }
 
 

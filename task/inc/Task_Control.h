@@ -8,6 +8,9 @@
 
 
 void Task_Control(void *Parameters);
+static void Control_RCMode(void);
+static void Control_KMMode(void);
+static void Control_ProtectMode(void);
 
 
 #endif

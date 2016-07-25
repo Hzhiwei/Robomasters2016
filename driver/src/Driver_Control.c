@@ -22,7 +22,7 @@ void CloudPID_InitConfig(void)
     
 #elif INFANTRY == 2     //阿拉斯加
     
-    PitchOPID.P = 8;
+    PitchOPID.P = 9;
     PitchOPID.I = 0.5;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
@@ -50,13 +50,49 @@ void CloudPID_InitConfig(void)
     YawOPID.PIDMax = 300;
     
     YawIPID.P = 80;
-    YawIPID.I = 20;
+    YawIPID.I = 5;
     YawIPID.D = 0;
     YawIPID.CurrentError = 0;
     YawIPID.LastError = 0;
     YawIPID.LastTick = 0;
-    YawIPID.IMax = 300;
+    YawIPID.IMax = 100;
     YawIPID.PIDMax = 5000;
+    
+    ChassisOPID.P = 1.4;
+    ChassisOPID.I = 0;
+    ChassisOPID.D = 0;
+    ChassisOPID.CurrentError = 0;
+    ChassisOPID.LastError = 0;
+    ChassisOPID.LastTick = 0;
+    ChassisOPID.IMax = 0;
+    ChassisOPID.PIDMax = 300;
+    
+    ChassisIPID.P = 12;
+    ChassisIPID.I = 0;
+    ChassisIPID.D = 0;
+    ChassisIPID.CurrentError = 0;
+    ChassisIPID.LastError = 0;
+    ChassisIPID.LastTick = 0;
+    ChassisIPID.IMax = 0;
+    ChassisIPID.PIDMax = 950;
+    
+    PokeOPID.CurrentError = 0;
+    PokeOPID.LastError = 0;
+    PokeOPID.P = 0.07;
+    PokeOPID.I = 0;
+    PokeOPID.D = 0;
+    PokeOPID.IMax = 0;
+    PokeOPID.PIDMax = 130;
+    PokeOPID.LastTick = 0;
+    
+    PokeIPID.CurrentError = 0;
+    PokeIPID.LastError = 0;
+    PokeIPID.P = 3.8;
+    PokeIPID.I = 0.2;
+    PokeIPID.D = 0;
+    PokeIPID.IMax = 200;
+    PokeIPID.PIDMax = 90;
+    PokeIPID.LastTick = 0;
     
 #elif INFANTRY == 3     //哈士奇
     
@@ -269,44 +305,6 @@ void Control_ChassisPID(void)
     
     ChassisParam.TargetOmega = ChassisIPID.PIDout;
 }
-
-
-///**
-//  * @brief  预判自动追踪专用速度PID
-//  * @param  目标角速度（编码器线单位）
-//  * @retval 输出电流值
-//  */
-//int16_t VControl_YawPID(float TargetOmega)
-//{
-//	portTickType CurrentTick = xTaskGetTickCount(); 
-//    
-//    ForcastYawSpeedPID.CurrentError = TargetOmega * 22.7556F - (Position.MotorEncoderOmega.Z - SuperGyoMotorEncoderOmega);
-//	
-//	ForcastYawSpeedPID.Pout = ForcastYawSpeedPID.P * ForcastYawSpeedPID.CurrentError;
-//	
-//	ForcastYawSpeedPID.Iout += ForcastYawSpeedPID.I * ForcastYawSpeedPID.CurrentError;
-//	ForcastYawSpeedPID.Iout = ForcastYawSpeedPID.Iout > ForcastYawSpeedPID.IMax ? ForcastYawSpeedPID.IMax : ForcastYawSpeedPID.Iout;
-//	ForcastYawSpeedPID.Iout = ForcastYawSpeedPID.Iout < -ForcastYawSpeedPID.IMax ? -ForcastYawSpeedPID.IMax : ForcastYawSpeedPID.Iout;
-//	
-//	if(ForcastYawSpeedPID.LastTick != CurrentTick)
-//	{
-//		ForcastYawSpeedPID.Dout = ForcastYawSpeedPID.D * (ForcastYawSpeedPID.CurrentError - ForcastYawSpeedPID.LastError) * 5 / (CurrentTick - ForcastYawSpeedPID.LastTick);
-//	}
-//	else
-//	{
-//		ForcastYawSpeedPID.Dout = ForcastYawSpeedPID.D * (ForcastYawSpeedPID.CurrentError - ForcastYawSpeedPID.LastError);
-//	}
-//	
-//	ForcastYawSpeedPID.PIDout = (ForcastYawSpeedPID.Pout + ForcastYawSpeedPID.Iout + ForcastYawSpeedPID.Dout);
-//	
-//	ForcastYawSpeedPID.PIDout = ForcastYawSpeedPID.PIDout > ForcastYawSpeedPID.PIDMax ? ForcastYawSpeedPID.PIDMax : ForcastYawSpeedPID.PIDout;
-//	ForcastYawSpeedPID.PIDout = ForcastYawSpeedPID.PIDout < -ForcastYawSpeedPID.PIDMax ? -ForcastYawSpeedPID.PIDMax : ForcastYawSpeedPID.PIDout;
-//	
-//	ForcastYawSpeedPID.LastError = ForcastYawSpeedPID.CurrentError;
-//	ForcastYawSpeedPID.LastTick = CurrentTick;
-//	
-//	return (short)ForcastYawSpeedPID.PIDout;
-//}
 
 
 

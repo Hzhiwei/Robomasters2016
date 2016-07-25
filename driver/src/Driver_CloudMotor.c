@@ -141,11 +141,11 @@ void Cloud_PitchAngleSet(float Target)
 {
     float MachineABSLimit, MixedLimit;
     
-    MachineABSLimit = Position.Euler.Pitch + (PitchEncoderUPLimit - PitchEncoderCenter) * 0.043945F;
+    MachineABSLimit = Position.Euler.Pitch + ((int16_t)PitchEncoderUPLimit - CloudParam.Pitch.RealEncoderAngle) * 0.043945F;
     MixedLimit = MachineABSLimit > PitchABSUPLimit ? PitchABSUPLimit : MachineABSLimit;
     Target = Target > MixedLimit ? MixedLimit : Target;
     
-    MachineABSLimit = Position.Euler.Pitch - (PitchEncoderCenter - PitchEncoderDOWNLimit) * 0.043945F;
+    MachineABSLimit = Position.Euler.Pitch + (PitchEncoderDOWNLimit - CloudParam.Pitch.RealEncoderAngle) * 0.043945F;
     MixedLimit = MachineABSLimit > PitchABSDOWNLimit ? MachineABSLimit : PitchABSDOWNLimit;
     Target = Target < MixedLimit ? MixedLimit : Target;
     

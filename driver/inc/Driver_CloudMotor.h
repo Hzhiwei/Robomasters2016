@@ -32,8 +32,8 @@
 #elif INFANTRY == 2     //°¢À­Ë¹¼Ó
 
     #define PitchEncoderUPLimit             3500
-    #define PitchEncoderDOWNLimit           2500
-    #define PitchEncoderCenter              2888
+    #define PitchEncoderDOWNLimit           2470
+    #define PitchEncoderCenter              2808
     #define YawEncoderLEFTLimit             5000
     #define YawEncoderRIGHTLimit            3250
     #define YawEncoderCenter                4122
@@ -41,8 +41,8 @@
     #define PitchABSUPLimit                 60.0F 
     #define PitchABSDOWNLimit               -40.0F
     
-    #define PitchEncoderPassZeroBoundary    0
-    #define YawEncoderPassZeroBoundary      0
+    #define PitchEncoderPassZeroBoundary    1
+    #define YawEncoderPassZeroBoundary      1
 
 #elif INFANTRY == 3     //¹þÊ¿Ææ
 
@@ -56,8 +56,8 @@
     #define PitchABSUPLimit                 60.0F 
     #define PitchABSDOWNLimit               -40.0F
     
-    #define PitchEncoderPassZeroBoundary    0
-    #define YawEncoderPassZeroBoundary      0
+    #define PitchEncoderPassZeroBoundary    1
+    #define YawEncoderPassZeroBoundary      1
 
 #elif INFANTRY == 4     //±ßÄÁ
 
@@ -71,8 +71,8 @@
     #define PitchABSUPLimit                 60.0F 
     #define PitchABSDOWNLimit               -40.0F
     
-    #define PitchEncoderPassZeroBoundary    0
-    #define YawEncoderPassZeroBoundary      0
+    #define PitchEncoderPassZeroBoundary    1
+    #define YawEncoderPassZeroBoundary      1
 
 #elif INFANTRY == 5     //¹·µ°
 
@@ -87,7 +87,7 @@
     #define PitchABSDOWNLimit               -40.0F
     
     #define PitchEncoderPassZeroBoundary    4000
-    #define YawEncoderPassZeroBoundary      0
+    #define YawEncoderPassZeroBoundary      1
 
 #endif
 

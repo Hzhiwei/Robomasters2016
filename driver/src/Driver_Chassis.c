@@ -11,14 +11,14 @@
 #include "Driver_SuperGyroscope.h"
 
 
-volatile float Last_Spd[4];
-//麦轮解算矩阵
-const signed char MecanumCalculateMAT[4][3] = { 
-	{1, 1, 1},
-	{1,-1,-1},
-	{1,-1, 1}, 
-	{1, 1,-1}
-};
+//volatile float Last_Spd[4];
+////麦轮解算矩阵
+//const signed char MecanumCalculateMAT[4][3] = { 
+//	{1, 1, 1},
+//	{1,-1,-1},
+//	{1,-1, 1}, 
+//	{1, 1,-1}
+//};
 
 
 /**
@@ -28,10 +28,10 @@ const signed char MecanumCalculateMAT[4][3] = {
   */
 void Chassis_InitConfig(void)
 {
-    for(int i=0;i<=3;i++)
-    {
-        Last_Spd[i]=0;
-    }
+//    for(int i=0;i<=3;i++)
+//    {
+//        Last_Spd[i]=0;
+//    }
     
     ChassisMaxSumCurrent = 2380.0F;
     
@@ -46,17 +46,6 @@ void Chassis_InitConfig(void)
         ChassisFrameCounter[i] = 0;
         ChassisFrameRate[i] = 0;
     }
-}
-
-
-/**
-  * @brief  角速度设置
-  * @param  目标角速度
-  * @retval void
-  */
-void Chassis_OmegaSet(float Target)
-{
-    ChassisParam.TargetOmega = Target;
 }
 
 
@@ -79,6 +68,65 @@ void Chassis_SpeedSet(float XSpeed, float YSpeed)
     ChassisParam.TargetVY = YSpeed;
 }
 
+
+/**
+  * @brief  底盘目标角度设置
+  * @param  目标角度
+  * @retval void
+  */
+void Chassis_TargetDirectionSet(float Target)
+{
+    ChassisParam.TargetABSAngle = Target;
+}
+
+
+/**
+  * @brief  底盘调节
+  * @param  void  
+  * @retval void
+  */
+void Chassis_Adjust(uint8_t mode)
+{
+    int16_t WheelSpeed[4];
+    int16_t PowerSum;
+    
+    int16_t ABSSpeed[4];
+    
+    Control_ChassisPID();
+    
+    //麦轮解算
+    MecanumCalculate(ChassisParam.TargetVX, ChassisParam.TargetVY, ChassisParam.TargetOmega, WheelSpeed);
+    
+    ChassisParam.LF.TargetSpeed = WheelSpeed[0];
+    ChassisParam.RF.TargetSpeed = WheelSpeed[1];
+    ChassisParam.LB.TargetSpeed = WheelSpeed[2];
+    ChassisParam.RB.TargetSpeed = WheelSpeed[3];
+
+    ABSSpeed[0] = (ChassisParam.LF.NeedCurrent > 0 ? ChassisParam.LF.NeedCurrent : -ChassisParam.LF.NeedCurrent);
+    ABSSpeed[1] = (ChassisParam.RF.NeedCurrent > 0 ? ChassisParam.RF.NeedCurrent : -ChassisParam.RF.NeedCurrent);
+    ABSSpeed[2] = (ChassisParam.LB.NeedCurrent > 0 ? ChassisParam.LB.NeedCurrent : -ChassisParam.LB.NeedCurrent);
+    ABSSpeed[3] = (ChassisParam.RB.NeedCurrent > 0 ? ChassisParam.RB.NeedCurrent : -ChassisParam.RB.NeedCurrent);
+    
+    //功率分配
+    PowerSum = ABSSpeed[0] + ABSSpeed[1] + ABSSpeed[2] + ABSSpeed[3];
+    
+    if(PowerSum > 0)
+    {
+        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[0] / PowerSum;
+        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[1] / PowerSum;
+        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[2] / PowerSum;
+        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[3] / PowerSum;
+    }
+    else
+    {
+        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent / 4;
+        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent / 4;
+        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent / 4;
+        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent / 4;
+    }
+    
+    Chassis_SendMotorParam(mode);
+}
 
 
 /**
@@ -195,64 +243,6 @@ void Chassis_MotorDebug(void)
 
 
 /**
-  * @brief  底盘总控制
-  * @param  0 停机        1 正常
-  * @retval void
-  */
-void Chassis_Control(uint8_t mode, uint8_t PIDChoie)
-{
-    Control_ChassisPID();
-    Chassis_Adjust();
-    Chassis_SendMotorParam(mode);
-}
-
-
-/**
-  * @brief  底盘调节
-  * @param  void  
-  * @retval void
-  */
-void Chassis_Adjust(void)                                  
-{
-    int16_t WheelSpeed[4];
-    int16_t PowerSum;
-    
-    int16_t ABSSpeed[4];
-    
-    //麦轮解算
-    MecanumCalculate(ChassisParam.TargetVX, ChassisParam.TargetVY, ChassisParam.TargetOmega, WheelSpeed);
-    
-    ChassisParam.LF.TargetSpeed = WheelSpeed[0];
-    ChassisParam.RF.TargetSpeed = WheelSpeed[1];
-    ChassisParam.LB.TargetSpeed = WheelSpeed[2];
-    ChassisParam.RB.TargetSpeed = WheelSpeed[3];
-
-    ABSSpeed[0] = (ChassisParam.LF.NeedCurrent > 0 ? ChassisParam.LF.NeedCurrent : -ChassisParam.LF.NeedCurrent);
-    ABSSpeed[1] = (ChassisParam.RF.NeedCurrent > 0 ? ChassisParam.RF.NeedCurrent : -ChassisParam.RF.NeedCurrent);
-    ABSSpeed[2] = (ChassisParam.LB.NeedCurrent > 0 ? ChassisParam.LB.NeedCurrent : -ChassisParam.LB.NeedCurrent);
-    ABSSpeed[3] = (ChassisParam.RB.NeedCurrent > 0 ? ChassisParam.RB.NeedCurrent : -ChassisParam.RB.NeedCurrent);
-    
-    //功率分配
-    PowerSum = ABSSpeed[0] + ABSSpeed[1] + ABSSpeed[2] + ABSSpeed[3];
-    
-    if(PowerSum > 0)
-    {
-        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[0] / PowerSum;
-        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[1] / PowerSum;
-        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[2] / PowerSum;
-        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent * ABSSpeed[3] / PowerSum;
-    }
-    else
-    {
-        ChassisParam.LF.LimitCurrent = ChassisMaxSumCurrent / 4;
-        ChassisParam.RF.LimitCurrent = ChassisMaxSumCurrent / 4;
-        ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent / 4;
-        ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent / 4;
-    }
-}
-
-
-/**
   * @brief  麦轮解算
   * @param  x速度（前）
   * @param  y速度（右）
@@ -261,40 +251,75 @@ void Chassis_Adjust(void)
   */
 static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed)
 {
-	unsigned char ii = 0, jj = 0;
-	float temp_mat[3] = {0,0,0};
-	float max_spd = 0,temp_speed = 0;
-	float temp_ration = 0;	
-	float temp_spd[4] = {0,0,0,0};
-	temp_mat[0] = Vx;
-	temp_mat[1] = Vy;
-	temp_mat[2] = Omega;//spinning 使自旋的
-	for(ii = 0;ii<4;ii++)
-	{
-		for(jj = 0;jj<3;jj++)
-		{
-			temp_spd[ii] += temp_mat[jj] * MecanumCalculateMAT[ii][jj];
-		}
-	}
-	//speed 限幅
-	for(ii=0; ii<4; ii++)  
-	{
-		temp_speed = temp_spd[ii] > 0 ? temp_spd[ii] : -temp_spd[ii];
-		max_spd = (max_spd > temp_speed) ? max_spd : temp_speed;
-	}
-	//如果超过麦伦最大速度，等比例缩小4个速度
-	if(max_spd > MaxWheelSpeed)
-	{
-		temp_ration = MaxWheelSpeed / max_spd;
-		for(ii=0; ii<4; ii++)
-		{
-			temp_spd[ii] = temp_spd[ii]*temp_ration; 
-		}	
-	}
-	
-    //设置实际速度
-	Speed[0] = (short)temp_spd[0];
-	Speed[1] = (short)temp_spd[1];
-	Speed[2] = (short)temp_spd[2];
-    Speed[3] = (short)temp_spd[3];
+/****************   这是旧的麦轮解算程序，但实际并不需要这么复杂，因此重写此函数      ****************/
+//	unsigned char ii = 0, jj = 0;
+//	float temp_mat[3] = {0,0,0};
+//	float max_spd = 0,temp_speed = 0;
+//	float temp_ration = 0;	
+//	float temp_spd[4] = {0,0,0,0};
+//	temp_mat[0] = Vx;
+//	temp_mat[1] = Vy;
+//	temp_mat[2] = Omega;//spinning 使自旋的
+//	for(ii = 0;ii<4;ii++)
+//	{
+//		for(jj = 0;jj<3;jj++)
+//		{
+//			temp_spd[ii] += temp_mat[jj] * MecanumCalculateMAT[ii][jj];
+//		}
+//	}
+//	//speed 限幅
+//	for(ii=0; ii<4; ii++)  
+//	{
+//		temp_speed = temp_spd[ii] > 0 ? temp_spd[ii] : -temp_spd[ii];
+//		max_spd = (max_spd > temp_speed) ? max_spd : temp_speed;
+//	}
+//	//如果超过麦伦最大速度，等比例缩小4个速度
+//	if(max_spd > MaxWheelSpeed)
+//	{
+//		temp_ration = MaxWheelSpeed / max_spd;
+//		for(ii=0; ii<4; ii++)
+//		{
+//			temp_spd[ii] = temp_spd[ii]*temp_ration; 
+//		}	
+//	}
+//	
+//    //设置实际速度
+//	Speed[0] = (short)temp_spd[0];
+//	Speed[1] = (short)temp_spd[1];
+//	Speed[2] = (short)temp_spd[2];
+//  Speed[3] = (short)temp_spd[3];
+    
+    
+    
+    float Buffer[4], Param, MaxSpeed;
+    uint8_t index;
+    
+    Buffer[0] = Vx + Vy + Omega;
+    Buffer[1] = Vx - Vy - Omega;
+    Buffer[2] = Vx - Vy + Omega;
+    Buffer[3] = Vx + Vy - Omega;
+    
+    //限幅
+    for(index = 0, MaxSpeed = 0; index < 4; index++)
+    {
+        if((Buffer[index] > 0 ? Buffer[index] : -Buffer[index]) > MaxSpeed)
+        {
+            MaxSpeed = (Buffer[index] > 0 ? Buffer[index] : -Buffer[index]);
+        }
+    }
+    if(MaxWheelSpeed < MaxSpeed)
+    {
+        Param = (float)MaxWheelSpeed / MaxSpeed;
+        Speed[0] = Buffer[0] * Param;
+        Speed[1] = Buffer[1] * Param;
+        Speed[2] = Buffer[2] * Param;
+        Speed[3] = Buffer[3] * Param; 
+    }
+    else
+    {
+        Speed[0] = Buffer[0];
+        Speed[1] = Buffer[1];
+        Speed[2] = Buffer[2];
+        Speed[3] = Buffer[3];
+    }
 }

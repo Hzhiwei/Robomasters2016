@@ -59,7 +59,6 @@ int16_t Control_YawPID(void);
 int16_t Control_PitchPID(void);
 int16_t Control_PokeIPID(void);
 void Control_ChassisPID(void);
-int16_t VControl_YawPID(float TargetOmega);
 
 
 #endif
