@@ -46,11 +46,11 @@ typedef enum
 }KMSubschema_Enum;
 
 
-
 //状态量
-__DRIVER_STATUSMACHINE_EXT ControlMode_Enum         ControlMode;
-__DRIVER_STATUSMACHINE_EXT FricStatus_Enum          FricStatus;
-__DRIVER_STATUSMACHINE_EXT KMSubschema_Enum         KMSubschema;
+__DRIVER_STATUSMACHINE_EXT ControlMode_Enum         ControlMode;            //控制模式
+__DRIVER_STATUSMACHINE_EXT KMSubschema_Enum         KMSubschema;            //键鼠子模式
+__DRIVER_STATUSMACHINE_EXT FricStatus_Enum          FricStatus;             //摩擦轮状态
+__DRIVER_STATUSMACHINE_EXT uint8_t                  ShotFlag;               //每次裁判系统读到发射值0，置1发射
 
 
 void StatusMachine_InitConfig(void);

@@ -83,6 +83,7 @@ void StatusMachine_Update(void)
             FricStatus = FricStatus_Stop;
         }
 /*******************************************  ↑  摩擦轮  ↑  *******************************************/
+        KMSubschema = KMSubschema_Normal;
     }
     //键鼠模式
     else if(ControlMode == ControlMode_KM)
@@ -101,15 +102,14 @@ void StatusMachine_Update(void)
                 FricStatus = FricStatus_Working;
             }
         }
-        //右拨码开关由其他状态至1时关闭
-        else if((DBUS_ReceiveData.switch_right == 1) && (LASTDBUS_ReceiveData.switch_right != 1))
+        else
         {
             FricStatus = FricStatus_Stop;
         }
 /*******************************************  ↑  摩擦轮  ↑  *******************************************/
 /*******************************************  ↓   模式   ↓  *******************************************/
         //无论什么时候按下CTRL键回归手动Normal模式
-        if(DBUS_CheckPush(KEY_CTRL))
+        if(DBUS_CheckPush(KEY_SHIFT))
         {
             KMSubschema = KMSubschema_Normal;
         }
@@ -118,9 +118,14 @@ void StatusMachine_Update(void)
         if(KMSubschema == KMSubschema_Normal)
         {
             //补给站模式
-            if(DBUS_CheckPush(KEY_SHIFT))
+            if(DBUS_CheckPush(KEY_CTRL))
             {
                 KMSubschema = KMSubschema_Supply;
+            }
+            //半自动模式
+            else if(DBUS_ReceiveData.mouse.press_right)
+            {
+                KMSubschema = KMSubschema_Halfauto;
             }
             //摇摆模式
             else if(DBUS_CheckPush(KEY_F))
@@ -142,13 +147,13 @@ void StatusMachine_Update(void)
             {
                 KMSubschema = KMSubschema_Circle;
             }
-            //半自动模式
-            else if(DBUS_ReceiveData.mouse.press_right)
-            {
-                KMSubschema = KMSubschema_Halfauto;
-            }
         }
 /*******************************************  ↑   模式   ↑  *******************************************/
+    }
+    else
+    {
+        FricStatus = FricStatus_Stop;
+        KMSubschema = KMSubschema_Normal;
     }
 }
 

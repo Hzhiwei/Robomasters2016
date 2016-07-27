@@ -57,4 +57,5 @@
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_vision.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_Chassis.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_CloudMotor.h
+.\objects\stm32f4xx_it.o: ..\driver\inc\Driver_StatusMachine.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_SuperGyroscope.h

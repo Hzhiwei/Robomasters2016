@@ -55,6 +55,7 @@
 .\objects\task_control.o: ..\lib\eMPL\inv_mpu.h
 .\objects\task_control.o: ..\lib\eMPL\inv_mpu_dmp_motion_driver.h
 .\objects\task_control.o: ..\driver\inc\Driver_DBUS.h
+.\objects\task_control.o: ..\driver\inc\Driver_Judge.h
 .\objects\task_control.o: ..\driver\inc\Driver_vision.h
 .\objects\task_control.o: ..\driver\inc\Driver_Chassis.h
 .\objects\task_control.o: ..\driver\inc\Driver_mpu9250.h
@@ -65,3 +66,4 @@
 .\objects\task_control.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\task_control.o: ..\driver\inc\Driver_StatusMachine.h
 .\objects\task_control.o: ..\driver\inc\Driver_SuperGyroscope.h
+.\objects\task_control.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

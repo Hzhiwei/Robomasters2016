@@ -2,6 +2,7 @@
 #define __DRIVER_POKEMOTOR_GLOBALS
 
 #include "OSinclude.h"
+#include "Driver_Judge.h"
 #include "Driver_Control.h"
 #include "Driver_PokeMotor.h"
 
@@ -68,7 +69,8 @@ void PokeMotor_Step(void)
     portTickType CurrentTick = xTaskGetTickCount();
     
     if((PokeMotorParam.Status == PokeMotorParam_Suit) && 
-        (CurrentTick - PokeMotorParam.LastShotTick >= POKESTEPMINTIMECRACK))
+        (CurrentTick - PokeMotorParam.LastShotTick >= POKESTEPMINTIMECRACK) &&
+        (CurrentTick - InfantryJudge.LastShotTick >= POKESTEPMINTIMECRACK))
     {
         PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation - POKELINESPERSTEP;
         PokeMotorParam.LastShotTick = CurrentTick;

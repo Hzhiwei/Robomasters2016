@@ -3,8 +3,9 @@
 
 
 #include "stm32f4xx.h"
+#include "OSinclude.h"
 
-#define JudgeBufferLength       47
+#define JudgeBufferLength       150
 #define JudgeFrameLength_1      46
 #define JudgeFrameLength_2      11
 #define JudgeFrameLength_3      24
@@ -79,12 +80,23 @@ typedef __packed struct
 }RealShootData_Struct;
 
 
+//裁判系统结构体
+typedef struct
+{
+    float RealVoltage;                  //实时电压
+    float RealCurrent;                  //实时电流
+    int16_t LastBlood;                  //剩余血量
+    uint8_t LastHartID;                 //上次收到伤害的装甲板ID号
+    portTickType LastHartTick;          //上次受伤害时间 
+    float LastShotSpeed;                //上次射击速度
+    portTickType LastShotTick;          //上次射击时间
+}InfantryJudge_Struct;
+
+
 //裁判系统数据缓存
 __DRIVER_EXT uint8_t JudgeDataBuffer[JudgeBufferLength];
 //实时电压
-__DRIVER_EXT float JudgeRealVoltage;
-//实时电流
-__DRIVER_EXT float JudgeRealCurrent;
+__DRIVER_EXT InfantryJudge_Struct InfantryJudge;
 //帧率计数器
 __DRIVER_EXT float JudgeFrameCounter;
 //帧率

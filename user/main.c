@@ -13,7 +13,6 @@
   * @retval void
   */
 int main(void)
-
 {
     xTaskCreate(Task_SysInitConfig,
                 "Test",

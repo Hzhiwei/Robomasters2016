@@ -173,8 +173,11 @@ void Append_CRC16_Check_Sum(uint8_t * pchMessage,uint32_t dwLength)
   */
 void Judge_InitConfig(void)
 {
-    JudgeRealVoltage = 25.2F;
-    JudgeRealCurrent = 0;
+    InfantryJudge.RealVoltage = 25.2F;
+    InfantryJudge.RealCurrent = 0;
+    InfantryJudge.LastBlood = 1500;
+    InfantryJudge.LastShotSpeed = 23.5;
+    InfantryJudge.LastShotTick = 0;
     JudgeFrameCounter = 0;
     JudgeFrameRate = 0;
 }

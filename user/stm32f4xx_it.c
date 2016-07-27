@@ -146,7 +146,9 @@ void DebugMon_Handler(void)
 #include "Driver_vision.h"
 #include "Driver_Chassis.h"
 #include "Driver_CloudMotor.h"
+#include "Driver_StatusMachine.h"
 #include "Driver_SuperGyroscope.h"
+#include "OSinclude.h"
 
 
 
@@ -330,8 +332,12 @@ void UART5_IRQHandler(void)
     DMA_Cmd(DMA1_Stream0, ENABLE);
 }
 
-
+int klklkl;
 //裁判系统空闲中断
+/*****
+DJI很毒
+以50HZ发送Info包，当有实时数据包产生时，在最近的一帧Info前无间隔加上实时数据包
+******/
 void UART4_IRQHandler(void)
 {
     FormatTrans FT;
@@ -342,9 +348,6 @@ void UART4_IRQHandler(void)
     DMA_Cmd(DMA1_Stream2, DISABLE);
     
     //比赛进程信息，只读电压电流
-    //傻狗说：
-    //很奇怪，大疆pdf给的比赛信息有效数据长度是38，而传过来的是37，而sizeof得到的也是38，反正这里有问题，最后决定用大疆发过来的的长度（37）为准
-    //我选择相信
     if((DMA1_Stream2->NDTR == JudgeBufferLength - JudgeFrameLength_1) && 
         (Verify_CRC16_Check_Sum(JudgeDataBuffer, 38 + 8) == 1) &&
         (JudgeDataBuffer[4] == 1))
@@ -356,17 +359,57 @@ void UART4_IRQHandler(void)
         FT.u8[2] = JudgeDataBuffer[14];
         FT.u8[1] = JudgeDataBuffer[13];
         FT.u8[0] = JudgeDataBuffer[12];
-        JudgeRealVoltage = FT.F;
+        InfantryJudge.RealVoltage = FT.F;
         
         //读取电压
         FT.u8[3] = JudgeDataBuffer[19];
         FT.u8[2] = JudgeDataBuffer[18];
         FT.u8[1] = JudgeDataBuffer[17];
         FT.u8[0] = JudgeDataBuffer[16];
-        JudgeRealCurrent = FT.F;
+        InfantryJudge.RealCurrent = FT.F;
+        
+        //剩余血量
+        InfantryJudge.LastBlood = ((int16_t)JudgeDataBuffer[11] << 8) | JudgeDataBuffer[10];
         
         //功率限制
-        ChassisMaxSumCurrent = CHASSISMAXPOWERRATE * CHASSISMAXPOWER * 1000 / JudgeRealVoltage;
+        ChassisMaxSumCurrent = CHASSISMAXPOWERRATE * CHASSISMAXPOWER * 1000 / InfantryJudge.RealVoltage;
+    }
+    //被攻击信息
+    else if((DMA1_Stream2->NDTR == JudgeBufferLength - JudgeFrameLength_1 - JudgeFrameLength_2) && 
+        (Verify_CRC16_Check_Sum(JudgeDataBuffer, 3 + 8) == 1) &&
+        (JudgeDataBuffer[4] == 2))
+    {
+        JudgeFrameCounter++;        //帧数增加
+        
+        //扣血类型
+        if(!(JudgeDataBuffer[6] >> 4))
+        {
+            //受伤装甲板ID
+            InfantryJudge.LastHartID = JudgeDataBuffer[6] & 0x0F;
+            //受伤时间
+            InfantryJudge.LastHartTick = xTaskGetTickCountFromISR();
+        }
+    }
+    //射击信息
+    else if((DMA1_Stream2->NDTR == JudgeBufferLength - JudgeFrameLength_1 - JudgeFrameLength_3) && 
+        (Verify_CRC16_Check_Sum(JudgeDataBuffer, 16 + 8) == 1) &&
+        (JudgeDataBuffer[4] == 3))
+    {
+        JudgeFrameCounter++;        //帧数增加
+        
+        //子弹射速
+        FT.u8[3] = JudgeDataBuffer[9];
+        FT.u8[2] = JudgeDataBuffer[8];
+        FT.u8[1] = JudgeDataBuffer[7];
+        FT.u8[0] = JudgeDataBuffer[6];
+        InfantryJudge.LastShotSpeed = FT.F;
+        
+        //子弹出膛时间
+        InfantryJudge.LastShotTick = xTaskGetTickCountFromISR();
+    }
+    else
+    {
+        klklkl = DMA1_Stream2->NDTR;
     }
     
     //重启DMA
