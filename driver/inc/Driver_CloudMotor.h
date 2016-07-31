@@ -76,17 +76,32 @@
 
 #elif INFANTRY == 5     //¹·µ°
 
-    #define PitchEncoderUPLimit             5400
-    #define PitchEncoderDOWNLimit           4600
-    #define PitchEncoderCenter              4862
+    #define PitchEncoderUPLimit             5830
+    #define PitchEncoderDOWNLimit           4930
+    #define PitchEncoderCenter              5154
     #define YawEncoderLEFTLimit             10400
-    #define YawEncoderRIGHTLimit            8400
-    #define YawEncoderCenter                9270
+    #define YawEncoderRIGHTLimit            8200
+    #define YawEncoderCenter                9265
                 
     #define PitchABSUPLimit                 60.0F 
     #define PitchABSDOWNLimit               -40.0F
     
-    #define PitchEncoderPassZeroBoundary    4000
+    #define PitchEncoderPassZeroBoundary    1
+    #define YawEncoderPassZeroBoundary      5000
+
+#elif INFANTRY == 6     //Ð¡Ó¢ÐÛ
+
+    #define PitchEncoderUPLimit             4460
+    #define PitchEncoderDOWNLimit           3490
+    #define PitchEncoderCenter              4012
+    #define YawEncoderLEFTLimit             7100
+    #define YawEncoderRIGHTLimit            5000
+    #define YawEncoderCenter                6180
+                
+    #define PitchABSUPLimit                 60.0F 
+    #define PitchABSDOWNLimit               -40.0F
+    
+    #define PitchEncoderPassZeroBoundary    1
     #define YawEncoderPassZeroBoundary      1
 
 #endif

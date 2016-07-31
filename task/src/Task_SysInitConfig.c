@@ -72,7 +72,7 @@ void Task_SysInitConfig(void *Parameters)
 //    vTaskDelay(4000);
     
     //生成CAN发送队列
-	Queue_CANSend = xQueueCreate(32, sizeof(CanSend_Type));		
+	Queue_CANSend = xQueueCreate(64, sizeof(CanSend_Type));		
     
     //////////////////////任务建立
     //监视器任务

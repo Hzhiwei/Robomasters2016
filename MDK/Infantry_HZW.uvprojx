@@ -497,9 +497,9 @@
               <FilePath>..\driver\src\Driver_mpu9250.c</FilePath>
             </File>
             <File>
-              <FileName>Driver_FricMototr.c</FileName>
+              <FileName>Driver_FricMotor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\driver\src\Driver_FricMototr.c</FilePath>
+              <FilePath>..\driver\src\Driver_FricMotor.c</FilePath>
             </File>
             <File>
               <FileName>Driver_PokeMotor.c</FileName>

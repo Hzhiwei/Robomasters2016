@@ -9,7 +9,7 @@
 ".\objects\driver_control.o"
 ".\objects\driver_steering.o"
 ".\objects\driver_mpu9250.o"
-".\objects\driver_fricmototr.o"
+".\objects\driver_fricmotor.o"
 ".\objects\driver_pokemotor.o"
 ".\objects\driver_cloudmotor.o"
 ".\objects\driver_statusmachine.o"

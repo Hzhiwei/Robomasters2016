@@ -141,14 +141,15 @@ void DebugMon_Handler(void)
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 
 #include "Config.h"
+#include "OSinclude.h"
 #include "Driver_DBUS.h"
 #include "Driver_Judge.h"
 #include "Driver_vision.h"
 #include "Driver_Chassis.h"
+#include "Driver_FricMotor.h"
 #include "Driver_CloudMotor.h"
 #include "Driver_StatusMachine.h"
 #include "Driver_SuperGyroscope.h"
-#include "OSinclude.h"
 
 
 
@@ -172,8 +173,8 @@ void CAN2_RX0_IRQHandler(void)
     static uint8_t FristGyroData = 0;
     u8Todouble dataTrans;
     
-    uint16_t YawPassZeroBuffer;
-    uint16_t PitchPassZeroBuffer;
+    int16_t YawPassZeroBuffer;
+    int16_t PitchPassZeroBuffer;
     
 #if CANPORT == 1
     CAN_Receive(CAN1, 0, &CanRxData);
@@ -183,11 +184,17 @@ void CAN2_RX0_IRQHandler(void)
     
     switch(CanRxData.StdId)
     {
+        //YAW µç»ú
         case    YAWMOTORCANID  :
         {
             CloudParam.Yaw.FrameCounter++;
             
+#if YAWMOTORENCODERPLUSEDIR == 1
             YawPassZeroBuffer = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
+#else
+            YawPassZeroBuffer = 8191 - ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
+#endif
+            
             if(YawPassZeroBuffer < YawEncoderPassZeroBoundary)
             {
                 CloudParam.Yaw.RealEncoderAngle = YawPassZeroBuffer + 8191;
@@ -198,11 +205,17 @@ void CAN2_RX0_IRQHandler(void)
             }
             break;
         }
+        //PITCH µç»ú
         case    PITCHMOTORCANID  :
         {
             CloudParam.Pitch.FrameCounter++;
-            
+
+#if PITCHMOTORENCODERPLUSEDIR == 1
             PitchPassZeroBuffer = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
+#else
+            PitchPassZeroBuffer = 8191 - (((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1]);
+#endif
+            
             if(PitchPassZeroBuffer < PitchEncoderPassZeroBoundary)
             {
                 CloudParam.Pitch.RealEncoderAngle = PitchPassZeroBuffer + 8191;
@@ -213,6 +226,7 @@ void CAN2_RX0_IRQHandler(void)
             }
             break;
         }
+        //µ×ÅÌÍÓÂÝÒÇ
         case    SUPERGYROSCOPECANIC :
         {
             SuperGyoFrameCounter++;
@@ -241,6 +255,7 @@ void CAN2_RX0_IRQHandler(void)
             
             break;
         }
+        //×óÇ°ÂÖ
         case    LFCHASSISCANID  :
         {
             ChassisFrameCounter[0]++;
@@ -251,6 +266,7 @@ void CAN2_RX0_IRQHandler(void)
             
             break;
         }
+        //ÓÒÇ°ÂÖ
         case    RFCHASSISCANID  :
         {
             ChassisFrameCounter[1]++;
@@ -261,6 +277,7 @@ void CAN2_RX0_IRQHandler(void)
             
             break;
         }
+        //×óºóÂÖ
         case    LBCHASSISCANID  :
         {
             ChassisFrameCounter[2]++;
@@ -271,6 +288,7 @@ void CAN2_RX0_IRQHandler(void)
             
             break;
         }
+        //ÓÒºóÂÖ
         case    RBCHASSISCANID  :
         {
             ChassisFrameCounter[3]++;
@@ -281,6 +299,18 @@ void CAN2_RX0_IRQHandler(void)
             
             break;
         }
+#if INFANTRY == 6
+        //×óÅÚÄ¦²ÁÂÖ
+        case    ARTILLERYFRICCANIDLEFT :
+        {
+             ArtilleryFricRealSpeed[0] = ((int16_t)CanRxData.Data[2] << 8) | CanRxData.Data[3];
+        }
+        //ÓÒÅÚÄ¦²ÁÂÖ
+        case    ARTILLERYFRICCANIDRIGHT :
+        {
+            ArtilleryFricRealSpeed[1] = ((int16_t)CanRxData.Data[2] << 8) | CanRxData.Data[3];
+        }
+#endif
     }
     
     #if CANPORT == 1

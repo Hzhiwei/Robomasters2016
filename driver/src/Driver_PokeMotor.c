@@ -17,7 +17,7 @@ void PokeMotor_InitConfig(void)
 {
     PokeMotorParam.RealLocation = 0;
     PokeMotorParam.RealSpeed = 0;
-    PokeMotorParam.Status = PokeMotorParam_Suit;
+    PokeMotorParam.Status = PokeMotorParam_Working;
     PokeMotorParam.TargetLocation = 0;
     PokeMotorParam.LastShotTick = 0;
     
@@ -27,7 +27,6 @@ void PokeMotor_InitConfig(void)
     //拨弹电机方向初始化为顺时针
     GPIO_SetBits(GPIOA, GPIO_Pin_5);
 }
-
 
 
 
@@ -54,7 +53,6 @@ void PokeMotorCurrent(int16_t Current)
         GPIO_ResetBits(GPIOA, GPIO_Pin_5);
         TIM5->CCR2 = -S;
     }
-//#endif
 }
 
 
@@ -68,9 +66,8 @@ void PokeMotor_Step(void)
 {
     portTickType CurrentTick = xTaskGetTickCount();
     
-    if((PokeMotorParam.Status == PokeMotorParam_Suit) && 
-        (CurrentTick - PokeMotorParam.LastShotTick >= POKESTEPMINTIMECRACK) &&
-        (CurrentTick - InfantryJudge.LastShotTick >= POKESTEPMINTIMECRACK))
+    if((PokeMotorParam.Status == PokeMotorParam_Working) && 
+        (CurrentTick - PokeMotorParam.LastShotTick >= POKESTEPMINTIMECRACK))
     {
         PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation - POKELINESPERSTEP;
         PokeMotorParam.LastShotTick = CurrentTick;
@@ -86,57 +83,99 @@ void PokeMotor_Step(void)
   */
 void PokeMotor_Adjust(uint8_t mode)
 {
+//    int16_t PokeCurrent;
+//    static portTickType LastStruckCheckTick = 0;
+//    static long LastCheckLocation = 0;
+//    static portTickType LastStruckDealTick = 0;
+//    portTickType CurrentTick = xTaskGetTickCount();
+    
     int16_t PokeCurrent;
-    static portTickType LastStruckCheckTick = 0;
-    static long LastCheckLocation = 0;
-    static portTickType LastStallDealTick = 0;
+    static portTickType LastStruckDealTick = 0;
+    
     portTickType CurrentTick = xTaskGetTickCount();
+    
     
     if(mode)
     {
-        //拨弹电机速度位置计算
-        PokeMotorParam.RealSpeed = POKEENCODERCenter - TIM3->CNT;
-        TIM3->CNT = POKEENCODERCenter;
+//        //拨弹电机速度位置计算
+//        PokeMotorParam.RealSpeed = POKEENCODERCenter - TIM3->CNT;
+//        TIM3->CNT = POKEENCODERCenter;
+//        
+//        //误差小于25线认为达到目标位置,否则处于调节状态
+//        if((PokeMotorParam.RealLocation > PokeMotorParam.TargetLocation ? (PokeMotorParam.RealLocation - PokeMotorParam.TargetLocation) : (PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation)) < 25)
+//        {
+//            PokeMotorParam.Status = PokeMotorParam_Suit;
+//        }
+//        else
+//        {
+//            PokeMotorParam.Status = PokeMotorParam_Adjusting;
+//        }
+//        
+//        //每100ms检测卡弹
+//        if(CurrentTick - LastStruckCheckTick >= 100)
+//        {
+//            //只有调节状态才有可能卡弹，进行卡弹检测
+//            if(PokeMotorParam_Adjusting == PokeMotorParam.Status)
+//            {
+//                //20ms内运动小于10线认为卡弹
+//                if((PokeMotorParam.RealLocation > LastCheckLocation ? (PokeMotorParam.RealLocation - LastCheckLocation) : (LastCheckLocation - PokeMotorParam.RealLocation)) < 10)
+//                {
+//                    //卡弹反转处理时间间隔为100ms，防止多次反转累加
+//                    if(CurrentTick - LastStruckDealTick > 300)
+//                    {
+//                        PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation ? POKESTRUCKDEALLINES : -POKESTRUCKDEALLINES;
+//                        LastStruckDealTick = CurrentTick;
+//                    }
+//                }
+//            }
+//            
+//            LastCheckLocation = PokeMotorParam.RealLocation;
+//            LastStruckCheckTick = CurrentTick;
+//        }
+//        
+//        
+//        PokeMotorParam.RealLocation += PokeMotorParam.RealSpeed;
+//        
+//        PokeCurrent = Control_PokeIPID();
+//        
+//        PokeMotorCurrent(PokeCurrent);
+
         
-        //误差小于25线认为达到目标位置,否则处于调节状态
-        if((PokeMotorParam.RealLocation > PokeMotorParam.TargetLocation ? (PokeMotorParam.RealLocation - PokeMotorParam.TargetLocation) : (PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation)) < 25)
-        {
-            PokeMotorParam.Status = PokeMotorParam_Suit;
-        }
-        else
-        {
-            PokeMotorParam.Status = PokeMotorParam_Adjusting;
-        }
+    
+    PokeMotorParam.RealSpeed = POKEENCODERCenter - TIM3->CNT;
+    TIM3->CNT = POKEENCODERCenter;
+    
+    //误差小于30线
+    if(((PokeOPID.CurrentError < 30) && (PokeOPID.CurrentError > -30)))
+    {
+        PokeMotorParam.Status = PokeMotorParam_Working;
+    }
         
-        //每20ms检测卡弹
-        if(CurrentTick - LastStruckCheckTick >= 200)
+    if(((PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation) && (PokeIPID.Iout > PokeIPID.IMax * 0.85F)) || ((PokeMotorParam.TargetLocation < PokeMotorParam.RealLocation) && (PokeIPID.Iout < -PokeIPID.IMax * 0.85F)))
+    {
+        PokeMotorParam.Status = PokeMotorParam_Stuck;
+        if(CurrentTick - LastStruckDealTick >= 400)
         {
-            //只有调节状态才有可能卡弹，进行卡弹检测
-            if(PokeMotorParam_Adjusting == PokeMotorParam.Status)
+            if((PokeMotorParam.TargetLocation != PokeMotorParam.RealLocation))
             {
-                //20ms内运动小于50线认为卡弹
-                if((PokeMotorParam.RealLocation > LastCheckLocation ? (PokeMotorParam.RealLocation - LastCheckLocation) : (LastCheckLocation - PokeMotorParam.RealLocation)) < 50)
-                {
-                    //卡弹反转处理时间间隔为100ms，防止多次反转累加
-                    if(CurrentTick - LastStallDealTick > 100)
-                    {
-                        PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation ? POKESTRUCKDEALLINES : -POKESTRUCKDEALLINES;
-                    }
-                    
-                    LastStallDealTick = CurrentTick;
-                }
+                PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + ((PokeMotorParam.TargetLocation > PokeMotorParam.RealLocation) ? (-POKESTRUCKDEALLINES) : POKESTRUCKDEALLINES);
             }
-            
-            LastCheckLocation = PokeMotorParam.RealLocation;
-            LastStruckCheckTick = CurrentTick;
+            else
+            {
+                PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + ((PokeOPID.PIDout > 0) ? (-POKESTRUCKDEALLINES) : POKESTRUCKDEALLINES);
+            }
         }
+    }
+    
+    PokeMotorParam.RealLocation += PokeMotorParam.RealSpeed;
+    
+    PokeCurrent = Control_PokeIPID();
+    
+    PokeMotorCurrent(PokeCurrent);
         
         
-        PokeMotorParam.RealLocation += PokeMotorParam.RealSpeed;
         
-        PokeCurrent = Control_PokeIPID();
         
-        PokeMotorCurrent(PokeCurrent);
     }
     else
     {

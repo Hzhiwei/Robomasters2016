@@ -92,7 +92,8 @@ void Task_Control(void *Parameters)
 			//由其他模式转入遥控模式
 			if(JumpToRCFlag)
 			{
-				CloudParam.Yaw.TargetABSAngle = CloudParam.Yaw.RealABSAngle;
+                TIM3->CNT = POKEENCODERCenter;              //拨弹电机定时器归位，防止改变模式时转动
+				CloudParam.Yaw.TargetABSAngle = SuperGyoParam.Angle;
 				PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation;
 			}
 			
@@ -107,7 +108,8 @@ void Task_Control(void *Parameters)
 			//由其他模式转入键鼠模式
 			if(JumpToKMFlag)
 			{
-				CloudParam.Yaw.TargetABSAngle = CloudParam.Yaw.RealABSAngle;
+                TIM3->CNT = POKEENCODERCenter;              //拨弹电机定时器归位，防止改变模式时转动
+				CloudParam.Yaw.TargetABSAngle = SuperGyoParam.Angle;
 				PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation;
 			}
 			
@@ -175,7 +177,7 @@ static void Control_RCMode(void)
     //云台控制
     Cloud_YawAngleSet(CloudParam.Yaw.TargetABSAngle - DBUS_ReceiveData.ch3 / 500.0F, AngleMode_ABS);
     Cloud_PitchAngleSet(CloudParam.Pitch.TargetABSAngle + DBUS_ReceiveData.ch4 / 120.0F);
-    Cloud_Adjust(1);
+//    Cloud_Adjust(1);
     
     //底盘控制
     Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
@@ -184,6 +186,15 @@ static void Control_RCMode(void)
 	
     //舵机舱门控制
 	Steering_Control(2);
+    
+    if(DBUS_ReceiveData.switch_right == 2)
+    {
+        PokeMotor_Step();
+    }
+    PokeMotor_Adjust(1);
+    
+//    FricArtillerySpeed_Adjust(1);
+    FricArtilleryMotorCurrent(2000, 2000);
 }
 
 
@@ -236,6 +247,9 @@ static void Control_ProtectMode(void)
     Chassis_Adjust(0);
 	Steering_Control(2);
     PokeMotor_Adjust(0);
+#if INFANTRY == 6
+    FricArtilleryMotorCurrent(0, 0);
+#endif
 }
 
 

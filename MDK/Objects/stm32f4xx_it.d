@@ -37,7 +37,6 @@
 .\objects\stm32f4xx_it.o: ..\lib\std\inc\stm32f4xx_fsmc.h
 .\objects\stm32f4xx_it.o: ..\user\main.h
 .\objects\stm32f4xx_it.o: ..\user\Config.h
-.\objects\stm32f4xx_it.o: ..\driver\inc\Driver_DBUS.h
 .\objects\stm32f4xx_it.o: ..\user\OSinclude.h
 .\objects\stm32f4xx_it.o: ..\lib\freertos\inc\FreeRTOS.h
 .\objects\stm32f4xx_it.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
@@ -53,9 +52,11 @@
 .\objects\stm32f4xx_it.o: ..\lib\freertos\inc\queue.h
 .\objects\stm32f4xx_it.o: ..\lib\freertos\inc\semphr.h
 .\objects\stm32f4xx_it.o: ..\lib\freertos\inc\event_groups.h
+.\objects\stm32f4xx_it.o: ..\driver\inc\Driver_DBUS.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_Judge.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_vision.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_Chassis.h
+.\objects\stm32f4xx_it.o: ..\driver\inc\Driver_FricMotor.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_StatusMachine.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_SuperGyroscope.h

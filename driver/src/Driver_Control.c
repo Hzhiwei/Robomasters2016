@@ -100,7 +100,152 @@ void CloudPID_InitConfig(void)
     
 #elif INFANTRY == 5     //¹·µ°
     
-#elif INFANTRY == 6     //Ó¢ÐÛ
+    PitchOPID.P = 9;
+    PitchOPID.I = 0.5;
+    PitchOPID.D = 0;
+    PitchOPID.CurrentError = 0;
+    PitchOPID.LastError = 0;
+    PitchOPID.LastTick = 0;
+    PitchOPID.IMax = 10;
+    PitchOPID.PIDMax = 400;
+    
+    PitchIPID.P = 50;
+    PitchIPID.I = 5;
+    PitchIPID.D = 0;
+    PitchIPID.CurrentError = 0;
+    PitchIPID.LastError = 0;
+    PitchIPID.LastTick = 0;
+    PitchIPID.IMax = 300;
+    PitchIPID.PIDMax = 5000;
+    
+    YawOPID.P = 15;
+    YawOPID.I = 0;
+    YawOPID.D = 0;
+    YawOPID.CurrentError = 0;
+    YawOPID.LastError = 0;
+    YawOPID.LastTick = 0;
+    YawOPID.IMax = 0;
+    YawOPID.PIDMax = 300;
+    
+    YawIPID.P = 100;
+    YawIPID.I = 0;
+    YawIPID.D = 0;
+    YawIPID.CurrentError = 0;
+    YawIPID.LastError = 0;
+    YawIPID.LastTick = 0;
+    YawIPID.IMax = 0;
+    YawIPID.PIDMax = 5000;
+    
+    ChassisOPID.P = 1.6;
+    ChassisOPID.I = 0;
+    ChassisOPID.D = 0;
+    ChassisOPID.CurrentError = 0;
+    ChassisOPID.LastError = 0;
+    ChassisOPID.LastTick = 0;
+    ChassisOPID.IMax = 0;
+    ChassisOPID.PIDMax = 300;
+    
+    ChassisIPID.P = 16;
+    ChassisIPID.I = 0;
+    ChassisIPID.D = 0;
+    ChassisIPID.CurrentError = 0;
+    ChassisIPID.LastError = 0;
+    ChassisIPID.LastTick = 0;
+    ChassisIPID.IMax = 0;
+    ChassisIPID.PIDMax = 950;
+    
+    PokeOPID.CurrentError = 0;
+    PokeOPID.LastError = 0;
+    PokeOPID.P = 0.07;
+    PokeOPID.I = 0;
+    PokeOPID.D = 0;
+    PokeOPID.IMax = 0;
+    PokeOPID.PIDMax = 130;
+    PokeOPID.LastTick = 0;
+    
+    PokeIPID.CurrentError = 0;
+    PokeIPID.LastError = 0;
+    PokeIPID.P = 3.8;
+    PokeIPID.I = 0.2;
+    PokeIPID.D = 0;
+    PokeIPID.IMax = 200;
+    PokeIPID.PIDMax = 90;
+    PokeIPID.LastTick = 0;
+    
+    
+#elif INFANTRY == 6     //Ð¡Ó¢ÐÛ
+    
+    PitchOPID.P = 9;
+    PitchOPID.I = 0.5;
+    PitchOPID.D = 0;
+    PitchOPID.CurrentError = 0;
+    PitchOPID.LastError = 0;
+    PitchOPID.LastTick = 0;
+    PitchOPID.IMax = 10;
+    PitchOPID.PIDMax = 400;
+    
+    PitchIPID.P = 50;
+    PitchIPID.I = 5;
+    PitchIPID.D = 0;
+    PitchIPID.CurrentError = 0;
+    PitchIPID.LastError = 0;
+    PitchIPID.LastTick = 0;
+    PitchIPID.IMax = 300;
+    PitchIPID.PIDMax = 5000;
+    
+    YawOPID.P = 16;
+    YawOPID.I = 0.1;
+    YawOPID.D = 0;
+    YawOPID.CurrentError = 0;
+    YawOPID.LastError = 0;
+    YawOPID.LastTick = 0;
+    YawOPID.IMax = 5;
+    YawOPID.PIDMax = 300;
+    
+    YawIPID.P = 80;
+    YawIPID.I = 5;
+    YawIPID.D = 0;
+    YawIPID.CurrentError = 0;
+    YawIPID.LastError = 0;
+    YawIPID.LastTick = 0;
+    YawIPID.IMax = 100;
+    YawIPID.PIDMax = 5000;
+    
+    ChassisOPID.P = 12;
+    ChassisOPID.I = 0;
+    ChassisOPID.D = 0;
+    ChassisOPID.CurrentError = 0;
+    ChassisOPID.LastError = 0;
+    ChassisOPID.LastTick = 0;
+    ChassisOPID.IMax = 0;
+    ChassisOPID.PIDMax = 300;
+    
+    ChassisIPID.P = 1.8;
+    ChassisIPID.I = 0;
+    ChassisIPID.D = 0;
+    ChassisIPID.CurrentError = 0;
+    ChassisIPID.LastError = 0;
+    ChassisIPID.LastTick = 0;
+    ChassisIPID.IMax = 0;
+    ChassisIPID.PIDMax = 950;
+    
+    PokeOPID.CurrentError = 0;
+    PokeOPID.LastError = 0;
+    PokeOPID.P = 0.07;
+    PokeOPID.I = 0;
+    PokeOPID.D = 0;
+    PokeOPID.IMax = 0;
+    PokeOPID.PIDMax = 130;
+    PokeOPID.LastTick = 0;
+    
+    PokeIPID.CurrentError = 0;
+    PokeIPID.LastError = 0;
+    PokeIPID.P = 3.8;
+    PokeIPID.I = 0.2;
+    PokeIPID.D = 0;
+    PokeIPID.IMax = 200;
+    PokeIPID.PIDMax = 90;
+    PokeIPID.LastTick = 0;
     
 #endif
 }

@@ -24,8 +24,9 @@
 //拨弹电机状态枚举
 typedef enum
 {
-    PokeMotorParam_Suit,                        //达到目标位置
-    PokeMotorParam_Adjusting,                      //正调整状态，包括正常工作和堵转反转处理
+    PokeMotorParam_Working,                         //正常
+    PokeMotorParam_StuckDealing,                    //正在反转处理卡弹
+    PokeMotorParam_Stuck                            //卡弹
 }PokeChassisParam_Enum;  
     
     

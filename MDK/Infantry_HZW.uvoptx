@@ -289,6 +289,36 @@
           <WinNumber>1</WinNumber>
           <ItemText>JudgeDataBuffer,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PokeMotorParam,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>20</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>YawPassZeroBuffer,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>21</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PitchPassZeroBuffer,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>22</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>8191 - ((int16_t)CanRxData.Data[0] &lt;&lt; 8) | CanRxData.Data[1],0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>23</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ArtilleryFricRealSpeed,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>24</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PokeIPID,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
@@ -548,8 +578,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\driver\src\Driver_FricMototr.c</PathWithFileName>
-      <FilenameWithoutPath>Driver_FricMototr.c</FilenameWithoutPath>
+      <PathWithFileName>..\driver\src\Driver_FricMotor.c</PathWithFileName>
+      <FilenameWithoutPath>Driver_FricMotor.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
