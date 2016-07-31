@@ -159,6 +159,8 @@ CanRxMsg CanRxData;
 //用于清空串口标志位的临时变量
 uint8_t UARTtemp;
 
+int16_t MinSpeed;
+
 /**
   * @brief  CAN数据接收中断服务函数
   * @param  void
@@ -303,7 +305,12 @@ void CAN2_RX0_IRQHandler(void)
         //左炮摩擦轮
         case    ARTILLERYFRICCANIDLEFT :
         {
-             ArtilleryFricRealSpeed[0] = ((int16_t)CanRxData.Data[2] << 8) | CanRxData.Data[3];
+            ArtilleryFricRealSpeed[0] = ((int16_t)CanRxData.Data[2] << 8) | CanRxData.Data[3];
+            
+            if(MinSpeed > (-ArtilleryFricRealSpeed[0]))
+            {
+                MinSpeed = -ArtilleryFricRealSpeed[0];
+            }                
         }
         //右炮摩擦轮
         case    ARTILLERYFRICCANIDRIGHT :
@@ -362,7 +369,7 @@ void UART5_IRQHandler(void)
     DMA_Cmd(DMA1_Stream0, ENABLE);
 }
 
-int klklkl;
+
 //裁判系统空闲中断
 /*****
 DJI很毒
@@ -437,10 +444,7 @@ void UART4_IRQHandler(void)
         //子弹出膛时间
         InfantryJudge.LastShotTick = xTaskGetTickCountFromISR();
     }
-    else
-    {
-        klklkl = DMA1_Stream2->NDTR;
-    }
+    
     
     //重启DMA
     DMA_ClearFlag(DMA1_Stream2, DMA_FLAG_TCIF2 | DMA_FLAG_HTIF2);

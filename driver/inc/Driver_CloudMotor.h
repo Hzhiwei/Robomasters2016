@@ -150,6 +150,7 @@ __CLOUDMOTOR_EXT CloudParam_Struct CloudParam;
 void CloudMotor_InitConfig(void);
 void CloudMotorCurrent(int16_t Pitch, int16_t Yaw);
 void Cloud_Adjust(uint8_t mode);
+void Cloud_AutoAdjust(float FeedSpeed, uint8_t mode);
 void Cloud_YawAngleSet(float Target, AngleMode_Enum mode);
 void Cloud_PitchAngleSet(float Target);
 

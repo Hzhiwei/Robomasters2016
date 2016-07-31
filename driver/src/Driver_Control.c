@@ -96,26 +96,98 @@ void CloudPID_InitConfig(void)
     
 #elif INFANTRY == 3     //哈士奇
     
-#elif INFANTRY == 4     //边牧（没名字，先这么叫吧）
+#elif INFANTRY == 4     //金毛
     
-#elif INFANTRY == 5     //狗蛋
-    
-    PitchOPID.P = 9;
-    PitchOPID.I = 0.5;
+    PitchOPID.P = 18;
+    PitchOPID.I = 0;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
     PitchOPID.LastError = 0;
     PitchOPID.LastTick = 0;
-    PitchOPID.IMax = 10;
-    PitchOPID.PIDMax = 400;
+    PitchOPID.IMax = 0;
+    PitchOPID.PIDMax = 300;
     
-    PitchIPID.P = 50;
-    PitchIPID.I = 5;
+    PitchIPID.P = 40;
+    PitchIPID.I = 0;
     PitchIPID.D = 0;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;
-    PitchIPID.IMax = 300;
+    PitchIPID.IMax = 0;
+    PitchIPID.PIDMax = 5000;
+    
+    YawOPID.P = 32;
+    YawOPID.I = 0;
+    YawOPID.D = 0;
+    YawOPID.CurrentError = 0;
+    YawOPID.LastError = 0;
+    YawOPID.LastTick = 0;
+    YawOPID.IMax = 0;
+    YawOPID.PIDMax = 300;
+    
+    YawIPID.P = 50;
+    YawIPID.I = 0;
+    YawIPID.D = 0;
+    YawIPID.CurrentError = 0;
+    YawIPID.LastError = 0;
+    YawIPID.LastTick = 0;
+    YawIPID.IMax = 0;
+    YawIPID.PIDMax = 5000;
+    
+    ChassisOPID.P = 8;
+    ChassisOPID.I = 0;
+    ChassisOPID.D = 0;
+    ChassisOPID.CurrentError = 0;
+    ChassisOPID.LastError = 0;
+    ChassisOPID.LastTick = 0;
+    ChassisOPID.IMax = 0;
+    ChassisOPID.PIDMax = 500;
+    
+    ChassisIPID.P = 2.05;
+    ChassisIPID.I = 0;
+    ChassisIPID.D = 0;
+    ChassisIPID.CurrentError = 0;
+    ChassisIPID.LastError = 0;
+    ChassisIPID.LastTick = 0;
+    ChassisIPID.IMax = 0;
+    ChassisIPID.PIDMax = 900;
+    
+    PokeOPID.CurrentError = 0;
+    PokeOPID.LastError = 0;
+    PokeOPID.P = 0.07;
+    PokeOPID.I = 0;
+    PokeOPID.D = 0;
+    PokeOPID.IMax = 0;
+    PokeOPID.PIDMax = 130;
+    PokeOPID.LastTick = 0;
+    
+    PokeIPID.CurrentError = 0;
+    PokeIPID.LastError = 0;
+    PokeIPID.P = 3.8;
+    PokeIPID.I = 0.2;
+    PokeIPID.D = 0;
+    PokeIPID.IMax = 200;
+    PokeIPID.PIDMax = 90;
+    PokeIPID.LastTick = 0;
+    
+#elif INFANTRY == 5     //狗蛋
+    
+    PitchOPID.P = 9;
+    PitchOPID.I = 00;
+    PitchOPID.D = 0;
+    PitchOPID.CurrentError = 0;
+    PitchOPID.LastError = 0;
+    PitchOPID.LastTick = 0;
+    PitchOPID.IMax = 0;
+    PitchOPID.PIDMax = 500;
+    
+    PitchIPID.P = 60;
+    PitchIPID.I = 0;
+    PitchIPID.D = 0;
+    PitchIPID.CurrentError = 0;
+    PitchIPID.LastError = 0;
+    PitchIPID.LastTick = 0;
+    PitchIPID.IMax = 0;
     PitchIPID.PIDMax = 5000;
     
     YawOPID.P = 15;
@@ -171,7 +243,6 @@ void CloudPID_InitConfig(void)
     PokeIPID.IMax = 200;
     PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
-    
     
 #elif INFANTRY == 6     //小英雄
     
@@ -449,6 +520,64 @@ void Control_ChassisPID(void)
     ChassisIPID.PIDout = ChassisIPID.PIDout < -ChassisIPID.PIDMax ? -ChassisIPID.PIDMax : ChassisIPID.PIDout;
     
     ChassisParam.TargetOmega = ChassisIPID.PIDout;
+}
+
+
+/**
+  * @note   modified
+  * @brief  Yaw轴PID
+  * @param  前馈补偿速度
+  * @retval 电流值
+  */
+int16_t Control_FeedForwardYawPID(float FeedSpeed)
+{
+	portTickType CurrentTick = xTaskGetTickCount(); 
+/***************************************	外环	******************************************/
+	YawOPID.CurrentError = CloudParam.Yaw.TargetABSAngle - CloudParam.Yaw.RealABSAngle;
+	
+	YawOPID.Pout = YawOPID.P * YawOPID.CurrentError;
+	
+	YawOPID.Iout += YawOPID.I * YawOPID.CurrentError;
+	YawOPID.Iout = YawOPID.Iout > YawOPID.IMax ? YawOPID.IMax : YawOPID.Iout;
+	YawOPID.Iout = YawOPID.Iout < -YawOPID.IMax ? -YawOPID.IMax : YawOPID.Iout;
+	
+	YawOPID.Dout = -YawOPID.D * (SuperGyoParam.Omega - Position.Real.OZ);
+	
+	YawOPID.PIDout = (YawOPID.Pout + YawOPID.Iout + YawOPID.Dout);
+	
+	YawOPID.PIDout = YawOPID.PIDout > YawOPID.PIDMax ? YawOPID.PIDMax : YawOPID.PIDout;
+	YawOPID.PIDout = YawOPID.PIDout < -YawOPID.PIDMax ? -YawOPID.PIDMax : YawOPID.PIDout;
+	
+	YawOPID.LastError = YawOPID.CurrentError;
+	
+/***************************************	内环	******************************************/
+	YawIPID.CurrentError = YawOPID.PIDout - (Position.Real.OZ - SuperGyoParam.Omega) + FeedSpeed;	
+//	YawIPID.CurrentError = -DBUS_ReceiveData.ch3 - (Position.Real.OZ - SuperGyoParam.Omega);
+	
+	YawIPID.Pout = YawIPID.P * YawIPID.CurrentError;
+	
+	YawIPID.Iout += YawIPID.I * YawIPID.CurrentError;
+	YawIPID.Iout = YawIPID.Iout > YawIPID.IMax ? YawIPID.IMax : YawIPID.Iout;
+	YawIPID.Iout = YawIPID.Iout < -YawIPID.IMax ? -YawIPID.IMax : YawIPID.Iout;
+	
+	if(YawIPID.LastTick != CurrentTick)
+	{
+		YawIPID.Dout = YawIPID.D * (YawIPID.CurrentError - YawIPID.LastError) * 5 / (CurrentTick - YawIPID.LastTick);
+	}
+	else
+	{
+		YawIPID.Dout = YawIPID.D * (YawIPID.CurrentError - YawIPID.LastError);
+	}
+	
+	YawIPID.PIDout = (YawIPID.Pout + YawIPID.Iout + YawIPID.Dout);
+	
+	YawIPID.PIDout = YawIPID.PIDout > YawIPID.PIDMax ? YawIPID.PIDMax : YawIPID.PIDout;
+	YawIPID.PIDout = YawIPID.PIDout < -YawIPID.PIDMax ? -YawIPID.PIDMax : YawIPID.PIDout;
+	
+	YawIPID.LastError = YawIPID.CurrentError;
+	YawIPID.LastTick = CurrentTick;
+	
+	return (short)YawIPID.PIDout;
 }
 
 

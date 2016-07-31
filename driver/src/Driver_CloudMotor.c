@@ -105,6 +105,34 @@ void Cloud_Adjust(uint8_t mode)
 
 
 /**
+  * @brief  自动射击电机调节函数
+  * @Parma  0 电机停机      1 PID调节
+  * @retval void
+  * @note   此函数应该周期性执行
+  */
+void Cloud_AutoAdjust(float FeedSpeed, uint8_t mode)
+{
+    int16_t PitchMotorCurrent, YawMotorCurrent;
+    
+    //未锁定
+    if(mode)
+    {
+        PitchMotorCurrent = Control_PitchPID();
+        YawMotorCurrent = Control_FeedForwardYawPID(FeedSpeed);
+    }
+    //锁定
+    else
+    {
+        PitchMotorCurrent = 0;
+        YawMotorCurrent = 0;
+    }
+    
+    //云台电机电流发送
+    CloudMotorCurrent(PitchMotorCurrent, YawMotorCurrent);
+}
+
+
+/**
   * @note   modified
   * @brief  云台Yaw角度设置
   * @param  目标角度

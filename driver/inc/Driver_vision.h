@@ -115,9 +115,9 @@ extern const uint8_t ShutdownOrder[PCDATALENGTH];
     
 
 void Vision_InitConfig(void);
-AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t PitchEncoder, uint8_t mode);
+AngleF_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t PitchEncoder, uint8_t mode);
 uint8_t ForcastCore(uint16_t SampleTime, uint16_t ForcastTime, Point_Struct *ForcastPoint);
-uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *ForcastAngle, uint8_t TimeMode);
+uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleF_Struct *ForcastAngle, uint8_t TimeMode);
 void SendPCOrder(PCOrder_Enum order);
 void SendEnemyColor(char Co);
 

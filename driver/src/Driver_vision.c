@@ -86,9 +86,9 @@ void Vision_InitConfig(void)
   * @param  0 不考虑重力加速度      1 考虑重力加速度
   * @retval 角度(编码器，中间为0）
   */
-AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t PitchEncoder, uint8_t mode)
+AngleF_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t PitchEncoder, uint8_t mode)
 {
-    AngleI_Struct ReturnData;
+    AngleF_Struct ReturnData;
     float Distance = sqrt(X * X + Z * Z);
     float distance, radian;
 //    float OneAngle;
@@ -104,19 +104,18 @@ AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t Pi
     Y0 = Y;
     Z0 = Z;
     
-    ReturnData.H =  - atan(X / Z0) * 1303.7973F;
+    ReturnData.H =  - atan(X / Z0) * 57.2958F;
     
     distance = sqrt(X0 * X0 + Z0 * Z0);
     if(mode == 0)
     {
     //不考虑重力加速度
-        ReturnData.V = -atan(Y0 / distance) * 1303.7973F;
+        ReturnData.V = -atan(Y0 / distance) * 57.2958F;
     }
     else
     {
     //考虑重力加速度
-        radian = (atan(((ACCofGravity * distance * distance) / (GUNSpeed * GUNSpeed) - Y0) / sqrt(Y0 * Y0 + distance * distance)) - atan(Y0 / distance)) / 2;
-        ReturnData.V = radian * 1303.7973F;
+        ReturnData.V = (atan(((ACCofGravity * distance * distance) / (GUNSpeed * GUNSpeed) - Y0) / sqrt(Y0 * Y0 + distance * distance)) - atan(Y0 / distance)) / 2 * 57.2958F;
     }
     
     return ReturnData;
@@ -132,8 +131,8 @@ AngleI_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t Pi
   */
 uint8_t ForcastCore(uint16_t SampleTime, uint16_t ForcastTime, Point_Struct *ForcastPoint)
 {
-    int RelativeTime;       //相对时间，防止绝对时间超范围
-    uint16_t index = 0, Currentindex;
+    int RelativeTime;                       //相对时间，防止绝对时间超范围
+    uint16_t index = 0, Currentindex;       
     uint16_t SampleNum = 0;
     
 
@@ -244,7 +243,7 @@ uint8_t ForcastCore(uint16_t SampleTime, uint16_t ForcastTime, Point_Struct *For
   * @param  时间模式    0 自定义时间（即ForcastTime）， 1 自动设定预判时间（根据距离及子弹速度确定）
   * @retval 0 二次拟合成功        1 因样本数据不够，拟合失败直接使用当前位置作为目标位置
   */
-uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *ForcastAngle, uint8_t TimeMode)
+uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleF_Struct *ForcastAngle, uint8_t TimeMode)
 {
     Point_Struct ForcastPoint;
     float distance;
@@ -264,7 +263,7 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *Fo
                                     ForcastPoint.Z,
                                     Position.Euler.Pitch,
                                     CloudParam.Pitch.RealEncoderAngle,
-                                    1);
+                                    0);
         
         return 0;
     }
@@ -277,7 +276,7 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleI_Struct *Fo
                                     EnemyDataBuffer[EnemyDataBufferPoint].Z,
                                     Position.Euler.Pitch,
                                     CloudParam.Pitch.RealEncoderAngle,
-                                    1);
+                                    0);
         
         return 1;
     }

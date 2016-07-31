@@ -78,14 +78,34 @@ void Task_Control(void *Parameters)
         DBUS_ButtonCheckJump(CurrentControlTick);
 /*********************  ↑  状态机状态更新  ↑ *********************/
 /**************************************************************************************************/
+/*********************  ↓  摩擦轮  ↓ *********************/
+	
+        //摩擦轮控制
+        if(FricStatus_Working == FricStatus)
+        {
+            GunFric_Control(1);
+#if INFANTRY == 6
+            FricArtillerySpeed_Adjust(1);
+#endif
+        }
+        else if(FricStatus_Crazy == FricStatus)
+        {
+            GunFric_Control(2);
+#if INFANTRY == 6
+            FricArtillerySpeed_Adjust(1);
+#endif
+        }
+        else
+        {
+            GunFric_Control(0);
+#if INFANTRY == 6
+            FricArtillerySpeed_Adjust(0);
+#endif
+        }
+/*********************  ↑  状态机状态更新  ↑ *********************/
+/**************************************************************************************************/
 /*********************  ↓  根据状态机控制  ↓ *********************/
         
-#if DEBUGECONTROLRC == 1
-		
-        PokeMotor_Adjust(1);
-		PokeMotor_Step();
-#else
-		
         //根据模式控制
         if(ControlMode_RC == ControlMode)
         {
@@ -116,8 +136,13 @@ void Task_Control(void *Parameters)
 			JumpToRCFlag = 1;
 			JumpToKMFlag = 0;
 			JumpToProtectFlag = 1; 
-			
+
+//Debug模式下，此处用于debug，普通模式下用于键鼠控制
+#if DEBUGECONTROLRC == 1
+            Control_KMSubschemaHalfauto();
+#else		
             Control_KMMode();
+#endif
         }
         else
         {
@@ -134,21 +159,6 @@ void Task_Control(void *Parameters)
 			
             Control_ProtectMode();
         }
-	
-        //摩擦轮控制
-        if(FricStatus_Working == FricStatus)
-        {
-            GunFric_Control(1);
-        }
-        else if(FricStatus_Crazy == FricStatus)
-        {
-            GunFric_Control(2);
-        }
-        else
-        {
-            GunFric_Control(0);
-        }
-#endif
         
 /*********************  ↑  根据状态机控制  ↑ *********************/
 /**************************************************************************************************/
@@ -177,7 +187,7 @@ static void Control_RCMode(void)
     //云台控制
     Cloud_YawAngleSet(CloudParam.Yaw.TargetABSAngle - DBUS_ReceiveData.ch3 / 500.0F, AngleMode_ABS);
     Cloud_PitchAngleSet(CloudParam.Pitch.TargetABSAngle + DBUS_ReceiveData.ch4 / 120.0F);
-//    Cloud_Adjust(1);
+    Cloud_Adjust(1);
     
     //底盘控制
     Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
@@ -193,8 +203,6 @@ static void Control_RCMode(void)
     }
     PokeMotor_Adjust(1);
     
-//    FricArtillerySpeed_Adjust(1);
-    FricArtilleryMotorCurrent(2000, 2000);
 }
 
 
@@ -384,9 +392,70 @@ static void Control_KMSubschemaSupply(void)
   * @param  void
   * @retval void
   */
+#define LastSpeedLength     6
+#define ForcastCloud        1
+
+
+    AngleF_Struct CurrentAngle;
+    AngleF_Struct LastAngle[LastSpeedLength];
+    double FeendS = 0;
+    float FeedParam = 90;
 static void Control_KMSubschemaHalfauto(void)
 {
+#if ForcastCloud == 1
     
+    int8_t index;
+    
+    //底盘控制
+    Chassis_Adjust(0);
+    
+    //预判结果
+    ForcastOnce(350, 90, &CurrentAngle, 0);
+    
+    //云台角度设定
+    Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
+    Cloud_PitchAngleSet(CurrentAngle.V);
+    
+    //速度补偿计算
+    FeendS = (CurrentAngle.H - LastAngle[LastSpeedLength - 1].H);
+    
+    //云台调节
+    Cloud_AutoAdjust(FeendS * FeedParam, 1);
+    
+    //历史值保存
+    for (index = LastSpeedLength - 1; index > 0; index--)
+    {
+        LastAngle[index] = LastAngle[index - 1];
+    }
+    LastAngle[0] = CurrentAngle;
+    
+#else
+    
+    int8_t index;
+    
+    //底盘控制
+    Chassis_Adjust(0);
+    
+    //角度转换
+    CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 1);
+    
+    //云台角度设定
+    Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
+    Cloud_PitchAngleSet(CurrentAngle.V);
+    
+    //速度补偿计算
+    FeendS = (CurrentAngle.H - LastAngle[LastSpeedLength - 1].H);
+    
+    //云台调节
+    Cloud_AutoAdjust(FeendS * FeedParam, 1);
+    
+    //历史值保存
+    for (index = LastSpeedLength - 1; index > 0; index--)
+    {
+        LastAngle[index] = LastAngle[index - 1];
+    }
+    LastAngle[0] = CurrentAngle;
+#endif
 }
 
 
@@ -535,6 +604,27 @@ static void Control_KMSubschemaCircle(void)
     Chassis_SpeedSet(0, 0);
     Chassis_Adjust(1);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

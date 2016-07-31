@@ -7,7 +7,7 @@
 #define DEBUGECONTROLRC             0           //debug模式遥控控制
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
-#define INFANTRY                    6           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 
+#define INFANTRY                    4           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 
 
 #if INFANTRY == 1               //萨摩参数↓
     #define MAXWORKINGSPEED         850         //正常前进后退速度（最大900）
@@ -189,7 +189,7 @@
 
 #elif INFANTRY == 4     //金毛
     
-    #define PITCHMOTORCURRENTPLUSDIR        0           //pitch轴云台电机电流方向为正时转动方向     1 抬头         0 低头
+    #define PITCHMOTORCURRENTPLUSDIR        1           //pitch轴云台电机电流方向为正时转动方向     1 抬头         0 低头
     #define YAWMOTORCURRENTPLUSDIR          0           //yaw轴云台电机电流方向为正时转动方向       1 逆时针       0 顺时针
     #define PITCHMOTORENCODERPLUSEDIR       1           //pitch轴云台电机编码器增加时转动方向       1 抬头         0 低头
     #define YAWMOTORENCODERPLUSEDIR         1           //yaw轴云台电机编码器增加时转动方向         1 逆时针       0 顺时针
