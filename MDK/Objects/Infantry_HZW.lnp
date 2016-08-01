@@ -7,6 +7,7 @@
 ".\objects\driver_vision.o"
 ".\objects\driver_chassis.o"
 ".\objects\driver_control.o"
+".\objects\driver_esp8266.o"
 ".\objects\driver_steering.o"
 ".\objects\driver_mpu9250.o"
 ".\objects\driver_fricmotor.o"

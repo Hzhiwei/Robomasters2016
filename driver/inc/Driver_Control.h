@@ -48,10 +48,10 @@ __DRIVER_CONTROL_EXT PID_Type ChassisAUTOIPID, ChassisAUTOOPID;
 //预判速度PID
 __DRIVER_CONTROL_EXT PID_Type ForcastYawSpeedPID;
 
-//#if INFANTRYTYPE == 1 || INFANTRYTYPE == 2
-////AB车模式
-//__DRIVER_CONTROL_EXT ABInfantryMode_Enum ABInfantryMode;
-//#endif
+#if INFANTRY == 6
+//摩擦轮PID
+__DRIVER_CONTROL_EXT PID_Type ArtFricLeftPID, ArtFricRightPID;
+#endif
 
 
 void CloudPID_InitConfig(void);
@@ -60,5 +60,10 @@ int16_t Control_PitchPID(void);
 int16_t Control_PokeIPID(void);
 void Control_ChassisPID(void);
 int16_t Control_FeedForwardYawPID(float FeedSpeed);
+
+#if INFANTRY == 6
+int16_t* Control_FricPID(int16_t *Output);
+#endif
+
 
 #endif

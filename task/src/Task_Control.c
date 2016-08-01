@@ -29,7 +29,6 @@ static void Control_KMSubschemaFullauto(void);
 static void Control_KMSubschemaCircle(void);
 
 
-
 //状态切换标志位
 static uint8_t JumpToRCFlag = 1, JumpToKMFlag = 1, JumpToProtectFlag = 1;
     
@@ -85,14 +84,14 @@ void Task_Control(void *Parameters)
         {
             GunFric_Control(1);
 #if INFANTRY == 6
-            FricArtillerySpeed_Adjust(1);
+            FricArtillerySpeed_Adjust(ARTILLERYFRICSPEED);
 #endif
         }
         else if(FricStatus_Crazy == FricStatus)
         {
             GunFric_Control(2);
 #if INFANTRY == 6
-            FricArtillerySpeed_Adjust(1);
+            FricArtillerySpeed_Adjust(ARTILLERYFRICSPEED);
 #endif
         }
         else
@@ -197,11 +196,22 @@ static void Control_RCMode(void)
     //舵机舱门控制
 	Steering_Control(2);
     
+#if INFANTRY == 6
+    if(DBUS_ReceiveData.switch_right == 2)
+    {
+        Poke_CylinderAdjust(1);
+    }
+    else
+    {
+        Poke_CylinderAdjust(0);
+    }
+#else
     if(DBUS_ReceiveData.switch_right == 2)
     {
         PokeMotor_Step();
     }
     PokeMotor_Adjust(1);
+#endif
     
 }
 
@@ -321,6 +331,23 @@ static void Control_KMSubschemaNormal(void)
 	
     //舵机舱门控制
 	Steering_Control(0);
+    
+#if INFANTRY == 6
+    if(DBUS_ReceiveData.mouse.press_left)
+    {
+        Poke_CylinderAdjust(1);
+    }
+    else
+    {
+        Poke_CylinderAdjust(0);
+    }
+#else
+    if(DBUS_ReceiveData.mouse.press_lef)
+    {
+        PokeMotor_Step();
+    }
+    PokeMotor_Adjust(1);
+#endif
 }
 
 
@@ -393,24 +420,41 @@ static void Control_KMSubschemaSupply(void)
   * @retval void
   */
 #define LastSpeedLength     6
-#define ForcastCloud        1
+#define ForcastCloud        0
 
 
     AngleF_Struct CurrentAngle;
     AngleF_Struct LastAngle[LastSpeedLength];
     double FeendS = 0;
-    float FeedParam = 90;
+    float FeedParam = 60;
 static void Control_KMSubschemaHalfauto(void)
 {
 #if ForcastCloud == 1
     
     int8_t index;
     
+#if INFANTRY == 6
+    if(DBUS_ReceiveData.switch_right == 2)
+    {
+        Poke_CylinderAdjust(1);
+    }
+    else
+    {
+        Poke_CylinderAdjust(0);
+    }
+#else
+    if(DBUS_ReceiveData.switch_right == 2)
+    {
+        PokeMotor_Step();
+    }
+    PokeMotor_Adjust(1);
+#endif
+    
     //底盘控制
     Chassis_Adjust(0);
     
     //预判结果
-    ForcastOnce(350, 90, &CurrentAngle, 0);
+    ForcastOnce(300, 150, &CurrentAngle, 0);
     
     //云台角度设定
     Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
@@ -432,6 +476,23 @@ static void Control_KMSubschemaHalfauto(void)
 #else
     
     int8_t index;
+    
+#if INFANTRY == 6
+    if(DBUS_ReceiveData.switch_right == 2)
+    {
+        Poke_CylinderAdjust(1);
+    }
+    else
+    {
+        Poke_CylinderAdjust(0);
+    }
+#else
+    if(DBUS_ReceiveData.switch_right == 2)
+    {
+        PokeMotor_Step();
+    }
+    PokeMotor_Adjust(1);
+#endif
     
     //底盘控制
     Chassis_Adjust(0);

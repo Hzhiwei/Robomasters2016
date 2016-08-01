@@ -55,5 +55,6 @@
 .\objects\driver_control.o: ..\driver\inc\Driver_Control.h
 .\objects\driver_control.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\driver_control.o: ..\driver\inc\Driver_PokeMotor.h
+.\objects\driver_control.o: ..\driver\inc\Driver_FricMotor.h
 .\objects\driver_control.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\driver_control.o: ..\driver\inc\Driver_SuperGyroscope.h

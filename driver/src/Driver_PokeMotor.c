@@ -26,6 +26,9 @@ void PokeMotor_InitConfig(void)
     
     //拨弹电机方向初始化为顺时针
     GPIO_SetBits(GPIOA, GPIO_Pin_5);
+    
+    //气缸驱动电压方向
+    GPIO_ResetBits(GPIOC, GPIO_Pin_0); 
 }
 
 
@@ -182,6 +185,62 @@ void PokeMotor_Adjust(uint8_t mode)
         PokeMotorCurrent(0);
     }
 }
+
+
+#if INFANTRY == 6
+/**
+  * @brief  气缸推进
+  * @param  1 推进  0 缩回
+  * @retval void
+  * @note   此函数必须周期执行
+  */
+void Poke_CylinderAdjust(uint8_t Target)
+{
+    static portTickType LastShotTick = 0;
+    portTickType CurrentTick = xTaskGetTickCount();
+    
+    if(CurrentTick - LastShotTick < 100)
+    {
+        Poke_CylinderControl(1);
+    }
+    else if(CurrentTick - LastShotTick < ARTILLERYSHOTCRACK)
+    {
+        Poke_CylinderControl(0);
+    }
+    else if(Target)
+    {
+        Poke_CylinderControl(1);
+        LastShotTick = CurrentTick;
+    }
+    else
+    {
+        Poke_CylinderControl(0);
+    }
+}
+
+
+/**
+  * @brief  气缸控制
+  * @param  1 推出        0 收回
+  * @retval void
+  */
+void Poke_CylinderControl(uint8_t Target)
+{
+    
+    if(Target)
+    {
+        GPIO_SetBits(GPIOC, GPIO_Pin_1); 
+    }
+    else
+    {
+        GPIO_ResetBits(GPIOC, GPIO_Pin_1); 
+    }
+}
+#endif
+
+
+
+
 
 
 

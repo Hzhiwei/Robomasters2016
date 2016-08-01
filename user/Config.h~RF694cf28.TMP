@@ -4,10 +4,10 @@
 #define __CONFIG_H
 
 
-#define DEBUGECONTROLRC             0           //debug模式遥控控制
+#define DEBUGECONTROLRC             1           //debug模式遥控控制
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
-#define INFANTRY                    6           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 小英雄
+#define INFANTRY                    6           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 
 
 #if INFANTRY == 1               //萨摩参数↓
     #define MAXWORKINGSPEED         850         //正常前进后退速度（最大900）
@@ -30,7 +30,7 @@
     
 #elif INFANTRY == 2               //阿拉斯加参数↓
 
-    #define FRICMOTORWORKINGSPEED   300         //摩擦轮工作速度(170)
+    #define FRICMOTORWORKINGSPEED   260         //摩擦轮工作速度(230)
     #define POKESTRUCKDEALLINES     400         //拨弹电机卡弹后反转处理线数
     #define CHASSISMAXPOWERRATE     0.82F       //底盘限制极限功率（80W）比例(例如此值为0.9，则实际限制功率为0.9*80=72W）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
@@ -150,9 +150,7 @@
     #define SWINGMODELIMIT          30          //摇摆模式单边限幅(慎重修改，不得高于40，否则此模式可能失效)
     #define SWINGMODEOMEGA          90          //摇摆模式角速度
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
-    #define CIRCLEMODEDELAY         10000       //圈圈模式受到伤害旋转时间   
-    #define ARTILLERYFRICSPEED      5000        //炮摩擦轮速度    
-    #define ARTILLERYSHOTCRACK      220         //炮发射时间间隔
+    #define CIRCLEMODEDELAY         10000       //圈圈模式受到伤害旋转时间    
 //    #define QESPINPARAM             27          //QE自旋系数（越大自旋越快，过大会发生底盘响应跟不上）
 //    #define MOUSESPINPARAM          16.0F       //鼠标自旋系数（越小自旋越快，过小会发生底盘响应跟不上）
 //    #define MOUSEPITCHPARAM         20.0F       //鼠标pitch控制系数（越小速度越快）

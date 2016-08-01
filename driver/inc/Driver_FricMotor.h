@@ -37,7 +37,7 @@ void GunFric_Control(uint8_t Control);
 
 //小英雄枪炮一体增加炮摩擦轮
 #if INFANTRY == 6
-void FricArtillerySpeed_Adjust(uint8_t TargetSpeed);
+void FricArtillerySpeed_Adjust(int16_t TargetSpeed);
 void FricArtilleryMotorCurrent(int16_t LeftArtilleryCurrent, int16_t RightArtilleryCurrent);
 #endif
 

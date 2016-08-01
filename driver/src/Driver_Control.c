@@ -7,6 +7,7 @@
 #include "Driver_Control.h"
 #include "Driver_mpu9250.h"
 #include "Driver_PokeMotor.h"
+#include "Driver_FricMotor.h"
 #include "Driver_CloudMotor.h"
 #include "Driver_SuperGyroscope.h"
 
@@ -246,40 +247,40 @@ void CloudPID_InitConfig(void)
     
 #elif INFANTRY == 6     //小英雄
     
-    PitchOPID.P = 9;
-    PitchOPID.I = 0.5;
+    PitchOPID.P = 20;
+    PitchOPID.I = 0;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
     PitchOPID.LastError = 0;
     PitchOPID.LastTick = 0;
-    PitchOPID.IMax = 10;
+    PitchOPID.IMax = 0;
     PitchOPID.PIDMax = 400;
     
-    PitchIPID.P = 50;
-    PitchIPID.I = 5;
+    PitchIPID.P = 100;
+    PitchIPID.I = 0;
     PitchIPID.D = 0;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;
-    PitchIPID.IMax = 300;
+    PitchIPID.IMax = 0;
     PitchIPID.PIDMax = 5000;
     
-    YawOPID.P = 16;
-    YawOPID.I = 0.1;
+    YawOPID.P = 10;
+    YawOPID.I = 0;
     YawOPID.D = 0;
     YawOPID.CurrentError = 0;
     YawOPID.LastError = 0;
     YawOPID.LastTick = 0;
-    YawOPID.IMax = 5;
+    YawOPID.IMax = 0;
     YawOPID.PIDMax = 300;
     
-    YawIPID.P = 80;
-    YawIPID.I = 5;
+    YawIPID.P = 100;
+    YawIPID.I = 0;
     YawIPID.D = 0;
     YawIPID.CurrentError = 0;
     YawIPID.LastError = 0;
     YawIPID.LastTick = 0;
-    YawIPID.IMax = 100;
+    YawIPID.IMax = 0;
     YawIPID.PIDMax = 5000;
     
     ChassisOPID.P = 12;
@@ -317,6 +318,24 @@ void CloudPID_InitConfig(void)
     PokeIPID.IMax = 200;
     PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
+    
+    ArtFricLeftPID.CurrentError = 0;
+    ArtFricLeftPID.LastError = 0;
+    ArtFricLeftPID.P = 5;
+    ArtFricLeftPID.I = 0.1;
+    ArtFricLeftPID.D = 0;
+    ArtFricLeftPID.IMax = 12000;
+    ArtFricLeftPID.PIDMax = 20000;
+    ArtFricLeftPID.LastTick = 0;
+    
+    ArtFricRightPID.CurrentError = 0;
+    ArtFricRightPID.LastError = 0;
+    ArtFricRightPID.P = 5;
+    ArtFricRightPID.I = 0.1;
+    ArtFricRightPID.D = 0;
+    ArtFricRightPID.IMax = 12000;
+    ArtFricRightPID.PIDMax = 20000;
+    ArtFricRightPID.LastTick = 0;
     
 #endif
 }
@@ -581,6 +600,73 @@ int16_t Control_FeedForwardYawPID(float FeedSpeed)
 }
 
 
+#if INFANTRY == 6
+/**
+  * @brief  摩擦轮PID
+  * @param  void
+  * @retval 目标电流值
+  */
+int16_t* Control_FricPID(int16_t *Output)
+{
+	portTickType CurrentTick = xTaskGetTickCount(); 
+    
+/*****************  左电机     *********************/
+    
+    ArtFricLeftPID.CurrentError = (float)(ArtilleryFricTargetSpeed) + ArtilleryFricRealSpeed[0];
+    
+    ArtFricLeftPID.Pout = ArtFricLeftPID.P * ArtFricLeftPID.CurrentError;
+    
+    ArtFricLeftPID.Iout += ArtFricLeftPID.I * ArtFricLeftPID.CurrentError;
+    ArtFricLeftPID.Iout = ArtFricLeftPID.Iout > ArtFricLeftPID.IMax ? ArtFricLeftPID.IMax : ArtFricLeftPID.Iout;
+    ArtFricLeftPID.Iout = ArtFricLeftPID.Iout < -ArtFricLeftPID.IMax ? -ArtFricLeftPID.IMax : ArtFricLeftPID.Iout;
+    
+    if(CurrentTick > ArtFricLeftPID.LastTick)
+    {
+        ArtFricLeftPID.Dout = ArtFricLeftPID.D * (ArtFricLeftPID.CurrentError - ArtFricLeftPID.LastError) * 5 / (CurrentTick - ArtFricLeftPID.LastTick);
+    }
+    else
+    {
+        ArtFricLeftPID.Dout = ArtFricLeftPID.D * (ArtFricLeftPID.CurrentError - ArtFricLeftPID.LastError);
+    }
+    
+    ArtFricLeftPID.PIDout = -(ArtFricLeftPID.Pout + ArtFricLeftPID.Iout + ArtFricLeftPID.Dout);
+    ArtFricLeftPID.PIDout = ArtFricLeftPID.PIDout > ArtFricLeftPID.PIDMax ? ArtFricLeftPID.PIDMax : ArtFricLeftPID.PIDout;
+    ArtFricLeftPID.PIDout = ArtFricLeftPID.PIDout < -ArtFricLeftPID.PIDMax ? -ArtFricLeftPID.PIDMax : ArtFricLeftPID.PIDout;
+    
+    ArtFricLeftPID.LastError = ArtFricLeftPID.CurrentError;
+    ArtFricLeftPID.LastTick = CurrentTick;
+	
+	Output[0] = ArtFricLeftPID.PIDout;
+    
+/*****************  右电机     *********************/
+    
+    ArtFricRightPID.CurrentError = (float)ArtilleryFricTargetSpeed - ArtilleryFricRealSpeed[1];
+    
+    ArtFricRightPID.Pout = ArtFricRightPID.P * ArtFricRightPID.CurrentError;
+    
+    ArtFricRightPID.Iout += ArtFricRightPID.I * ArtFricRightPID.CurrentError;
+    ArtFricRightPID.Iout = ArtFricRightPID.Iout > ArtFricRightPID.IMax ? ArtFricRightPID.IMax : ArtFricRightPID.Iout;
+    ArtFricRightPID.Iout = ArtFricRightPID.Iout < -ArtFricRightPID.IMax ? -ArtFricRightPID.IMax : ArtFricRightPID.Iout;
+    
+    if(CurrentTick > ArtFricRightPID.LastTick)
+    {
+        ArtFricRightPID.Dout = ArtFricRightPID.D * (ArtFricRightPID.CurrentError - ArtFricRightPID.LastError) * 5 / (CurrentTick - ArtFricRightPID.LastTick);
+    }
+    else
+    {
+        ArtFricRightPID.Dout = ArtFricRightPID.D * (ArtFricRightPID.CurrentError - ArtFricRightPID.LastError);
+    }
+    
+    ArtFricRightPID.PIDout = ArtFricRightPID.Pout + ArtFricRightPID.Iout + ArtFricRightPID.Dout;
+    ArtFricRightPID.PIDout = ArtFricRightPID.PIDout > ArtFricRightPID.PIDMax ? ArtFricRightPID.PIDMax : ArtFricRightPID.PIDout;
+    ArtFricRightPID.PIDout = ArtFricRightPID.PIDout < -ArtFricRightPID.PIDMax ? -ArtFricRightPID.PIDMax : ArtFricRightPID.PIDout;
+    
+    ArtFricRightPID.LastError = ArtFricRightPID.CurrentError;
+    ArtFricRightPID.LastTick = CurrentTick;
+	
+	Output[1] = ArtFricRightPID.PIDout;
+}
+#endif
 
 
 

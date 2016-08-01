@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "Handler.h"
 #include "Task_CANSend.h"
+#include "Driver_Control.h"
 #include "Driver_FricMotor.h"
 
 
@@ -59,35 +60,13 @@ void GunFric_Control(uint8_t Control)
   * @param  目标速度
   * @retval void
   */
-void FricArtillerySpeed_Adjust(uint8_t Target)
+void FricArtillerySpeed_Adjust(int16_t Target)
 {
     int16_t Current[2];
     
-    if(Target)
-    {
-        if(ARTILLERYACCBELOWSPEED > ArtilleryFricRealSpeed[0])
-        {
-            Current[0] = ARTILLERYFRICMAXCURREN;
-        }
-        else
-        {
-            Current[0] = ARTILLERYFRICMINCURRENOFTMAXSPEED;
-        }
-        
-        if(ARTILLERYACCBELOWSPEED > ArtilleryFricRealSpeed[1])
-        {
-            Current[1] = ARTILLERYFRICMAXCURREN;
-        }
-        else
-        {
-            Current[1] = ARTILLERYFRICMINCURRENOFTMAXSPEED;
-        }
-    }
-    else
-    {
-        Current[0] = 0;
-        Current[1] = 0;
-    }
+    ArtilleryFricTargetSpeed = Target;
+    
+    Control_FricPID(Current);
     
     FricArtilleryMotorCurrent(Current[0], Current[1]);
 }
@@ -117,10 +96,14 @@ void FricArtilleryMotorCurrent(int16_t LeftArtilleryCurrent, int16_t RightArtill
     SendData.SendCanTxMsg.RTR   =   CAN_RTR_Data;
     SendData.SendCanTxMsg.StdId =   ARTILLERYFRICCONTROLCANID;
     
-    SendData.SendCanTxMsg.Data[0] = (-LeftArtilleryCurrent) >> 8;
-    SendData.SendCanTxMsg.Data[1] = (-LeftArtilleryCurrent);
+    SendData.SendCanTxMsg.Data[0] = LeftArtilleryCurrent >> 8;
+    SendData.SendCanTxMsg.Data[1] = LeftArtilleryCurrent;
     SendData.SendCanTxMsg.Data[2] = RightArtilleryCurrent >> 8;
     SendData.SendCanTxMsg.Data[3] = RightArtilleryCurrent;
+    SendData.SendCanTxMsg.Data[4] = 0;
+    SendData.SendCanTxMsg.Data[5] = 0;
+    SendData.SendCanTxMsg.Data[6] = 0;
+    SendData.SendCanTxMsg.Data[7] = 0;
     
     xQueueSend(Queue_CANSend, &SendData, 10);
 }

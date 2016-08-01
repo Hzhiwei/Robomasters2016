@@ -263,7 +263,7 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleF_Struct *Fo
                                     ForcastPoint.Z,
                                     Position.Euler.Pitch,
                                     CloudParam.Pitch.RealEncoderAngle,
-                                    0);
+                                    1);
         
         return 0;
     }
@@ -276,7 +276,7 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleF_Struct *Fo
                                     EnemyDataBuffer[EnemyDataBufferPoint].Z,
                                     Position.Euler.Pitch,
                                     CloudParam.Pitch.RealEncoderAngle,
-                                    0);
+                                    1);
         
         return 1;
     }

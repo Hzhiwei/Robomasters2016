@@ -110,6 +110,15 @@ void BSP_GPIO_InitConfig(void)
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource7, GPIO_AF_TIM3);
     
     
+    //气缸控制
+    GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType  =   GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Pin    =   GPIO_Pin_0 | GPIO_Pin_1;
+    GPIO_InitStructure.GPIO_Speed  =   GPIO_Speed_50MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+    GPIO_ResetBits(GPIOC, GPIO_Pin_0);              //方向
+    
+    
     //SIM_IIC（mpu9250）
 	//SCL
 	GPIO_InitStructure.GPIO_Mode	=	GPIO_Mode_OUT;

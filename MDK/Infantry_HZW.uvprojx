@@ -487,6 +487,11 @@
               <FilePath>..\driver\src\Driver_Control.c</FilePath>
             </File>
             <File>
+              <FileName>Driver_ESP8266.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\src\Driver_ESP8266.c</FilePath>
+            </File>
+            <File>
               <FileName>Driver_Steering.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\driver\src\Driver_Steering.c</FilePath>

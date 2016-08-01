@@ -159,7 +159,6 @@ CanRxMsg CanRxData;
 //用于清空串口标志位的临时变量
 uint8_t UARTtemp;
 
-int16_t MinSpeed;
 
 /**
   * @brief  CAN数据接收中断服务函数
@@ -306,16 +305,13 @@ void CAN2_RX0_IRQHandler(void)
         case    ARTILLERYFRICCANIDLEFT :
         {
             ArtilleryFricRealSpeed[0] = ((int16_t)CanRxData.Data[2] << 8) | CanRxData.Data[3];
-            
-            if(MinSpeed > (-ArtilleryFricRealSpeed[0]))
-            {
-                MinSpeed = -ArtilleryFricRealSpeed[0];
-            }                
+            break;
         }
         //右炮摩擦轮
         case    ARTILLERYFRICCANIDRIGHT :
         {
             ArtilleryFricRealSpeed[1] = ((int16_t)CanRxData.Data[2] << 8) | CanRxData.Data[3];
+            break;
         }
 #endif
     }
