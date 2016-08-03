@@ -55,7 +55,9 @@
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_DBUS.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_Judge.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_vision.h
+.\objects\stm32f4xx_it.o: ..\user\CommonDataStructure.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_Chassis.h
+.\objects\stm32f4xx_it.o: ..\driver\inc\Driver_ESP8266.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_FricMotor.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_StatusMachine.h

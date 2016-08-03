@@ -28,18 +28,22 @@
 #include "Driver_StatusMachine.h"
 #include "Driver_SuperGyroscope.h"
 
-
 #include "Task_Bell.h"
 #include "Task_Monitor.h"
 #include "Task_CANSend.h"
 #include "Task_Control.h"
 
 
+#include "Driver_ESP8266.h"
 /**
   * @brief  系统初始化任务
   * @param  unused
   * @retval void
   */
+  
+  int kkk = 0, dddd = 3;;
+  
+  
 void Task_SysInitConfig(void *Parameters)
 {
     BSP_GPIO_InitConfig();
@@ -70,6 +74,20 @@ void Task_SysInitConfig(void *Parameters)
     
     //等待底盘陀螺仪初始化完成
 //    vTaskDelay(4000);
+
+//while(1)
+//{
+//    if(kkk)
+//    {
+//        ESP8266_SendPack(dddd);
+////        while((USART3->SR & 0x40)==0);//等待发送结束
+////        USART_SendData(USART3, 'd');
+//        kkk = 0;
+//    }
+//}
+
+
+
     
     //生成CAN发送队列
 	Queue_CANSend = xQueueCreate(64, sizeof(CanSend_Type));		

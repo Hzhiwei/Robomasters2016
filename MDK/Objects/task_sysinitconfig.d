@@ -65,6 +65,7 @@
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_DBUS.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Judge.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Vision.h
+.\objects\task_sysinitconfig.o: ..\user\CommonDataStructure.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Chassis.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Control.h
@@ -79,3 +80,4 @@
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_Monitor.h
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_CANSend.h
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_Control.h
+.\objects\task_sysinitconfig.o: ..\driver\inc\Driver_ESP8266.h

@@ -40,6 +40,7 @@ void BSP_UART_InitConfig(void)
     USART_Init(USART3, &USART_InitStructure);
     
     USART_DMACmd(USART3, USART_DMAReq_Tx, ENABLE);
+    USART_DMACmd(USART3, USART_DMAReq_Rx, ENABLE);
     
     USART_Cmd(USART3, ENABLE);
     

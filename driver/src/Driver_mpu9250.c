@@ -18,9 +18,9 @@ void MPU9250_InitConfig(void)
     
 #elif INFANTRY == 2     //阿拉斯加
     
-    Omega_Offset.X = -0.54F;
-    Omega_Offset.Y = -0.4F;
-    Omega_Offset.Z = 0.46F;
+    Omega_Offset.X = -0.67;
+    Omega_Offset.Y = -0.48;
+    Omega_Offset.Z = 0.48;
     
 #elif INFANTRY == 3     //哈士奇
     
@@ -55,9 +55,9 @@ uint8_t MPU9250_Update(void)
     Position.Euler.Roll = Roll;
     Position.Euler.Yaw = Yaw;
     
-    Position.Real.OX = -(OX - Omega_Offset.X);
-    Position.Real.OY = -(OY - Omega_Offset.Y);
-    Position.Real.OZ = -(OZ - Omega_Offset.Z);
+    Position.Real.OX = -OX - Omega_Offset.X;
+    Position.Real.OY = -OY - Omega_Offset.Y;
+    Position.Real.OZ = -OZ - Omega_Offset.Z;
     
     return 0;
 }

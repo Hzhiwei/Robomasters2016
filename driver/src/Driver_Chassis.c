@@ -4,12 +4,15 @@
 #include "Config.h"
 #include "Handler.h"
 #include "OSinclude.h"
+#include "CommonDataStructure.h"
 #include "Task_CANSend.h"
+#include "Driver_Judge.h"
 #include "Driver_Chassis.h"
 #include "Driver_Control.h"
 #include "Driver_CloudMotor.h"
 #include "Driver_SuperGyroscope.h"
 
+#include "Driver_DBUS.h"
 
 //volatile float Last_Spd[4];
 ////麦轮解算矩阵
@@ -57,8 +60,7 @@ void Chassis_InitConfig(void)
   */
 void Chassis_SpeedSet(float XSpeed, float YSpeed)
 {
-    XSpeed = XSpeed > MaxWheelSpeed
-    ? MaxWheelSpeed : XSpeed;
+    XSpeed = XSpeed > MaxWheelSpeed? MaxWheelSpeed : XSpeed;
     XSpeed = XSpeed < -MaxWheelSpeed ? -MaxWheelSpeed : XSpeed;
     
     YSpeed = YSpeed > MaxWheelSpeed ? MaxWheelSpeed : YSpeed;
@@ -93,6 +95,8 @@ void Chassis_Adjust(uint8_t mode)
     int16_t ABSSpeed[4];
     
     Control_ChassisPID();
+
+//    ChassisParam.TargetOmega = DBUS_ReceiveData.ch3;
     
     //麦轮解算
     MecanumCalculate(ChassisParam.TargetVX, ChassisParam.TargetVY, ChassisParam.TargetOmega, WheelSpeed);
@@ -138,6 +142,10 @@ void Chassis_SendMotorParam(uint8_t mode)
 {
     static  CanSend_Type   SendData;
     
+#if MOTORTYPE == 1
+    FormatTrans FT;
+#endif
+    
 #if CANPORT == 1
     SendData.CANx = 1;
 #else
@@ -161,6 +169,34 @@ void Chassis_SendMotorParam(uint8_t mode)
         SendData.SendCanTxMsg.Data[6] = ChassisParam.RB.TargetSpeed;
         xQueueSend(Queue_CANSend, &SendData, 10);
         
+        
+//3510驱动要求发送实际电流，限制电流
+#if MOTORTYPE == 1
+        SendData.SendCanTxMsg.StdId =   CURRENTCONTROLCANID;
+        //实际电流
+        if(JudgeFrameRate < 10)         //裁判系统离线发0
+        {
+            FT.F = 0;
+        }
+        else
+        {
+            FT.F = InfantryJudge.RealCurrent * 1000.0F;
+        }
+        SendData.SendCanTxMsg.Data[0] = FT.u8[0];
+        SendData.SendCanTxMsg.Data[1] = FT.u8[1];
+        SendData.SendCanTxMsg.Data[2] = FT.u8[2];
+        SendData.SendCanTxMsg.Data[3] = FT.u8[3];
+        
+        //限制电流
+        FT.F = ChassisMaxSumCurrent;
+        SendData.SendCanTxMsg.Data[4] = FT.u8[0];
+        SendData.SendCanTxMsg.Data[5] = FT.u8[1];
+        SendData.SendCanTxMsg.Data[6] = FT.u8[2];
+        SendData.SendCanTxMsg.Data[7] = FT.u8[3];
+        
+        xQueueSend(Queue_CANSend, &SendData, 10);
+        
+#else
         SendData.SendCanTxMsg.StdId =   CHASSISCURRENTSETCANID;
         SendData.SendCanTxMsg.Data[1] = ChassisParam.LF.LimitCurrent >> 8;
         SendData.SendCanTxMsg.Data[0] = ChassisParam.LF.LimitCurrent;
@@ -171,6 +207,7 @@ void Chassis_SendMotorParam(uint8_t mode)
         SendData.SendCanTxMsg.Data[7] = ChassisParam.RB.LimitCurrent >> 8;
         SendData.SendCanTxMsg.Data[6] = ChassisParam.RB.LimitCurrent;
         xQueueSend(Queue_CANSend, &SendData, 10);
+#endif
     }
     else
     {
@@ -185,6 +222,9 @@ void Chassis_SendMotorParam(uint8_t mode)
         SendData.SendCanTxMsg.Data[7] = 0;
         xQueueSend(Queue_CANSend, &SendData, 10);
         
+#if MOTORTYPE == 1
+        
+#else
         SendData.SendCanTxMsg.StdId =   CHASSISCURRENTSETCANID;
         SendData.SendCanTxMsg.Data[0] = 0;
         SendData.SendCanTxMsg.Data[1] = 0;
@@ -195,6 +235,7 @@ void Chassis_SendMotorParam(uint8_t mode)
         SendData.SendCanTxMsg.Data[6] = 0;
         SendData.SendCanTxMsg.Data[7] = 0;
         xQueueSend(Queue_CANSend, &SendData, 10);
+#endif
     }
 }
 
@@ -323,3 +364,18 @@ static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed)
         Speed[3] = Buffer[3];
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

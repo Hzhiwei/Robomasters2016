@@ -51,8 +51,11 @@
 .\objects\driver_chassis.o: ..\lib\freertos\inc\queue.h
 .\objects\driver_chassis.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_chassis.o: ..\lib\freertos\inc\event_groups.h
+.\objects\driver_chassis.o: ..\user\CommonDataStructure.h
 .\objects\driver_chassis.o: ..\task\inc\Task_CANSend.h
+.\objects\driver_chassis.o: ..\driver\inc\Driver_Judge.h
 .\objects\driver_chassis.o: ..\driver\inc\Driver_Chassis.h
 .\objects\driver_chassis.o: ..\driver\inc\Driver_Control.h
 .\objects\driver_chassis.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\driver_chassis.o: ..\driver\inc\Driver_SuperGyroscope.h
+.\objects\driver_chassis.o: ..\driver\inc\Driver_DBUS.h

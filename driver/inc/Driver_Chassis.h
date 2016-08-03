@@ -4,13 +4,18 @@
 #define __DRIVER_CHASSIS_H
 
 
+#include "OSinclude.h"
 #include "stm32f4xx.h"
 
 
+#if MOTORTYPE == 1
+#define CURRENTCONTROLCANID             0x35        //给3510发送电流的ID号
+#endif
+
 #define LFCHASSISCONTROLCANID           0x75
-#define MaxWheelSpeed                  900
+#define MaxWheelSpeed                   900
 #define ChassisLimitCurrent             2750            //底盘电流限制极限
-#define MOUSEINTLIMIT           0.9F        //鼠标旋转速度上限，当鼠标旋转时底盘速度跟不上则减小此值
+#define MOUSEINTLIMIT                   0.9F        //鼠标旋转速度上限，当鼠标旋转时底盘速度跟不上则减小此值
 
 
 //底盘电机CANID

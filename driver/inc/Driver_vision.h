@@ -5,6 +5,7 @@
 
 #include "stm32f4xx.h"
 #include "OSinclude.h"
+#include "CommonDataStructure.h"
 
 
 #define PCDATALENGTH            26  //帧长
@@ -46,14 +47,6 @@ typedef struct
     int Time;
     char ID;
 }Enemy_Struct;
-
-//格式转换联合体
-typedef union
-{
-    uint8_t u8[4];
-    float F;
-    int I;
-}FormatTrans;
 
 //点数据结构
 typedef struct

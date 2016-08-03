@@ -53,4 +53,6 @@
 .\objects\bsp_dma.o: ..\lib\freertos\inc\event_groups.h
 .\objects\bsp_dma.o: ..\driver\inc\Driver_Judge.h
 .\objects\bsp_dma.o: ..\driver\inc\Driver_vision.h
+.\objects\bsp_dma.o: ..\user\CommonDataStructure.h
 .\objects\bsp_dma.o: ..\driver\inc\Driver_mpu9250.h
+.\objects\bsp_dma.o: ..\driver\inc\Driver_ESP8266.h

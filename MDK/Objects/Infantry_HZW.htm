@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Infantry_HZW.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Infantry_HZW.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Tue Aug 02 01:02:33 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Wed Aug 03 19:42:33 2016
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -118,7 +118,7 @@ Function Pointers
  <LI><a href="#[42]">UART5_IRQHandler</a> from stm32f4xx_it.o(i.UART5_IRQHandler) referenced from startup_stm32f40_41xxx.o(RESET)
  <LI><a href="#[32]">USART1_IRQHandler</a> from stm32f4xx_it.o(i.USART1_IRQHandler) referenced from startup_stm32f40_41xxx.o(RESET)
  <LI><a href="#[33]">USART2_IRQHandler</a> from startup_stm32f40_41xxx.o(.text) referenced from startup_stm32f40_41xxx.o(RESET)
- <LI><a href="#[34]">USART3_IRQHandler</a> from startup_stm32f40_41xxx.o(.text) referenced from startup_stm32f40_41xxx.o(RESET)
+ <LI><a href="#[34]">USART3_IRQHandler</a> from stm32f4xx_it.o(i.USART3_IRQHandler) referenced from startup_stm32f40_41xxx.o(RESET)
  <LI><a href="#[54]">USART6_IRQHandler</a> from startup_stm32f40_41xxx.o(.text) referenced from startup_stm32f40_41xxx.o(RESET)
  <LI><a href="#[8]">UsageFault_Handler</a> from stm32f4xx_it.o(i.UsageFault_Handler) referenced from startup_stm32f40_41xxx.o(RESET)
  <LI><a href="#[d]">WWDG_IRQHandler</a> from startup_stm32f40_41xxx.o(.text) referenced from startup_stm32f40_41xxx.o(RESET)
@@ -132,8 +132,8 @@ Function Pointers
 Global Symbols
 </H3>
 <P><STRONG><a name="[69]"></a>__main</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, __main.o(!!!main))
-<BR><BR>[Calls]<UL><LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
-<LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
+<BR><BR>[Calls]<UL><LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
+<LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
 </UL>
 
 <P><STRONG><a name="[6a]"></a>__scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter))
@@ -513,9 +513,6 @@ Global Symbols
 <P><STRONG><a name="[33]"></a>USART2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f40_41xxx.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
-<P><STRONG><a name="[34]"></a>USART3_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f40_41xxx.o(.text))
-<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
-</UL>
 <P><STRONG><a name="[54]"></a>USART6_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f40_41xxx.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
@@ -583,11 +580,11 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_errno_addr
 </UL>
-<BR>[Called By]<UL><LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sqrt
-<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sin
+<BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sin
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cos
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_asin
+<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sqrt
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
 </UL>
 
 <P><STRONG><a name="[7e]"></a>__aeabi_memcpy4</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, rt_memcpy_w.o(.text), UNUSED)
@@ -676,7 +673,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
 
-<P><STRONG><a name="[8d]"></a>BSP_DMA_InitConfig</STRONG> (Thumb, 248 bytes, Stack size 64 bytes, bsp_dma.o(i.BSP_DMA_InitConfig))
+<P><STRONG><a name="[8d]"></a>BSP_DMA_InitConfig</STRONG> (Thumb, 400 bytes, Stack size 64 bytes, bsp_dma.o(i.BSP_DMA_InitConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = BSP_DMA_InitConfig &rArr; DMA_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_Cmd
@@ -686,7 +683,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
 
-<P><STRONG><a name="[91]"></a>BSP_GPIO_InitConfig</STRONG> (Thumb, 704 bytes, Stack size 16 bytes, bsp_gpio.o(i.BSP_GPIO_InitConfig))
+<P><STRONG><a name="[91]"></a>BSP_GPIO_InitConfig</STRONG> (Thumb, 762 bytes, Stack size 16 bytes, bsp_gpio.o(i.BSP_GPIO_InitConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = BSP_GPIO_InitConfig &rArr; GPIO_PinAFConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_PinAFConfig
@@ -698,7 +695,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
 
-<P><STRONG><a name="[96]"></a>BSP_NVIC_InitConfig</STRONG> (Thumb, 218 bytes, Stack size 8 bytes, bsp_nvic.o(i.BSP_NVIC_InitConfig))
+<P><STRONG><a name="[96]"></a>BSP_NVIC_InitConfig</STRONG> (Thumb, 260 bytes, Stack size 8 bytes, bsp_nvic.o(i.BSP_NVIC_InitConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = BSP_NVIC_InitConfig &rArr; USART_ITConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_ITConfig
@@ -729,7 +726,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
 
-<P><STRONG><a name="[a8]"></a>BSP_UART_InitConfig</STRONG> (Thumb, 266 bytes, Stack size 24 bytes, bsp_uart.o(i.BSP_UART_InitConfig))
+<P><STRONG><a name="[a8]"></a>BSP_UART_InitConfig</STRONG> (Thumb, 276 bytes, Stack size 24 bytes, bsp_uart.o(i.BSP_UART_InitConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 92<LI>Call Chain = BSP_UART_InitConfig &rArr; USART_Init &rArr; RCC_GetClocksFreq
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_Init
@@ -971,19 +968,22 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[12a]"></a>DMA_ClearFlag</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, stm32f4xx_dma.o(i.DMA_ClearFlag))
-<BR><BR>[Called By]<UL><LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART5_IRQHandler
+<BR><BR>[Called By]<UL><LI><a href="#[34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART3_IRQHandler
+<LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART5_IRQHandler
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART4_IRQHandler
 </UL>
 
 <P><STRONG><a name="[90]"></a>DMA_Cmd</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, stm32f4xx_dma.o(i.DMA_Cmd))
-<BR><BR>[Called By]<UL><LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART5_IRQHandler
+<BR><BR>[Called By]<UL><LI><a href="#[34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART3_IRQHandler
+<LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART5_IRQHandler
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART4_IRQHandler
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_DMA_InitConfig
 </UL>
 
 <P><STRONG><a name="[125]"></a>DMA_GetCmdStatus</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, stm32f4xx_dma.o(i.DMA_GetCmdStatus))
-<BR><BR>[Called By]<UL><LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART5_IRQHandler
+<BR><BR>[Called By]<UL><LI><a href="#[34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART3_IRQHandler
+<LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART5_IRQHandler
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART4_IRQHandler
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
@@ -995,7 +995,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[126]"></a>DMA_SetCurrDataCounter</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f4xx_dma.o(i.DMA_SetCurrDataCounter))
-<BR><BR>[Called By]<UL><LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART5_IRQHandler
+<BR><BR>[Called By]<UL><LI><a href="#[34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART3_IRQHandler
+<LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART5_IRQHandler
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART4_IRQHandler
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
@@ -1363,14 +1364,14 @@ Global Symbols
 <P><STRONG><a name="[c7]"></a>RecToPolar</STRONG> (Thumb, 536 bytes, Stack size 128 bytes, driver_vision.o(i.RecToPolar))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = RecToPolar &rArr; __hardfp_atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
-<LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
+<BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 <LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dneg
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMSubschemaHalfauto
 </UL>
@@ -1512,7 +1513,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> task_sysinitconfig.o(i.Task_SysInitConfig)
 </UL>
-<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 346 bytes, Stack size 8 bytes, task_control.o(i.Task_Control))
+<P><STRONG><a name="[63]"></a>Task_Control</STRONG> (Thumb, 350 bytes, Stack size 8 bytes, task_control.o(i.Task_Control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 320<LI>Call Chain = Task_Control &rArr; MPU9250_Update &rArr; MPU9250DMP_GetEuler &rArr; __hardfp_atan2 &rArr; atan &rArr; __hardfp_atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetTickCount
@@ -1541,8 +1542,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 264 + Unknown Stack Size
 <LI>Call Chain = Task_SysInitConfig &rArr; MPU9250DMP_InitConfig &rArr; MPU9250DMPU_Selftest &rArr; mpu_run_self_test &rArr; mpu_set_dmp_state &rArr; mpu_set_sample_rate &rArr; mpu_lp_accel_mode &rArr; mpu_configure_fifo &rArr; set_int_enable &rArr; IIC_SendBuffer &rArr; IIC_SendByte
 </UL>
-<BR>[Calls]<UL><LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_InitConfig
-<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CloudPID_InitConfig
+<BR>[Calls]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CloudPID_InitConfig
 <LI><a href="#[122]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_InitConfig
 <LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Vision_InitConfig
 <LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DBUS_InitConfig
@@ -1568,6 +1568,7 @@ Global Symbols
 <LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PokeMotor_InitConfig
 <LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FricMotor_InitConfig
 <LI><a href="#[120]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU9250_InitConfig
+<LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_InitConfig
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.main)
 </UL>
@@ -1596,6 +1597,16 @@ Global Symbols
 </UL>
 <P><STRONG><a name="[32]"></a>USART1_IRQHandler</STRONG> (Thumb, 856 bytes, Stack size 12 bytes, stm32f4xx_it.o(i.USART1_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = USART1_IRQHandler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
+</UL>
+<P><STRONG><a name="[34]"></a>USART3_IRQHandler</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, stm32f4xx_it.o(i.USART3_IRQHandler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = USART3_IRQHandler
+</UL>
+<BR>[Calls]<UL><LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_SetCurrDataCounter
+<LI><a href="#[125]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_GetCmdStatus
+<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_Cmd
+<LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_ClearFlag
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
@@ -1647,9 +1658,7 @@ Global Symbols
 <P><STRONG><a name="[ec]"></a>__hardfp_asin</STRONG> (Thumb, 770 bytes, Stack size 88 bytes, asin.o(i.__hardfp_asin))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = __hardfp_asin &rArr; sqrt &rArr; _dsqrt &rArr; __fpl_dnaninf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
-<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sqrt
-<LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<BR>[Calls]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_drsub
@@ -1661,6 +1670,8 @@ Global Symbols
 <LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_underflow
 <LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_invalid
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_infnan
+<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
+<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sqrt
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU9250DMP_GetEuler
 </UL>
@@ -1701,13 +1712,13 @@ Global Symbols
 <P><STRONG><a name="[cd]"></a>__hardfp_cos</STRONG> (Thumb, 180 bytes, Stack size 32 bytes, cos.o(i.__hardfp_cos))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = __hardfp_cos &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
-<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
-<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dneg
+<BR>[Calls]<UL><LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dneg
 <LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_sin
 <LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
 <LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_invalid
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_infnan
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
+<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMSubschemaSwing
 </UL>
@@ -1715,13 +1726,13 @@ Global Symbols
 <P><STRONG><a name="[cf]"></a>__hardfp_sin</STRONG> (Thumb, 180 bytes, Stack size 32 bytes, sin.o(i.__hardfp_sin))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = __hardfp_sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
-<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
-<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dneg
+<BR>[Calls]<UL><LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dneg
 <LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_sin
 <LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
 <LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_invalid
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_infnan
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
+<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMSubschemaSwing
 </UL>
@@ -1771,10 +1782,10 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 </UL>
-<BR>[Called By]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
-<LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
+<BR>[Called By]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_asin
 <LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_sin
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
 </UL>
 
 <P><STRONG><a name="[138]"></a>__kernel_sin</STRONG> (Thumb, 280 bytes, Stack size 72 bytes, sin_i.o(i.__kernel_sin))
@@ -2827,9 +2838,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[19c]"></a>_dadd</STRONG> (Thumb, 332 bytes, Stack size 16 bytes, daddsub_clz.o(x$fpl$dadd), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[19e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dretinf
+<BR><BR>[Calls]<UL><LI><a href="#[19d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dsub1
+<LI><a href="#[19e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dretinf
 <LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
-<LI><a href="#[19d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dsub1
 </UL>
 
 <P><STRONG><a name="[104]"></a>__aeabi_ddiv</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, ddiv.o(x$fpl$ddiv))
@@ -2850,8 +2861,8 @@ Global Symbols
 <P><STRONG><a name="[13b]"></a>__aeabi_d2iz</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, dfix.o(x$fpl$dfix))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_d2iz
 </UL>
-<BR>[Called By]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
-<LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
+<BR>[Called By]<UL><LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
 </UL>
 
 <P><STRONG><a name="[1a0]"></a>_dfix</STRONG> (Thumb, 94 bytes, Stack size 32 bytes, dfix.o(x$fpl$dfix), UNUSED)
@@ -2878,13 +2889,13 @@ Global Symbols
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMSubschemaSwing
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMSubschemaHalfauto
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU9250DMP_GetEuler
-<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
 <LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_asin
 <LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_sin
 <LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
 <LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_poly
 <LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_underflow
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
 </UL>
 
 <P><STRONG><a name="[1a1]"></a>_dmul</STRONG> (Thumb, 332 bytes, Stack size 32 bytes, dmul.o(x$fpl$dmul), UNUSED)
@@ -2895,13 +2906,13 @@ Global Symbols
 <P><STRONG><a name="[19b]"></a>__fpl_dnaninf</STRONG> (Thumb, 156 bytes, Stack size 16 bytes, dnaninf.o(x$fpl$dnaninf))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = __fpl_dnaninf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dsqrt
-<LI><a href="#[1a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dmul
+<BR>[Called By]<UL><LI><a href="#[1a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dmul
 <LI><a href="#[19f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ddiv
 <LI><a href="#[1a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dsub
 <LI><a href="#[19c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dadd
 <LI><a href="#[199]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_d2f
 <LI><a href="#[1a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dfix
+<LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dsqrt
 </UL>
 
 <P><STRONG><a name="[19e]"></a>__fpl_dretinf</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, dretinf.o(x$fpl$dretinf), UNUSED)
@@ -2914,12 +2925,12 @@ Global Symbols
 <P><STRONG><a name="[133]"></a>__aeabi_drsub</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, daddsub_clz.o(x$fpl$drsb))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = __aeabi_drsub
 </UL>
-<BR>[Called By]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
-<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
+<BR>[Called By]<UL><LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 <LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_asin
 <LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_sin
 <LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
 </UL>
 
 <P><STRONG><a name="[1a2]"></a>_drsb</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, daddsub_clz.o(x$fpl$drsb), UNUSED)
@@ -2941,17 +2952,17 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RecToPolar
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMSubschemaSwing
-<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
 <LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 <LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_asin
 <LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_sin
 <LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
 </UL>
 
 <P><STRONG><a name="[1a4]"></a>_dsub</STRONG> (Thumb, 464 bytes, Stack size 32 bytes, daddsub_clz.o(x$fpl$dsub), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
-<LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dadd1
+<BR><BR>[Calls]<UL><LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dadd1
+<LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
 </UL>
 
 <P><STRONG><a name="[c9]"></a>__aeabi_f2d</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, f2d.o(x$fpl$f2d))
@@ -3048,8 +3059,7 @@ Local Symbols
 <P><STRONG><a name="[bb]"></a>Control_KMSubschemaNormal</STRONG> (Thumb, 294 bytes, Stack size 24 bytes, task_control.o(i.Control_KMSubschemaNormal))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = Control_KMSubschemaNormal &rArr; Chassis_Adjust &rArr; Chassis_SendMotorParam &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_Control
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_TargetDirectionSet
+<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_TargetDirectionSet
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_SpeedSet
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Adjust
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DBUS_CheckPush
@@ -3057,6 +3067,7 @@ Local Symbols
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_PitchAngleSet
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_Adjust
 <LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Poke_CylinderAdjust
+<LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_Control
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMMode
 </UL>
@@ -3064,14 +3075,14 @@ Local Symbols
 <P><STRONG><a name="[bc]"></a>Control_KMSubschemaSupply</STRONG> (Thumb, 240 bytes, Stack size 24 bytes, task_control.o(i.Control_KMSubschemaSupply))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = Control_KMSubschemaSupply &rArr; Chassis_Adjust &rArr; Chassis_SendMotorParam &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_Control
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_TargetDirectionSet
+<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_TargetDirectionSet
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_SpeedSet
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Adjust
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DBUS_CheckPush
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_YawAngleSet
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_PitchAngleSet
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_Adjust
+<LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_Control
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMMode
 </UL>
@@ -3101,11 +3112,11 @@ Local Symbols
 <P><STRONG><a name="[d2]"></a>Control_ProtectMode</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, task_control.o(i.Control_ProtectMode))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = Control_ProtectMode &rArr; Chassis_Adjust &rArr; Chassis_SendMotorParam &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_Control
-<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Adjust
+<BR>[Calls]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Adjust
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_Adjust
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PokeMotor_Adjust
 <LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FricArtilleryMotorCurrent
+<LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_Control
 </UL>
 <BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 </UL>
@@ -3113,14 +3124,14 @@ Local Symbols
 <P><STRONG><a name="[d5]"></a>Control_RCMode</STRONG> (Thumb, 188 bytes, Stack size 16 bytes, task_control.o(i.Control_RCMode))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = Control_RCMode &rArr; Chassis_Adjust &rArr; Chassis_SendMotorParam &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_Control
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_TargetDirectionSet
+<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_TargetDirectionSet
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_SpeedSet
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Adjust
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_YawAngleSet
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_PitchAngleSet
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_Adjust
 <LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Poke_CylinderAdjust
+<LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Steering_Control
 </UL>
 <BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 </UL>

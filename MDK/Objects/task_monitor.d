@@ -55,6 +55,7 @@
 .\objects\task_monitor.o: ..\driver\inc\Driver_DBUS.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_Judge.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_vision.h
+.\objects\task_monitor.o: ..\user\CommonDataStructure.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_Chassis.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_CloudMotor.h

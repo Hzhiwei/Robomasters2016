@@ -6,7 +6,7 @@
 //SDA:E8
 
 
-#define IIC_DELAY IIC_Delay(9);
+#define IIC_DELAY IIC_Delay(15);
 
 
 /**

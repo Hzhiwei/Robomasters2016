@@ -164,6 +164,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -201,99 +202,95 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>EnemyDataBuffer,0x0A</ItemText>
+          <ItemText>ESP8266TXBuffer</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>EnemyDataBufferPoint,0x0A</ItemText>
+          <ItemText>ESP8266RXBuffer</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>AAngle,0x0A</ItemText>
+          <ItemText>ESP8266RXDataQuanity,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>FeedParam,0x0A</ItemText>
+          <ItemText>\\Infantry_HZW\../driver/src/Driver_ESP8266.c\ESP8266RXBuffer</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>FeendS,0x0A</ItemText>
+          <ItemText>kkk,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>CurrentAngle,0x0A</ItemText>
+          <ItemText>ks,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>LastAngle,0x0A</ItemText>
+          <ItemText>PitchOPID,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PitchOPID,0x0A</ItemText>
+          <ItemText>PitchIPID,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PitchIPID,0x0A</ItemText>
+          <ItemText>Position,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>YawOPID,0x0A</ItemText>
+          <ItemText>lpf,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>YawIPID,0x0A</ItemText>
+          <ItemText>CloudParam,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ChassisOPID,0x0A</ItemText>
+          <ItemText>ChassisParam,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ChassisIPID,0x0A</ItemText>
+          <ItemText>CloudParam,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ArtilleryFricRealSpeed,0x0A</ItemText>
+          <ItemText>YawOPID,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>MinSpeed,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>15</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>ArtFricLeftPID</ItemText>
-        </Ww>
-        <Ww>
-          <count>16</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>ssssps,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>17</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>ArtFricRightPID,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>18</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>KMSubschema,0x0A</ItemText>
+          <ItemText>YawIPID,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
+      <MemoryWindow1>
+        <Mm>
+          <WinNumber>1</WinNumber>
+          <SubType>0</SubType>
+          <ItemText>0x8005AC4</ItemText>
+          <AccSizeX>0</AccSizeX>
+        </Mm>
+      </MemoryWindow1>
+      <MemoryWindow2>
+        <Mm>
+          <WinNumber>2</WinNumber>
+          <SubType>0</SubType>
+          <ItemText>0x8005ABF</ItemText>
+          <AccSizeX>0</AccSizeX>
+        </Mm>
+      </MemoryWindow2>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -328,8 +325,16 @@
       <bLintAuto>0</bLintAuto>
       <SystemViewers>
         <Entry>
+          <Name>System Viewer\DMA1</Name>
+          <WinId>35904</WinId>
+        </Entry>
+        <Entry>
           <Name>System Viewer\GPIOC</Name>
           <WinId>35905</WinId>
+        </Entry>
+        <Entry>
+          <Name>System Viewer\USART3</Name>
+          <WinId>35903</WinId>
         </Entry>
       </SystemViewers>
     </TargetOption>
@@ -785,7 +790,7 @@
 
   <Group>
     <GroupName>stdlib</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -897,7 +902,7 @@
 
   <Group>
     <GroupName>freertos</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1056,7 +1061,7 @@
 
   <Group>
     <GroupName>core</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1104,6 +1109,19 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\system\sim_IIC\sim_IIC.c</PathWithFileName>
       <FilenameWithoutPath>sim_IIC.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>9</GroupNumber>
+      <FileNumber>55</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\system\StringDecoding\StringDecoding.c</PathWithFileName>
+      <FilenameWithoutPath>StringDecoding.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

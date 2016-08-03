@@ -65,7 +65,10 @@ void Task_Control(void *Parameters)
         //Yaw轴实际绝对角度
         CloudParam.Yaw.RealABSAngle = SuperGyoParam.Angle + ((int16_t)CloudParam.Yaw.RealEncoderAngle - YawEncoderCenter) * 0.043945F;
         //Pitch轴实际绝对角度
-        CloudParam.Pitch.RealABSAngle = Position.Euler.Pitch;
+//        CloudParam.Pitch.RealABSAngle = Position.Euler.Pitch;
+
+#warning PItch Angle is Encoder Data
+        CloudParam.Pitch.RealABSAngle = (CloudParam.Pitch.RealEncoderAngle - PitchEncoderCenter) * 0.04395F;
         
 /************************  ↑  姿态更新  ↑ ************************/
 /**************************************************************************************************/
@@ -112,7 +115,7 @@ void Task_Control(void *Parameters)
 			if(JumpToRCFlag)
 			{
                 TIM3->CNT = POKEENCODERCenter;              //拨弹电机定时器归位，防止改变模式时转动
-				CloudParam.Yaw.TargetABSAngle = SuperGyoParam.Angle;
+
 				PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation;
 			}
 			
@@ -342,7 +345,7 @@ static void Control_KMSubschemaNormal(void)
         Poke_CylinderAdjust(0);
     }
 #else
-    if(DBUS_ReceiveData.mouse.press_lef)
+    if(DBUS_ReceiveData.mouse.press_left)
     {
         PokeMotor_Step();
     }

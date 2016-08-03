@@ -1,5 +1,4 @@
 .\objects\driver_esp8266.o: ..\driver\src\Driver_ESP8266.c
-.\objects\driver_esp8266.o: ..\driver\inc\Driver_ESP8266.h
 .\objects\driver_esp8266.o: ..\user\OSinclude.h
 .\objects\driver_esp8266.o: ..\lib\freertos\inc\FreeRTOS.h
 .\objects\driver_esp8266.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
@@ -16,6 +15,7 @@
 .\objects\driver_esp8266.o: ..\lib\freertos\inc\queue.h
 .\objects\driver_esp8266.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_esp8266.o: ..\lib\freertos\inc\event_groups.h
+.\objects\driver_esp8266.o: ..\driver\inc\Driver_ESP8266.h
 .\objects\driver_esp8266.o: ..\core\stm32f4xx.h
 .\objects\driver_esp8266.o: ..\core\core_cm4.h
 .\objects\driver_esp8266.o: ..\core\core_cmInstr.h
@@ -50,3 +50,4 @@
 .\objects\driver_esp8266.o: ..\lib\std\inc\stm32f4xx_dac.h
 .\objects\driver_esp8266.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\driver_esp8266.o: ..\lib\std\inc\stm32f4xx_fsmc.h
+.\objects\driver_esp8266.o: ..\system\StringDecoding\StringDecoding.h

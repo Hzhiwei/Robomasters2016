@@ -51,6 +51,7 @@
 .\objects\driver_vision.o: ..\lib\freertos\inc\queue.h
 .\objects\driver_vision.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_vision.o: ..\lib\freertos\inc\event_groups.h
+.\objects\driver_vision.o: ..\user\CommonDataStructure.h
 .\objects\driver_vision.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\driver_vision.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\driver_vision.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
