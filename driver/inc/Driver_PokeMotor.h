@@ -46,13 +46,18 @@ __DRIVER_POKEMOTOR_EXT PokeMotorParam_Struct PokeMotorParam;
 
 
 void PokeMotor_InitConfig(void);
+
+#if FRICTYPE == 1
+
+void Poke_CylinderAdjust(uint8_t Target);
+void Poke_CylinderControl(uint8_t Target);
+
+#else
+
 void PokeMotorCurrent(int16_t Current);
 void PokeMotor_Step(void);
 void PokeMotor_Adjust(uint8_t mode);
 
-#if INFANTRY == 6
-void Poke_CylinderAdjust(uint8_t Target);
-void Poke_CylinderControl(uint8_t Target);
 #endif
 
 

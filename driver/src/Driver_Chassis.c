@@ -14,15 +14,6 @@
 
 #include "Driver_DBUS.h"
 
-//volatile float Last_Spd[4];
-////麦轮解算矩阵
-//const signed char MecanumCalculateMAT[4][3] = { 
-//	{1, 1, 1},
-//	{1,-1,-1},
-//	{1,-1, 1}, 
-//	{1, 1,-1}
-//};
-
 
 /**
   * @brief  底盘初始化
@@ -31,11 +22,6 @@
   */
 void Chassis_InitConfig(void)
 {
-//    for(int i=0;i<=3;i++)
-//    {
-//        Last_Spd[i]=0;
-//    }
-    
     ChassisMaxSumCurrent = 2380.0F;
     
     ChassisParam.TargetVX = 0;
@@ -95,8 +81,6 @@ void Chassis_Adjust(uint8_t mode)
     int16_t ABSSpeed[4];
     
     Control_ChassisPID();
-
-//    ChassisParam.TargetOmega = DBUS_ReceiveData.ch3;
     
     //麦轮解算
     MecanumCalculate(ChassisParam.TargetVX, ChassisParam.TargetVY, ChassisParam.TargetOmega, WheelSpeed);
@@ -106,6 +90,8 @@ void Chassis_Adjust(uint8_t mode)
     ChassisParam.LB.TargetSpeed = WheelSpeed[2];
     ChassisParam.RB.TargetSpeed = WheelSpeed[3];
 
+//35电机需要进行动态电流分配
+#if MOTORTYPE == 0
     ABSSpeed[0] = (ChassisParam.LF.NeedCurrent > 0 ? ChassisParam.LF.NeedCurrent : -ChassisParam.LF.NeedCurrent);
     ABSSpeed[1] = (ChassisParam.RF.NeedCurrent > 0 ? ChassisParam.RF.NeedCurrent : -ChassisParam.RF.NeedCurrent);
     ABSSpeed[2] = (ChassisParam.LB.NeedCurrent > 0 ? ChassisParam.LB.NeedCurrent : -ChassisParam.LB.NeedCurrent);
@@ -128,6 +114,7 @@ void Chassis_Adjust(uint8_t mode)
         ChassisParam.LB.LimitCurrent = ChassisMaxSumCurrent / 4;
         ChassisParam.RB.LimitCurrent = ChassisMaxSumCurrent / 4;
     }
+#endif
     
     Chassis_SendMotorParam(mode);
 }
@@ -170,7 +157,7 @@ void Chassis_SendMotorParam(uint8_t mode)
         xQueueSend(Queue_CANSend, &SendData, 10);
         
         
-//3510驱动要求发送实际电流，限制电流
+//3510驱动要求发送总实际电流，总限制电流
 #if MOTORTYPE == 1
         SendData.SendCanTxMsg.StdId =   CURRENTCONTROLCANID;
         //实际电流
@@ -180,7 +167,7 @@ void Chassis_SendMotorParam(uint8_t mode)
         }
         else
         {
-            FT.F = InfantryJudge.RealCurrent * 1000.0F;
+            FT.F = InfantryJudge.RealCurrent * 1000.0F;     //单位转换为A
         }
         SendData.SendCanTxMsg.Data[0] = FT.u8[0];
         SendData.SendCanTxMsg.Data[1] = FT.u8[1];
@@ -196,7 +183,7 @@ void Chassis_SendMotorParam(uint8_t mode)
         
         xQueueSend(Queue_CANSend, &SendData, 10);
         
-#else
+#else   //35电机要求发送单电机限制电流
         SendData.SendCanTxMsg.StdId =   CHASSISCURRENTSETCANID;
         SendData.SendCanTxMsg.Data[1] = ChassisParam.LF.LimitCurrent >> 8;
         SendData.SendCanTxMsg.Data[0] = ChassisParam.LF.LimitCurrent;
@@ -223,7 +210,7 @@ void Chassis_SendMotorParam(uint8_t mode)
         xQueueSend(Queue_CANSend, &SendData, 10);
         
 #if MOTORTYPE == 1
-        
+        //3510电机不发送东西
 #else
         SendData.SendCanTxMsg.StdId =   CHASSISCURRENTSETCANID;
         SendData.SendCanTxMsg.Data[0] = 0;
@@ -292,46 +279,6 @@ void Chassis_MotorDebug(void)
   */
 static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed)
 {
-/****************   这是旧的麦轮解算程序，但实际并不需要这么复杂，因此重写此函数      ****************/
-//	unsigned char ii = 0, jj = 0;
-//	float temp_mat[3] = {0,0,0};
-//	float max_spd = 0,temp_speed = 0;
-//	float temp_ration = 0;	
-//	float temp_spd[4] = {0,0,0,0};
-//	temp_mat[0] = Vx;
-//	temp_mat[1] = Vy;
-//	temp_mat[2] = Omega;//spinning 使自旋的
-//	for(ii = 0;ii<4;ii++)
-//	{
-//		for(jj = 0;jj<3;jj++)
-//		{
-//			temp_spd[ii] += temp_mat[jj] * MecanumCalculateMAT[ii][jj];
-//		}
-//	}
-//	//speed 限幅
-//	for(ii=0; ii<4; ii++)  
-//	{
-//		temp_speed = temp_spd[ii] > 0 ? temp_spd[ii] : -temp_spd[ii];
-//		max_spd = (max_spd > temp_speed) ? max_spd : temp_speed;
-//	}
-//	//如果超过麦伦最大速度，等比例缩小4个速度
-//	if(max_spd > MaxWheelSpeed)
-//	{
-//		temp_ration = MaxWheelSpeed / max_spd;
-//		for(ii=0; ii<4; ii++)
-//		{
-//			temp_spd[ii] = temp_spd[ii]*temp_ration; 
-//		}	
-//	}
-//	
-//    //设置实际速度
-//	Speed[0] = (short)temp_spd[0];
-//	Speed[1] = (short)temp_spd[1];
-//	Speed[2] = (short)temp_spd[2];
-//  Speed[3] = (short)temp_spd[3];
-    
-    
-    
     float Buffer[4], Param, MaxSpeed;
     uint8_t index;
     

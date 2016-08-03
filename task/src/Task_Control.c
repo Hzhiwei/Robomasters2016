@@ -65,10 +65,10 @@ void Task_Control(void *Parameters)
         //Yaw轴实际绝对角度
         CloudParam.Yaw.RealABSAngle = SuperGyoParam.Angle + ((int16_t)CloudParam.Yaw.RealEncoderAngle - YawEncoderCenter) * 0.043945F;
         //Pitch轴实际绝对角度
-//        CloudParam.Pitch.RealABSAngle = Position.Euler.Pitch;
+        CloudParam.Pitch.RealABSAngle = Position.Euler.Pitch;
 
-#warning PItch Angle is Encoder Data
-        CloudParam.Pitch.RealABSAngle = (CloudParam.Pitch.RealEncoderAngle - PitchEncoderCenter) * 0.04395F;
+//#warning pitch Angle is Encoder Data
+//        CloudParam.Pitch.RealABSAngle = (CloudParam.Pitch.RealEncoderAngle - PitchEncoderCenter) * 0.04395F;
         
 /************************  ↑  姿态更新  ↑ ************************/
 /**************************************************************************************************/
@@ -85,23 +85,26 @@ void Task_Control(void *Parameters)
         //摩擦轮控制
         if(FricStatus_Working == FricStatus)
         {
-            GunFric_Control(1);
-#if INFANTRY == 6
+#if FRICTYPE == 1
             FricArtillerySpeed_Adjust(ARTILLERYFRICSPEED);
+#else
+            GunFric_Control(1);
 #endif
         }
         else if(FricStatus_Crazy == FricStatus)
         {
-            GunFric_Control(2);
-#if INFANTRY == 6
+#if FRICTYPE == 1
             FricArtillerySpeed_Adjust(ARTILLERYFRICSPEED);
+#else
+            GunFric_Control(2);
 #endif
         }
         else
         {
-            GunFric_Control(0);
-#if INFANTRY == 6
+#if FRICTYPE == 1
             FricArtillerySpeed_Adjust(0);
+#else
+            GunFric_Control(0);
 #endif
         }
 /*********************  ↑  状态机状态更新  ↑ *********************/
@@ -199,7 +202,7 @@ static void Control_RCMode(void)
     //舵机舱门控制
 	Steering_Control(2);
     
-#if INFANTRY == 6
+#if FRICTYPE == 1
     if(DBUS_ReceiveData.switch_right == 2)
     {
         Poke_CylinderAdjust(1);
@@ -267,9 +270,10 @@ static void Control_ProtectMode(void)
     Cloud_Adjust(0);
     Chassis_Adjust(0);
 	Steering_Control(2);
-    PokeMotor_Adjust(0);
-#if INFANTRY == 6
+#if FRICTYPE == 1
     FricArtilleryMotorCurrent(0, 0);
+#else
+    PokeMotor_Adjust(0);
 #endif
 }
 
@@ -335,7 +339,7 @@ static void Control_KMSubschemaNormal(void)
     //舵机舱门控制
 	Steering_Control(0);
     
-#if INFANTRY == 6
+#if FRICTYPE == 1
     if(DBUS_ReceiveData.mouse.press_left)
     {
         Poke_CylinderAdjust(1);
@@ -436,7 +440,7 @@ static void Control_KMSubschemaHalfauto(void)
     
     int8_t index;
     
-#if INFANTRY == 6
+#if FRICTYPE == 1
     if(DBUS_ReceiveData.switch_right == 2)
     {
         Poke_CylinderAdjust(1);

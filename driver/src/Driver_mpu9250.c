@@ -16,6 +16,10 @@ void MPU9250_InitConfig(void)
 {
 #if INFANTRY == 1       //萨摩
     
+    Omega_Offset.X = 0;
+    Omega_Offset.Y = 0;
+    Omega_Offset.Z = 0;
+    
 #elif INFANTRY == 2     //阿拉斯加
     
     Omega_Offset.X = -0.67;
@@ -24,11 +28,27 @@ void MPU9250_InitConfig(void)
     
 #elif INFANTRY == 3     //哈士奇
     
+    Omega_Offset.X = 0;
+    Omega_Offset.Y = 0;
+    Omega_Offset.Z = 0;
+    
 #elif INFANTRY == 4     //边牧（没名字，先这么叫吧）
+    
+    Omega_Offset.X = 0;
+    Omega_Offset.Y = 0;
+    Omega_Offset.Z = 0;
     
 #elif INFANTRY == 5     //狗蛋
     
+    Omega_Offset.X = 0;
+    Omega_Offset.Y = 0;
+    Omega_Offset.Z = 0;
+    
 #elif INFANTRY == 6     //英雄
+    
+    Omega_Offset.X = 0;
+    Omega_Offset.Y = 0;
+    Omega_Offset.Z = 0;
     
 #endif
 }

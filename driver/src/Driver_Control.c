@@ -672,13 +672,13 @@ int16_t Control_FeedForwardYawPID(float FeedSpeed)
 }
 
 
-#if INFANTRY == 6
+#if FRICTYPE == 1       //摩擦轮为3510，需要PID
 /**
   * @brief  摩擦轮PID
   * @param  void
   * @retval 目标电流值
   */
-int16_t* Control_FricPID(int16_t *Output)
+void Control_FricPID(int16_t *Output)
 {
 	portTickType CurrentTick = xTaskGetTickCount(); 
     

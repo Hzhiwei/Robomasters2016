@@ -62,7 +62,7 @@ void Control_ChassisPID(void);
 int16_t Control_FeedForwardYawPID(float FeedSpeed);
 
 #if INFANTRY == 6
-int16_t* Control_FricPID(int16_t *Output);
+void  Control_FricPID(int16_t *Output);
 #endif
 
 

@@ -14,47 +14,20 @@
   * @retval void
   */
 void FricMotor_InitConfig(void)
-{
-    //速度初始化为0
-    TIM8->CCR1 = 1000;
-    TIM8->CCR2 = 1000;
-    
-//小英雄枪炮一体增加炮摩擦轮
-#if INFANTRY == 6
+{ 
+#if FRICTYPE == 1
     ArtilleryFricRealSpeed[0] = 0;
     ArtilleryFricRealSpeed[1] = 0;
     ArtilleryFricTargetSpeed = 0;
+#else
+    //速度初始化为0
+    TIM8->CCR1 = 1000;
+    TIM8->CCR2 = 1000;
 #endif
 }
 
 
-/**
-  * @brief  枪摩擦轮起停
-  * @param  0 停止        1 启动        2 狂野模式
-  * @retval void
-  */
-void GunFric_Control(uint8_t Control)
-{
-    if(Control == 1)
-    {
-        TIM8->CCR1 = 1000 + FRICMOTORWORKINGSPEED;
-        TIM8->CCR2 = 1000 + FRICMOTORWORKINGSPEED;
-    }
-    else if(Control == 2)
-    {
-        TIM8->CCR1 = 1000 + 1000;
-        TIM8->CCR2 = 1000 + 1000;
-    }
-    else
-    {
-        TIM8->CCR1 = 1000;
-        TIM8->CCR2 = 1000;
-    }
-}
-
-
-//小英雄枪炮一体增加炮摩擦轮
-#if INFANTRY == 6
+#if FRICTYPE == 1
 /**
   * @brief  炮摩擦轮速度调节
   * @param  目标速度
@@ -107,6 +80,35 @@ void FricArtilleryMotorCurrent(int16_t LeftArtilleryCurrent, int16_t RightArtill
     
     xQueueSend(Queue_CANSend, &SendData, 10);
 }
+
+
+#else
+
+
+/**
+  * @brief  枪摩擦轮起停
+  * @param  0 停止        1 启动        2 狂野模式
+  * @retval void
+  */
+void GunFric_Control(uint8_t Control)
+{
+    if(Control == 1)
+    {
+        TIM8->CCR1 = 1000 + FRICMOTORWORKINGSPEED;
+        TIM8->CCR2 = 1000 + FRICMOTORWORKINGSPEED;
+    }
+    else if(Control == 2)
+    {
+        TIM8->CCR1 = 1000 + 1000;
+        TIM8->CCR2 = 1000 + 1000;
+    }
+    else
+    {
+        TIM8->CCR1 = 1000;
+        TIM8->CCR2 = 1000;
+    }
+}
+
 #endif
 
 

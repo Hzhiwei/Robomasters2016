@@ -179,6 +179,7 @@ void CAN2_RX0_IRQHandler(void)
     int16_t YawPassZeroBuffer;
     int16_t PitchPassZeroBuffer;
     
+    //读取CAN数据
 #if CANPORT == 1
     CAN_Receive(CAN1, 0, &CanRxData);
 #else
@@ -191,7 +192,8 @@ void CAN2_RX0_IRQHandler(void)
         case    YAWMOTORCANID  :
         {
             CloudParam.Yaw.FrameCounter++;
-            
+     
+//电机角度过零处理
 #if YAWMOTORENCODERPLUSEDIR == 1
             YawPassZeroBuffer = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
 #else
@@ -258,6 +260,11 @@ void CAN2_RX0_IRQHandler(void)
             
             break;
         }
+        
+//电机种类为3510
+#if MOTORTYPE == 1
+    #warning 3510 motor is CAN data has not benn deal
+#else       //35电机
         //左前轮
         case    LFCHASSISCANID  :
         {
@@ -302,7 +309,10 @@ void CAN2_RX0_IRQHandler(void)
             
             break;
         }
-#if INFANTRY == 6
+#endif
+     
+//小英雄 摩擦轮使用3510电机        
+#if FRICTYPE == 1
         //左炮摩擦轮
         case    ARTILLERYFRICCANIDLEFT :
         {
@@ -318,11 +328,11 @@ void CAN2_RX0_IRQHandler(void)
 #endif
     }
     
-    #if CANPORT == 1
+#if CANPORT == 1
 	CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
-    #else
+#else
 	CAN_ITConfig(CAN2, CAN_IT_FMP0, ENABLE);
-    #endif
+#endif
 }
 
 
@@ -331,7 +341,6 @@ void CAN2_RX0_IRQHandler(void)
   * @param  void
   * @retval void
   */
-
 #if CANPORT == 1
 void CAN2_RX0_IRQHandler(void)
 {
@@ -345,7 +354,11 @@ void CAN1_RX0_IRQHandler(void)
 #endif
 
 
-//DBUS空闲中断
+/**
+  * @brief  DBUS空闲中断(UART5)
+  * @param  void
+  * @retval void
+  */
 void UART5_IRQHandler(void)
 {
     UARTtemp = UART5->DR;
@@ -368,11 +381,12 @@ void UART5_IRQHandler(void)
 }
 
 
-//裁判系统空闲中断
-/*****
-DJI很毒
-以50HZ发送Info包，当有实时数据包产生时，在最近的一帧Info前无间隔加上实时数据包
-******/
+/**
+  * @brief  裁判系统空闲中断(UART4)
+  * @param  void
+  * @retval void
+  * @note   DJI很毒,以50HZ发送Info包，当有实时数据包产生时，在最近的一帧Info前无间隔加上实时数据包
+  */
 void UART4_IRQHandler(void)
 {
     FormatTrans FT;
@@ -452,7 +466,11 @@ void UART4_IRQHandler(void)
 }
 
 
-//PC视觉数据 串口中断
+/**
+  * @brief  PC视觉数据 串口中断(USART1)
+  * @param  void
+  * @retval void
+  */
 void USART1_IRQHandler(void)
 {
     uint8_t i, Sum = 0;
@@ -521,7 +539,7 @@ void USART1_IRQHandler(void)
 
 
 /**
-  * @brief  USART3中断服务函数
+  * @brief  (ESP8266)USART3中断服务函数
   * @param  void 
   * @retval void
   */

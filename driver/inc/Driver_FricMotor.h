@@ -32,13 +32,12 @@ __DRIVER_FRICMOTOR_EXT int16_t ArtilleryFricTargetSpeed;           //Ä¦²ÁÂÖÄ¿±êË
 
 
 void FricMotor_InitConfig(void);
-void GunFric_Control(uint8_t Control);
 
-
-//Ğ¡Ó¢ĞÛÇ¹ÅÚÒ»ÌåÔö¼ÓÅÚÄ¦²ÁÂÖ
-#if INFANTRY == 6
+#if FRICTYPE == 1
 void FricArtillerySpeed_Adjust(int16_t TargetSpeed);
 void FricArtilleryMotorCurrent(int16_t LeftArtilleryCurrent, int16_t RightArtilleryCurrent);
+#else
+void GunFric_Control(uint8_t Control);
 #endif
 
 
