@@ -90,7 +90,8 @@ AngleF_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t Pi
 {
     AngleF_Struct ReturnData;
     float Distance = sqrt(X * X + Z * Z);
-    float distance, radian;
+    float distance;
+//    float radian;
 //    float OneAngle;
     float X0, Y0, Z0;
     

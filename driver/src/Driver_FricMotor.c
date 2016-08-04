@@ -54,9 +54,6 @@ void FricArtillerySpeed_Adjust(int16_t Target)
 void FricArtilleryMotorCurrent(int16_t LeftArtilleryCurrent, int16_t RightArtilleryCurrent)
 {
     CanSend_Type   SendData;
-    
-//    LeftArtilleryCurrent = LeftArtilleryCurrent > 30000 ? 30000 : LeftArtilleryCurrent;
-//    RightArtilleryCurrent = RightArtilleryCurrent < -30000 ? -30000 : RightArtilleryCurrent;
 
 #if CANPORT == 1
     SendData.CANx = 1;
@@ -90,7 +87,7 @@ void FricArtilleryMotorCurrent(int16_t LeftArtilleryCurrent, int16_t RightArtill
   * @param  0 Í£Ö¹        1 Æô¶¯        2 ¿ñÒ°Ä£Ê½
   * @retval void
   */
-void GunFric_Control(uint8_t Control)
+void FricGunControl(uint8_t Control)
 {
     if(Control == 1)
     {

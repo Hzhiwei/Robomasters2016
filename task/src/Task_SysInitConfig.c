@@ -54,40 +54,24 @@ void Task_SysInitConfig(void *Parameters)
     BSP_NVIC_InitConfig();
     
     Steering_InitConfig();
-    PokeMotor_InitConfig();
+    Poke_InitConfig();
     Bell_InitConfig();
     DBUS_InitConfig();
     CloudMotor_InitConfig();
-    CloudPID_InitConfig();
+    ControlPID_InitConfig();
     StatusMachine_InitConfig();
     SuperGyo_InitConfig();
     Vision_InitConfig();
     MPU9250_InitConfig();
     FricMotor_InitConfig();
     Chassis_InitConfig();
-//    MPU9250DMP_InitConfig(0);
-//    vTaskDelay(1000);
     
     //延时保证陀螺仪正常初始化
     vTaskDelay(1000);
     MPU9250DMP_InitConfig(0);
     
     //等待底盘陀螺仪初始化完成
-//    vTaskDelay(4000);
-
-//while(1)
-//{
-//    if(kkk)
-//    {
-//        ESP8266_SendPack(dddd);
-////        while((USART3->SR & 0x40)==0);//等待发送结束
-////        USART_SendData(USART3, 'd');
-//        kkk = 0;
-//    }
-//}
-
-
-
+    vTaskDelay(1000); 
     
     //生成CAN发送队列
 	Queue_CANSend = xQueueCreate(64, sizeof(CanSend_Type));		

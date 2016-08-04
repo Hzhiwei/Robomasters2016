@@ -88,7 +88,7 @@ void Task_Control(void *Parameters)
 #if FRICTYPE == 1
             FricArtillerySpeed_Adjust(ARTILLERYFRICSPEED);
 #else
-            GunFric_Control(1);
+            FricGunControl(1);
 #endif
         }
         else if(FricStatus_Crazy == FricStatus)
@@ -96,7 +96,7 @@ void Task_Control(void *Parameters)
 #if FRICTYPE == 1
             FricArtillerySpeed_Adjust(ARTILLERYFRICSPEED);
 #else
-            GunFric_Control(2);
+            FricGunControl(2);
 #endif
         }
         else
@@ -104,7 +104,7 @@ void Task_Control(void *Parameters)
 #if FRICTYPE == 1
             FricArtillerySpeed_Adjust(0);
 #else
-            GunFric_Control(0);
+            FricGunControl(0);
 #endif
         }
 /*********************  ↑  状态机状态更新  ↑ *********************/
@@ -118,8 +118,9 @@ void Task_Control(void *Parameters)
 			if(JumpToRCFlag)
 			{
                 TIM3->CNT = POKEENCODERCenter;              //拨弹电机定时器归位，防止改变模式时转动
-
+#if FRICTYPE == 0
 				PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation;
+#endif
 			}
 			
 			JumpToRCFlag = 0;
@@ -135,7 +136,9 @@ void Task_Control(void *Parameters)
 			{
                 TIM3->CNT = POKEENCODERCenter;              //拨弹电机定时器归位，防止改变模式时转动
 				CloudParam.Yaw.TargetABSAngle = SuperGyoParam.Angle;
+#if FRICTYPE == 0
 				PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation;
+#endif
 			}
 			
 			JumpToRCFlag = 1;
@@ -155,7 +158,9 @@ void Task_Control(void *Parameters)
 			if(JumpToProtectFlag)
 			{
 				CloudParam.Yaw.TargetABSAngle = CloudParam.Yaw.RealABSAngle;
+#if FRICTYPE == 0
 				PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation;
+#endif
 			}
 			
 			JumpToRCFlag = 1;
@@ -214,9 +219,9 @@ static void Control_RCMode(void)
 #else
     if(DBUS_ReceiveData.switch_right == 2)
     {
-        PokeMotor_Step();
+        Poke_MotorStep();
     }
-    PokeMotor_Adjust(1);
+    Poke_MotorAdjust(1);
 #endif
     
 }
@@ -273,7 +278,7 @@ static void Control_ProtectMode(void)
 #if FRICTYPE == 1
     FricArtilleryMotorCurrent(0, 0);
 #else
-    PokeMotor_Adjust(0);
+    Poke_MotorAdjust(0);
 #endif
 }
 
@@ -351,9 +356,9 @@ static void Control_KMSubschemaNormal(void)
 #else
     if(DBUS_ReceiveData.mouse.press_left)
     {
-        PokeMotor_Step();
+        Poke_MotorStep();
     }
-    PokeMotor_Adjust(1);
+    Poke_MotorAdjust(1);
 #endif
 }
 
@@ -426,12 +431,12 @@ static void Control_KMSubschemaSupply(void)
   * @param  void
   * @retval void
   */
-#define LastSpeedLength     6
-#define ForcastCloud        0
+#define LastParam           7
+#define ForcastCloud        1
 
 
     AngleF_Struct CurrentAngle;
-    AngleF_Struct LastAngle[LastSpeedLength];
+    AngleF_Struct LastAngle[LastParam * 2 + 1];
     double FeendS = 0;
     float FeedParam = 60;
 static void Control_KMSubschemaHalfauto(void)
@@ -452,29 +457,29 @@ static void Control_KMSubschemaHalfauto(void)
 #else
     if(DBUS_ReceiveData.switch_right == 2)
     {
-        PokeMotor_Step();
+        Poke_MotorStep();
     }
-    PokeMotor_Adjust(1);
+    Poke_MotorAdjust(1);
 #endif
     
     //底盘控制
     Chassis_Adjust(0);
     
     //预判结果
-    ForcastOnce(300, 150, &CurrentAngle, 0);
+    ForcastOnce(300, 100, &CurrentAngle, 0);
     
     //云台角度设定
     Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
     Cloud_PitchAngleSet(CurrentAngle.V);
     
     //速度补偿计算
-    FeendS = (CurrentAngle.H - LastAngle[LastSpeedLength - 1].H);
+    FeendS = (CurrentAngle.H - LastAngle[LastParam * 2].H);
     
     //云台调节
     Cloud_AutoAdjust(FeendS * FeedParam, 1);
     
     //历史值保存
-    for (index = LastSpeedLength - 1; index > 0; index--)
+    for (index = LastParam * 2; index > 0; index--)
     {
         LastAngle[index] = LastAngle[index - 1];
     }
@@ -483,8 +488,10 @@ static void Control_KMSubschemaHalfauto(void)
 #else
     
     int8_t index;
+    float ForcastParam1, ForcastParam2;
     
-#if INFANTRY == 6
+    
+#if FRICTYPE == 1
     if(DBUS_ReceiveData.switch_right == 2)
     {
         Poke_CylinderAdjust(1);
@@ -496,29 +503,41 @@ static void Control_KMSubschemaHalfauto(void)
 #else
     if(DBUS_ReceiveData.switch_right == 2)
     {
-        PokeMotor_Step();
+        Poke_MotorStep();
     }
-    PokeMotor_Adjust(1);
+    Poke_MotorAdjust(1);
 #endif
     
     //底盘控制
     Chassis_Adjust(0);
     
     //角度转换
-    CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 1);
+    CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 0);
     
     //云台角度设定
     Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
     Cloud_PitchAngleSet(CurrentAngle.V);
     
     //速度补偿计算
-    FeendS = (CurrentAngle.H - LastAngle[LastSpeedLength - 1].H);
+    ForcastParam1 = CurrentAngle.H;
+    for(index = 0; index < LastParam; index++)
+    {
+        ForcastParam1 += LastAngle[index].H;
+    }
+    ForcastParam2 = 0;
+    for(index = LastParam; index < LastParam * 2 + 1; index++)
+    {
+        ForcastParam2 += LastAngle[index].H;
+    }
+    FeendS = (ForcastParam1 - ForcastParam2) / LastParam / LastParam;
+    
+//    FeendS = CurrentAngle.H - LastAngle[LastParam * 2].H;
     
     //云台调节
     Cloud_AutoAdjust(FeendS * FeedParam, 1);
     
     //历史值保存
-    for (index = LastSpeedLength - 1; index > 0; index--)
+    for (index = LastParam * 2 + 1 - 1; index > 0; index--)
     {
         LastAngle[index] = LastAngle[index - 1];
     }

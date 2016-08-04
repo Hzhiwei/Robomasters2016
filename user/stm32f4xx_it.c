@@ -173,8 +173,8 @@ void CAN1_RX0_IRQHandler(void)
 void CAN2_RX0_IRQHandler(void)
 #endif
 {
-    static uint8_t FristGyroData = 0;
-    u8Todouble dataTrans;
+    static uint8_t FristGyroData = 0;       //第一次收到陀螺仪数据标志位
+    FormatTrans dataTrans;                  //格式转换变量
     
     int16_t YawPassZeroBuffer;
     int16_t PitchPassZeroBuffer;
@@ -193,7 +193,7 @@ void CAN2_RX0_IRQHandler(void)
         {
             CloudParam.Yaw.FrameCounter++;
      
-//电机角度过零处理
+//电机编码器过零处理
 #if YAWMOTORENCODERPLUSEDIR == 1
             YawPassZeroBuffer = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
 #else
@@ -215,6 +215,7 @@ void CAN2_RX0_IRQHandler(void)
         {
             CloudParam.Pitch.FrameCounter++;
 
+//电机编码器过零处理
 #if PITCHMOTORENCODERPLUSEDIR == 1
             PitchPassZeroBuffer = ((int16_t)CanRxData.Data[0] << 8) | CanRxData.Data[1];
 #else
@@ -236,27 +237,27 @@ void CAN2_RX0_IRQHandler(void)
         {
             SuperGyoFrameCounter++;
             
-            dataTrans.uint8_tdata[0] = CanRxData.Data[0];
-            dataTrans.uint8_tdata[1] = CanRxData.Data[1];
-            dataTrans.uint8_tdata[2] = CanRxData.Data[2];
-            dataTrans.uint8_tdata[3] = CanRxData.Data[3];
+            dataTrans.U[0] = CanRxData.Data[0];
+            dataTrans.U[1] = CanRxData.Data[1];
+            dataTrans.U[2] = CanRxData.Data[2];
+            dataTrans.U[3] = CanRxData.Data[3];
             
             if(FristGyroData)
             {
-                SuperGyoParam.Angle = dataTrans.floatdata - SuperGyoParam.Offset;
+                SuperGyoParam.Angle = dataTrans.F - SuperGyoParam.Offset;
             }
             else
             {
                 SuperGyoParam.Angle = 0;
-                SuperGyoParam.Offset = dataTrans.floatdata;
+                SuperGyoParam.Offset = dataTrans.F;
                 FristGyroData = 1;
             }
             
-            dataTrans.uint8_tdata[0] = CanRxData.Data[4];
-            dataTrans.uint8_tdata[1] = CanRxData.Data[5];
-            dataTrans.uint8_tdata[2] = CanRxData.Data[6];
-            dataTrans.uint8_tdata[3] = CanRxData.Data[7];
-            SuperGyoParam.Omega = dataTrans.floatdata;
+            dataTrans.U[0] = CanRxData.Data[4];
+            dataTrans.U[1] = CanRxData.Data[5];
+            dataTrans.U[2] = CanRxData.Data[6];
+            dataTrans.U[3] = CanRxData.Data[7];
+            SuperGyoParam.Omega = dataTrans.F;
             
             break;
         }
@@ -404,17 +405,17 @@ void UART4_IRQHandler(void)
         JudgeFrameCounter++;        //帧数增加
         
         //读取电压
-        FT.u8[3] = JudgeDataBuffer[15];
-        FT.u8[2] = JudgeDataBuffer[14];
-        FT.u8[1] = JudgeDataBuffer[13];
-        FT.u8[0] = JudgeDataBuffer[12];
+        FT.U[3] = JudgeDataBuffer[15];
+        FT.U[2] = JudgeDataBuffer[14];
+        FT.U[1] = JudgeDataBuffer[13];
+        FT.U[0] = JudgeDataBuffer[12];
         InfantryJudge.RealVoltage = FT.F;
         
         //读取电压
-        FT.u8[3] = JudgeDataBuffer[19];
-        FT.u8[2] = JudgeDataBuffer[18];
-        FT.u8[1] = JudgeDataBuffer[17];
-        FT.u8[0] = JudgeDataBuffer[16];
+        FT.U[3] = JudgeDataBuffer[19];
+        FT.U[2] = JudgeDataBuffer[18];
+        FT.U[1] = JudgeDataBuffer[17];
+        FT.U[0] = JudgeDataBuffer[16];
         InfantryJudge.RealCurrent = FT.F;
         
         //剩余血量
@@ -447,16 +448,15 @@ void UART4_IRQHandler(void)
         JudgeFrameCounter++;        //帧数增加
         
         //子弹射速
-        FT.u8[3] = JudgeDataBuffer[9];
-        FT.u8[2] = JudgeDataBuffer[8];
-        FT.u8[1] = JudgeDataBuffer[7];
-        FT.u8[0] = JudgeDataBuffer[6];
+        FT.U[3] = JudgeDataBuffer[9];
+        FT.U[2] = JudgeDataBuffer[8];
+        FT.U[1] = JudgeDataBuffer[7];
+        FT.U[0] = JudgeDataBuffer[6];
         InfantryJudge.LastShotSpeed = FT.F;
         
         //子弹出膛时间
         InfantryJudge.LastShotTick = xTaskGetTickCountFromISR();
     }
-    
     
     //重启DMA
     DMA_ClearFlag(DMA1_Stream2, DMA_FLAG_TCIF2 | DMA_FLAG_HTIF2);
@@ -501,34 +501,34 @@ void USART1_IRQHandler(void)
                 EnemyDataBufferPoint = (EnemyDataBufferPoint + 1) % ENEMYDATABUFFERLENGHT;
                 
                 //解码
-                Buffer.u8[3] = PCDataBuffer[(PCDataBufferPoint + 4) % PCDATALENGTH];
-                Buffer.u8[2] = PCDataBuffer[(PCDataBufferPoint + 5) % PCDATALENGTH];
-                Buffer.u8[1] = PCDataBuffer[(PCDataBufferPoint + 6) % PCDATALENGTH];
-                Buffer.u8[0] = PCDataBuffer[(PCDataBufferPoint + 7) % PCDATALENGTH];
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 4) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 5) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 6) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 7) % PCDATALENGTH];
                 EnemyDataBuffer[EnemyDataBufferPoint].X = Buffer.F;
 
-                Buffer.u8[3] = PCDataBuffer[(PCDataBufferPoint + 8) % PCDATALENGTH];
-                Buffer.u8[2] = PCDataBuffer[(PCDataBufferPoint + 9) % PCDATALENGTH];
-                Buffer.u8[1] = PCDataBuffer[(PCDataBufferPoint + 10) % PCDATALENGTH];
-                Buffer.u8[0] = PCDataBuffer[(PCDataBufferPoint + 11) % PCDATALENGTH];
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 8) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 9) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 10) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 11) % PCDATALENGTH];
                 EnemyDataBuffer[EnemyDataBufferPoint].Y = Buffer.F;
 
-                Buffer.u8[3] = PCDataBuffer[(PCDataBufferPoint + 12) % PCDATALENGTH];
-                Buffer.u8[2] = PCDataBuffer[(PCDataBufferPoint + 13) % PCDATALENGTH];
-                Buffer.u8[1] = PCDataBuffer[(PCDataBufferPoint + 14) % PCDATALENGTH];
-                Buffer.u8[0] = PCDataBuffer[(PCDataBufferPoint + 15) % PCDATALENGTH];
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 12) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 13) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 14) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 15) % PCDATALENGTH];
                 EnemyDataBuffer[EnemyDataBufferPoint].Z = Buffer.F;
 
-                Buffer.u8[3] = PCDataBuffer[(PCDataBufferPoint + 16) % PCDATALENGTH];
-                Buffer.u8[2] = PCDataBuffer[(PCDataBufferPoint + 17) % PCDATALENGTH];
-                Buffer.u8[1] = PCDataBuffer[(PCDataBufferPoint + 18) % PCDATALENGTH];
-                Buffer.u8[0] = PCDataBuffer[(PCDataBufferPoint + 19) % PCDATALENGTH];
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 16) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 17) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 18) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 19) % PCDATALENGTH];
                 EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp = Buffer.F;
 
-                Buffer.u8[3] = PCDataBuffer[(PCDataBufferPoint + 20) % PCDATALENGTH];
-                Buffer.u8[2] = PCDataBuffer[(PCDataBufferPoint + 21) % PCDATALENGTH];
-                Buffer.u8[1] = PCDataBuffer[(PCDataBufferPoint + 22) % PCDATALENGTH];
-                Buffer.u8[0] = PCDataBuffer[(PCDataBufferPoint + 23) % PCDATALENGTH];
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 20) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 21) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 22) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 23) % PCDATALENGTH];
                 EnemyDataBuffer[EnemyDataBufferPoint].Time = Buffer.I;
 
                 EnemyDataBuffer[EnemyDataBufferPoint].ID = PCDataBuffer[(PCDataBufferPoint + 3) % PCDATALENGTH];

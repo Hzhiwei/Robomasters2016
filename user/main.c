@@ -16,7 +16,7 @@ int main(void)
 {
     xTaskCreate(Task_SysInitConfig,
                 "Test",
-                1400,
+                1600,
                 NULL,
                 3,
                 NULL);

@@ -145,6 +145,7 @@ void Chassis_SendMotorParam(uint8_t mode)
     
     if(mode)
     {
+        //目标速度
         SendData.SendCanTxMsg.StdId =   CHASSISSPEEDSETCANID;
         SendData.SendCanTxMsg.Data[1] = ChassisParam.LF.TargetSpeed >> 8;
         SendData.SendCanTxMsg.Data[0] = ChassisParam.LF.TargetSpeed;
@@ -198,6 +199,7 @@ void Chassis_SendMotorParam(uint8_t mode)
     }
     else
     {
+        //目标速度全部置零
         SendData.SendCanTxMsg.StdId =   CHASSISSPEEDSETCANID;
         SendData.SendCanTxMsg.Data[0] = 0;
         SendData.SendCanTxMsg.Data[1] = 0;
@@ -227,6 +229,7 @@ void Chassis_SendMotorParam(uint8_t mode)
 }
 
 
+#if MOTORTYPE == 0
 /**
   * @brief  电机调试模式，电流700，速度0
   * @param  void
@@ -268,6 +271,7 @@ void Chassis_MotorDebug(void)
     SendData.SendCanTxMsg.Data[6] = /* BC */ 0;
     xQueueSend(Queue_CANSend, &SendData, 10);
 }
+#endif
 
 
 /**

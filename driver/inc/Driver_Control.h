@@ -54,14 +54,14 @@ __DRIVER_CONTROL_EXT PID_Type ArtFricLeftPID, ArtFricRightPID;
 #endif
 
 
-void CloudPID_InitConfig(void);
+void ControlPID_InitConfig(void);
 int16_t Control_YawPID(void);
 int16_t Control_PitchPID(void);
 int16_t Control_PokeIPID(void);
 void Control_ChassisPID(void);
 int16_t Control_FeedForwardYawPID(float FeedSpeed);
 
-#if INFANTRY == 6
+#if FRICTYPE == 1
 void  Control_FricPID(int16_t *Output);
 #endif
 

@@ -89,8 +89,11 @@ void Chassis_SpeedSet(float XSpeed, float YSpeed);
 void Chassis_TargetDirectionSet(float Target);
 void Chassis_Adjust(uint8_t mode);
 void Chassis_SendMotorParam(uint8_t mode);
-void Chassis_MotorDebug(void);
 static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed);
+
+#if MOTORTYPE == 0
+void Chassis_MotorDebug(void);
+#endif
 
 
 

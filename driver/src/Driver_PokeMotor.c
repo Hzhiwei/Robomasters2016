@@ -13,7 +13,7 @@
   * @param  void
   * @retval void
   */
-void PokeMotor_InitConfig(void)
+void Poke_InitConfig(void)
 {
 #if FRICTYPE == 1
     
@@ -96,7 +96,7 @@ void Poke_CylinderControl(uint8_t Target)
   * @param  电流大小（±399）
   * @retval void
   */
-void PokeMotorCurrent(int16_t Current)
+void Poke_MotorCurrent(int16_t Current)
 {
     int16_t S;
     
@@ -123,7 +123,7 @@ void PokeMotorCurrent(int16_t Current)
   * @retval void
   * @note   拨弹电机处于非停止状态（working,struck）无效,考虑射频
   */
-void PokeMotor_Step(void)
+void Poke_MotorStep(void)
 {
     portTickType CurrentTick = xTaskGetTickCount();
     
@@ -142,7 +142,7 @@ void PokeMotor_Step(void)
   * @retval void
   * @note   此函数要求周期运行
   */
-void PokeMotor_Adjust(uint8_t mode)
+void Poke_MotorAdjust(uint8_t mode)
 {
     int16_t PokeCurrent;
     static portTickType LastStruckDealTick = 0;
@@ -181,11 +181,11 @@ void PokeMotor_Adjust(uint8_t mode)
         
         PokeCurrent = Control_PokeIPID();
         
-        PokeMotorCurrent(PokeCurrent);
+        Poke_MotorCurrent(PokeCurrent);
     }
     else
     {
-        PokeMotorCurrent(0);
+        Poke_MotorCurrent(0);
     }
 }
 #endif

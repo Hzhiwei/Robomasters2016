@@ -17,7 +17,7 @@
   * @param  void
   * @retval void
   */
-void CloudPID_InitConfig(void)
+void ControlPID_InitConfig(void)
 {
 #if INFANTRY == 1       //萨摩
     
@@ -95,7 +95,7 @@ void CloudPID_InitConfig(void)
     
 #elif INFANTRY == 2     //阿拉斯加
     
-    PitchOPID.P = 9;
+    PitchOPID.P = 12;
     PitchOPID.I = 0;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
@@ -104,7 +104,7 @@ void CloudPID_InitConfig(void)
     PitchOPID.IMax = 0;
     PitchOPID.PIDMax = 400;
     
-    PitchIPID.P = 50;
+    PitchIPID.P = 40;
     PitchIPID.I = 0;
     PitchIPID.D = 0;
     PitchIPID.CurrentError = 0;
@@ -168,6 +168,78 @@ void CloudPID_InitConfig(void)
     PokeIPID.LastTick = 0;
     
 #elif INFANTRY == 3     //哈士奇
+    
+    PitchOPID.P = 9;
+    PitchOPID.I = 00;
+    PitchOPID.D = 0;
+    PitchOPID.CurrentError = 0;
+    PitchOPID.LastError = 0;
+    PitchOPID.LastTick = 0;
+    PitchOPID.IMax = 0;
+    PitchOPID.PIDMax = 500;
+    
+    PitchIPID.P = 10;
+    PitchIPID.I = 0;
+    PitchIPID.D = 0;
+    PitchIPID.CurrentError = 0;
+    PitchIPID.LastError = 0;
+    PitchIPID.LastTick = 0;
+    PitchIPID.IMax = 0;
+    PitchIPID.PIDMax = 5000;
+    
+    YawOPID.P = 15;
+    YawOPID.I = 0;
+    YawOPID.D = 0;
+    YawOPID.CurrentError = 0;
+    YawOPID.LastError = 0;
+    YawOPID.LastTick = 0;
+    YawOPID.IMax = 0;
+    YawOPID.PIDMax = 300;
+    
+    YawIPID.P = 50;
+    YawIPID.I = 0;
+    YawIPID.D = 0;
+    YawIPID.CurrentError = 0;
+    YawIPID.LastError = 0;
+    YawIPID.LastTick = 0;
+    YawIPID.IMax = 0;
+    YawIPID.PIDMax = 5000;
+    
+    ChassisOPID.P = 1;
+    ChassisOPID.I = 0;
+    ChassisOPID.D = 0;
+    ChassisOPID.CurrentError = 0;
+    ChassisOPID.LastError = 0;
+    ChassisOPID.LastTick = 0;
+    ChassisOPID.IMax = 0;
+    ChassisOPID.PIDMax = 300;
+    
+    ChassisIPID.P = 5;
+    ChassisIPID.I = 0;
+    ChassisIPID.D = 0;
+    ChassisIPID.CurrentError = 0;
+    ChassisIPID.LastError = 0;
+    ChassisIPID.LastTick = 0;
+    ChassisIPID.IMax = 0;
+    ChassisIPID.PIDMax = 950;
+    
+    PokeOPID.CurrentError = 0;
+    PokeOPID.LastError = 0;
+    PokeOPID.P = 0.07;
+    PokeOPID.I = 0;
+    PokeOPID.D = 0;
+    PokeOPID.IMax = 0;
+    PokeOPID.PIDMax = 130;
+    PokeOPID.LastTick = 0;
+    
+    PokeIPID.CurrentError = 0;
+    PokeIPID.LastError = 0;
+    PokeIPID.P = 3.8;
+    PokeIPID.I = 0.2;
+    PokeIPID.D = 0;
+    PokeIPID.IMax = 200;
+    PokeIPID.PIDMax = 90;
+    PokeIPID.LastTick = 0;
     
 #elif INFANTRY == 4     //金毛
     
@@ -509,7 +581,7 @@ int16_t Control_PitchPID(void)
 	PitchIPID.Iout = PitchIPID.Iout > PitchIPID.IMax ? PitchIPID.IMax : PitchIPID.Iout;
 	PitchIPID.Iout = PitchIPID.Iout < -PitchIPID.IMax ? -PitchIPID.IMax : PitchIPID.Iout;
 	
-	if(YawIPID.LastTick != CurrentTick)
+	if(PitchIPID.LastTick != CurrentTick)
 	{
         PitchIPID.Dout = PitchIPID.D * (PitchIPID.CurrentError - PitchIPID.LastError) * 5 / (CurrentTick - PitchIPID.LastTick);
     }
@@ -519,7 +591,6 @@ int16_t Control_PitchPID(void)
     }
 	
 	PitchIPID.PIDout = (PitchIPID.Pout + PitchIPID.Iout + PitchIPID.Dout);
-	
 	PitchIPID.PIDout = PitchIPID.PIDout > PitchIPID.PIDMax ? PitchIPID.PIDMax : PitchIPID.PIDout;
 	PitchIPID.PIDout = PitchIPID.PIDout < -PitchIPID.PIDMax ? -PitchIPID.PIDMax : PitchIPID.PIDout;
 	
@@ -527,48 +598,6 @@ int16_t Control_PitchPID(void)
 	PitchIPID.LastTick = CurrentTick;
 	
 	return (short)PitchIPID.PIDout;
-}
-
-
-/**
-  * @brief  拨弹电机PID
-  * @param  void
-  * @retval 
-  */
-int16_t Control_PokeIPID(void)
-{
-    /*****************************  外环  *****************************/
-    PokeOPID.CurrentError = PokeMotorParam.TargetLocation - PokeMotorParam.RealLocation;
-    
-    PokeOPID.Pout = PokeOPID.P * PokeOPID.CurrentError;
-    PokeOPID.Dout = PokeOPID.D * (PokeOPID.CurrentError - PokeOPID.LastError);
-    
-    PokeOPID.PIDout = PokeOPID.Pout + PokeOPID.Dout;
-    PokeOPID.PIDout = PokeOPID.PIDout > PokeOPID.PIDMax ? PokeOPID.PIDMax : PokeOPID.PIDout;
-    PokeOPID.PIDout = PokeOPID.PIDout < -PokeOPID.PIDMax ? -PokeOPID.PIDMax : PokeOPID.PIDout;
-    
-    PokeOPID.LastError = PokeOPID.CurrentError;
-    
-    /*****************************  内环  *****************************/
-    PokeIPID.CurrentError = PokeOPID.PIDout - PokeMotorParam.RealSpeed;
-//    PokeIPID.CurrentError = DBUS_ReceiveData.ch1 - PokeMotorParam.RealSpeed;
-    
-    PokeIPID.Pout = PokeIPID.P * PokeIPID.CurrentError;
-    
-    PokeIPID.Iout += PokeIPID.CurrentError * PokeIPID.I;
-    PokeIPID.Iout = PokeIPID.Iout > PokeIPID.IMax ? PokeIPID.IMax : PokeIPID.Iout;
-    PokeIPID.Iout = PokeIPID.Iout < -PokeIPID.IMax ? -PokeIPID.IMax : PokeIPID.Iout;
-    
-    PokeIPID.Dout = PokeIPID.D * (PokeIPID.CurrentError - PokeIPID.LastError);
-    
-    PokeIPID.PIDout = -(PokeIPID.Pout + PokeIPID.Iout + PokeIPID.Dout);
-    
-    PokeIPID.PIDout = PokeIPID.PIDout > PokeIPID.PIDMax ? PokeIPID.PIDMax : PokeIPID.PIDout;
-    PokeIPID.PIDout = PokeIPID.PIDout < -PokeIPID.PIDMax ? -PokeIPID.PIDMax : PokeIPID.PIDout;
-    
-    PokeIPID.LastError = PokeIPID.CurrentError;
-    
-    return PokeIPID.PIDout;
 }
 
 
@@ -738,6 +767,50 @@ void Control_FricPID(int16_t *Output)
 	
 	Output[1] = ArtFricRightPID.PIDout;
 }
+
+#else           //普通摩擦轮需要拨弹电机PID
+
+/**
+  * @brief  拨弹电机PID
+  * @param  void
+  * @retval 
+  */
+int16_t Control_PokeIPID(void)
+{
+    /*****************************  外环  *****************************/
+    PokeOPID.CurrentError = PokeMotorParam.TargetLocation - PokeMotorParam.RealLocation;
+    
+    PokeOPID.Pout = PokeOPID.P * PokeOPID.CurrentError;
+    PokeOPID.Dout = PokeOPID.D * (PokeOPID.CurrentError - PokeOPID.LastError);
+    
+    PokeOPID.PIDout = PokeOPID.Pout + PokeOPID.Dout;
+    PokeOPID.PIDout = PokeOPID.PIDout > PokeOPID.PIDMax ? PokeOPID.PIDMax : PokeOPID.PIDout;
+    PokeOPID.PIDout = PokeOPID.PIDout < -PokeOPID.PIDMax ? -PokeOPID.PIDMax : PokeOPID.PIDout;
+    
+    PokeOPID.LastError = PokeOPID.CurrentError;
+    
+    /*****************************  内环  *****************************/
+    PokeIPID.CurrentError = PokeOPID.PIDout - PokeMotorParam.RealSpeed;
+//    PokeIPID.CurrentError = DBUS_ReceiveData.ch1 - PokeMotorParam.RealSpeed;
+    
+    PokeIPID.Pout = PokeIPID.P * PokeIPID.CurrentError;
+    
+    PokeIPID.Iout += PokeIPID.CurrentError * PokeIPID.I;
+    PokeIPID.Iout = PokeIPID.Iout > PokeIPID.IMax ? PokeIPID.IMax : PokeIPID.Iout;
+    PokeIPID.Iout = PokeIPID.Iout < -PokeIPID.IMax ? -PokeIPID.IMax : PokeIPID.Iout;
+    
+    PokeIPID.Dout = PokeIPID.D * (PokeIPID.CurrentError - PokeIPID.LastError);
+    
+    PokeIPID.PIDout = -(PokeIPID.Pout + PokeIPID.Iout + PokeIPID.Dout);
+    
+    PokeIPID.PIDout = PokeIPID.PIDout > PokeIPID.PIDMax ? PokeIPID.PIDMax : PokeIPID.PIDout;
+    PokeIPID.PIDout = PokeIPID.PIDout < -PokeIPID.PIDMax ? -PokeIPID.PIDMax : PokeIPID.PIDout;
+    
+    PokeIPID.LastError = PokeIPID.CurrentError;
+    
+    return PokeIPID.PIDout;
+}
+
 #endif
 
 

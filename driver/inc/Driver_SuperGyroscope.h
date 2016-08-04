@@ -17,13 +17,6 @@
 #endif
 
 
-typedef union u8Tofloat
-{
-    float floatdata;
-    uint8_t uint8_tdata[4];
-}u8Todouble;
-
-
 //底盘陀螺仪数据结构体
 typedef struct
 {

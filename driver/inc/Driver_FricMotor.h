@@ -37,7 +37,7 @@ void FricMotor_InitConfig(void);
 void FricArtillerySpeed_Adjust(int16_t TargetSpeed);
 void FricArtilleryMotorCurrent(int16_t LeftArtilleryCurrent, int16_t RightArtilleryCurrent);
 #else
-void GunFric_Control(uint8_t Control);
+void FricGunControl(uint8_t Control);
 #endif
 
 
