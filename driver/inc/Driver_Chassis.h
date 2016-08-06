@@ -29,7 +29,11 @@
 #define CHASSISCURRENTSETCANID          0x40
 
 
+#if INFANTRY == 6
+#define CHASSISMAXPOWER                 9999.0F       //底盘最大功率
+#else
 #define CHASSISMAXPOWER                 80.0F       //底盘最大功率
+#endif
 
 
 #ifdef  __DRIVER_CHASSIS_GLOBALS

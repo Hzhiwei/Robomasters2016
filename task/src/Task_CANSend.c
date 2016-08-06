@@ -25,6 +25,8 @@ void Task_CANSend(void *Parameters)
                 CAN1->MCR &= 0xFD;
             }
             
+            while(!(CAN1->TSR & 0x1C000000));
+            
             CAN_Transmit(CAN1, &(CANSendData.SendCanTxMsg));
         }
         else
@@ -35,6 +37,9 @@ void Task_CANSend(void *Parameters)
                 CAN2->MCR |= 0x02;
                 CAN2->MCR &= 0xFD;
             }
+            
+            while(!(CAN2->TSR & 0x1C000000));
+            
             CAN_Transmit(CAN2, &(CANSendData.SendCanTxMsg));
         }
         

@@ -17,6 +17,7 @@
 ".\objects\driver_supergyroscope.o"
 ".\objects\task_bell.o"
 ".\objects\task_control.o"
+".\objects\task_esp8266.o"
 ".\objects\task_monitor.o"
 ".\objects\task_cansend.o"
 ".\objects\task_sysinitconfig.o"

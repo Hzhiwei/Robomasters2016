@@ -147,12 +147,15 @@ void DebugMon_Handler(void)
 #include "Driver_vision.h"
 #include "Driver_Chassis.h"
 #include "Driver_ESP8266.h"
+#include "Driver_ESP8266.h"
 #include "Driver_FricMotor.h"
 #include "Driver_CloudMotor.h"
 #include "Driver_StatusMachine.h"
 #include "Driver_SuperGyroscope.h"
 
 #include "CommonDataStructure.h"
+
+#include "String.h"
 
 
 //CAN接收数据存储缓存
@@ -392,6 +395,10 @@ void UART4_IRQHandler(void)
 {
     FormatTrans FT;
     
+#if USEESP8266 == 1
+    uint16_t JudgeDataLenght, index;
+#endif
+    
     UARTtemp = UART4->DR;
     UARTtemp = UART4->SR;
     
@@ -457,6 +464,21 @@ void UART4_IRQHandler(void)
         //子弹出膛时间
         InfantryJudge.LastShotTick = xTaskGetTickCountFromISR();
     }
+   
+//使用ESP8266发送上位机数据
+#if USEESP8266 == 1
+    if(ESP8266APPortLinkFlag)
+    {
+        JudgeDataLenght = JudgeBufferLength - DMA1_Stream2->NDTR;
+        
+        for(index = 0; index < JudgeDataLenght; index++)
+        {
+            ESP8266TXBuffer[index] = JudgeDataBuffer[index];
+        }
+        
+        ESP8266_SendPack(JudgeDataLenght);
+    }
+#endif
     
     //重启DMA
     DMA_ClearFlag(DMA1_Stream2, DMA_FLAG_TCIF2 | DMA_FLAG_HTIF2);
@@ -550,6 +572,8 @@ void USART3_IRQHandler(void)
     UARTtemp = USART3->SR;
     
     DMA_Cmd(DMA1_Stream1, DISABLE);
+    
+    LatestRespond = 1;
     
     //重启DMA
     DMA_ClearFlag(DMA1_Stream1, DMA_FLAG_TCIF1 | DMA_FLAG_HTIF1);

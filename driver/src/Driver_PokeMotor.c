@@ -175,6 +175,7 @@ void Poke_MotorAdjust(uint8_t mode)
                     PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation + ((PokeOPID.PIDout > 0) ? (-POKESTRUCKDEALLINES) : POKESTRUCKDEALLINES);
                 }
             }
+            LastStruckDealTick = CurrentTick;
         }
     
         PokeMotorParam.RealLocation += PokeMotorParam.RealSpeed;

@@ -123,10 +123,10 @@ void StatusMachine_Update(void)
                 KMSubschema = KMSubschema_Supply;
             }
             //半自动模式
-            else if(DBUS_ReceiveData.mouse.press_right)
-            {
-                KMSubschema = KMSubschema_Halfauto;
-            }
+//            else if(DBUS_ReceiveData.mouse.press_right)
+//            {
+//                KMSubschema = KMSubschema_Halfauto;
+//            }
             //摇摆模式
             else if(DBUS_CheckPush(KEY_F))
             {
@@ -148,6 +148,11 @@ void StatusMachine_Update(void)
                 KMSubschema = KMSubschema_Circle;
             }
         }
+        //用于半自动回归
+//        else if((KMSubschema == KMSubschema_Halfauto) && (!DBUS_ReceiveData.mouse.press_right))
+//        {
+//            KMSubschema = KMSubschema_Normal;
+//        }
 /*******************************************  ↑   模式   ↑  *******************************************/
     }
     else

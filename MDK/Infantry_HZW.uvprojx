@@ -542,6 +542,11 @@
               <FilePath>..\task\src\Task_Control.c</FilePath>
             </File>
             <File>
+              <FileName>Task_ESP8266.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\src\Task_ESP8266.c</FilePath>
+            </File>
+            <File>
               <FileName>Task_Monitor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\task\src\Task_Monitor.c</FilePath>

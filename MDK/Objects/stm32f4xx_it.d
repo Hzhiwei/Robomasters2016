@@ -62,3 +62,4 @@
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_StatusMachine.h
 .\objects\stm32f4xx_it.o: ..\driver\inc\Driver_SuperGyroscope.h
+.\objects\stm32f4xx_it.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\String.h

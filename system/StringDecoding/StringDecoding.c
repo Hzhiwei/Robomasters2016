@@ -123,7 +123,7 @@ int8_t SDEC_StringIsEqual(char *Str1, char *Str2)
         Str2++;
     }
     
-    if((*(Str1 + 1) == 0) && (*(Str2 + 1) == 0))
+    if((*Str1 == 0) && (*Str2 == 0))
     {
         return 1;
     }
@@ -131,6 +131,33 @@ int8_t SDEC_StringIsEqual(char *Str1, char *Str2)
     {
         return 0;
     }
+}
+
+
+/**
+  * @brief  比较两个字符串指定位置指定长度子字符串是否相等
+  * @param  字符串1地址
+  * @param  字符串1偏移
+  * @param  字符串2地址
+  * @param  字符串2偏移
+  * @param  待比较部分长度
+  * @retval 0 不相等           1 相等
+  */
+uint8_t SDEC_ChildStringIsEqual(char *Str1, uint16_t Offset1, char *Str2, uint16_t Offset2, uint16_t Lenght)
+{
+    uint16_t index;
+    
+    Str1 += Offset1;
+    Str2 += Offset2;
+    
+    for(index = 0; index < Lenght; index++, Str1++, Str2++)
+    {
+        if(*Str1 != *Str2)
+        {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 

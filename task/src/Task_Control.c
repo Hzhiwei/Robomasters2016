@@ -46,7 +46,7 @@ void Task_Control(void *Parameters)
     for(;;)
     {
         CurrentControlTick = xTaskGetTickCount();
-        
+  
 /************************  ↓  姿态更新  ↓ ************************/
         MPU9250_Update();
         
@@ -344,22 +344,26 @@ static void Control_KMSubschemaNormal(void)
     //舵机舱门控制
 	Steering_Control(0);
     
+    
+    if(DBUS_ReceiveData.switch_right == 3)
+    {
 #if FRICTYPE == 1
-    if(DBUS_ReceiveData.mouse.press_left)
-    {
-        Poke_CylinderAdjust(1);
-    }
-    else
-    {
-        Poke_CylinderAdjust(0);
-    }
+        if(DBUS_ReceiveData.mouse.press_left)
+        {
+            Poke_CylinderAdjust(1);
+        }
+        else
+        {
+            Poke_CylinderAdjust(0);
+        }
 #else
-    if(DBUS_ReceiveData.mouse.press_left)
-    {
-        Poke_MotorStep();
-    }
-    Poke_MotorAdjust(1);
+        if(DBUS_ReceiveData.mouse.press_left)
+        {
+            Poke_MotorStep();
+        }
+        Poke_MotorAdjust(1);
 #endif
+    }
 }
 
 
@@ -490,23 +494,25 @@ static void Control_KMSubschemaHalfauto(void)
     int8_t index;
     float ForcastParam1, ForcastParam2;
     
-    
+    if(DBUS_ReceiveData.switch_right == 3)
+    {
 #if FRICTYPE == 1
-    if(DBUS_ReceiveData.switch_right == 2)
-    {
-        Poke_CylinderAdjust(1);
-    }
-    else
-    {
-        Poke_CylinderAdjust(0);
-    }
+        if(DBUS_ReceiveData.mouse.press_left)
+        {
+            Poke_CylinderAdjust(1);
+        }
+        else
+        {
+            Poke_CylinderAdjust(0);
+        }
 #else
-    if(DBUS_ReceiveData.switch_right == 2)
-    {
-        Poke_MotorStep();
-    }
-    Poke_MotorAdjust(1);
+        if(DBUS_ReceiveData.mouse.press_left)
+        {
+            Poke_MotorStep();
+        }
+        Poke_MotorAdjust(1);
 #endif
+    }
     
     //底盘控制
     Chassis_Adjust(0);
@@ -629,6 +635,26 @@ static void Control_KMSubschemaSwing(void)
     else
     {
         Yspeed = 0;
+    }
+    
+    if(DBUS_ReceiveData.switch_right == 3)
+    {
+#if FRICTYPE == 1
+        if(DBUS_ReceiveData.mouse.press_left)
+        {
+            Poke_CylinderAdjust(1);
+        }
+        else
+        {
+            Poke_CylinderAdjust(0);
+        }
+#else
+        if(DBUS_ReceiveData.mouse.press_left)
+        {
+            Poke_MotorStep();
+        }
+        Poke_MotorAdjust(1);
+#endif
     }
     
     TargetRealAngle = (CloudParam.Yaw.RealABSAngle - SuperGyoParam.Angle) * 0.0174533F;

@@ -46,9 +46,9 @@
 
 #elif INFANTRY == 3     //¹þÊ¿Ææ
 
-    #define PitchEncoderUPLimit             4400
-    #define PitchEncoderDOWNLimit           3500
-    #define PitchEncoderCenter              3897
+    #define PitchEncoderUPLimit             5600
+    #define PitchEncoderDOWNLimit           4740
+    #define PitchEncoderCenter              5038
     #define YawEncoderLEFTLimit             4600
     #define YawEncoderRIGHTLimit            2220
     #define YawEncoderCenter                3380
@@ -77,7 +77,7 @@
 #elif INFANTRY == 5     //¹·µ°
 
     #define PitchEncoderUPLimit             5830
-    #define PitchEncoderDOWNLimit           4930
+    #define PitchEncoderDOWNLimit           4910
     #define PitchEncoderCenter              5154
     #define YawEncoderLEFTLimit             10400
     #define YawEncoderRIGHTLimit            8200

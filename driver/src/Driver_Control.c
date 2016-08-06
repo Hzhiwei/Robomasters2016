@@ -89,7 +89,7 @@ void ControlPID_InitConfig(void)
     PokeIPID.P = 3.8;
     PokeIPID.I = 0.2;
     PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
+    PokeIPID.IMax = 300;
     PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
     
@@ -163,7 +163,7 @@ void ControlPID_InitConfig(void)
     PokeIPID.P = 3.8;
     PokeIPID.I = 0.2;
     PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
+    PokeIPID.IMax = 300;
     PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
     
@@ -178,7 +178,7 @@ void ControlPID_InitConfig(void)
     PitchOPID.IMax = 0;
     PitchOPID.PIDMax = 500;
     
-    PitchIPID.P = 10;
+    PitchIPID.P = 40;
     PitchIPID.I = 0;
     PitchIPID.D = 0;
     PitchIPID.CurrentError = 0;
@@ -205,16 +205,16 @@ void ControlPID_InitConfig(void)
     YawIPID.IMax = 0;
     YawIPID.PIDMax = 5000;
     
-    ChassisOPID.P = 1;
+    ChassisOPID.P = 12;
     ChassisOPID.I = 0;
     ChassisOPID.D = 0;
     ChassisOPID.CurrentError = 0;
     ChassisOPID.LastError = 0;
     ChassisOPID.LastTick = 0;
     ChassisOPID.IMax = 0;
-    ChassisOPID.PIDMax = 300;
+    ChassisOPID.PIDMax = 500;
     
-    ChassisIPID.P = 5;
+    ChassisIPID.P = 2;
     ChassisIPID.I = 0;
     ChassisIPID.D = 0;
     ChassisIPID.CurrentError = 0;
@@ -237,7 +237,7 @@ void ControlPID_InitConfig(void)
     PokeIPID.P = 3.8;
     PokeIPID.I = 0.2;
     PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
+    PokeIPID.IMax = 300;
     PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
     
@@ -311,7 +311,7 @@ void ControlPID_InitConfig(void)
     PokeIPID.P = 3.8;
     PokeIPID.I = 0.2;
     PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
+    PokeIPID.IMax = 300;
     PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
     
@@ -385,7 +385,7 @@ void ControlPID_InitConfig(void)
     PokeIPID.P = 3.8;
     PokeIPID.I = 0.2;
     PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
+    PokeIPID.IMax = 300;
     PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
     
@@ -459,7 +459,7 @@ void ControlPID_InitConfig(void)
     PokeIPID.P = 3.8;
     PokeIPID.I = 0.2;
     PokeIPID.D = 0;
-    PokeIPID.IMax = 200;
+    PokeIPID.IMax = 300;
     PokeIPID.PIDMax = 90;
     PokeIPID.LastTick = 0;
     

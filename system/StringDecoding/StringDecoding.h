@@ -12,6 +12,7 @@ void SDEC_GetString(char *Str, char *Target, char Location, int32_t Lenght);
 int32_t SDEC_SearchChar(char *Str, char Target);
 //int32_t SDEC_SearchString(char *Str, char *Target);
 int8_t SDEC_StringIsEqual(char *Str1, char *Str2);
+uint8_t SDEC_ChildStringIsEqual(char *Str1, uint16_t Offset1, char *Str2, uint16_t Offset2, uint16_t Lenght);
 int32_t SDEC_SearchMultiChar(char *Str, uint32_t *Loc, char Target);
 
 

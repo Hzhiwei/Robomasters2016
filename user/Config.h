@@ -4,11 +4,11 @@
 #define __CONFIG_H
 
 
-#define DEBUGECONTROLRC             1           //debug模式遥控控制
-#define USEESP8266                  0           //使用ESP8266返回裁判系统数据
+#define DEBUGECONTROLRC             0           //debug模式遥控控制
+#define USEESP8266                  1           //使用ESP8266返回裁判系统数据
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
-#define INFANTRY                    4           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 小英雄
+#define INFANTRY                    2           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 小英雄
 
 #if INFANTRY == 1               //萨摩参数↓
 
@@ -42,7 +42,7 @@
 
 #elif INFANTRY == 3               //哈士奇参数↓
 
-    #define FRICMOTORWORKINGSPEED   160         //摩擦轮工作速度(170)
+    #define FRICMOTORWORKINGSPEED   265         //摩擦轮工作速度(170)
     #define POKESTRUCKDEALLINES     400         //拨弹电机卡弹后反转处理线数
     #define CHASSISMAXPOWERRATE     0.82F       //底盘限制极限功率（80W）比例(例如此值为0.9，则实际限制功率为0.9*80=72W）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
@@ -73,7 +73,7 @@
 
 #elif INFANTRY == 5               //狗蛋
 
-    #define FRICMOTORWORKINGSPEED   260         //摩擦轮工作速度(230)
+    #define FRICMOTORWORKINGSPEED   265u         //摩擦轮工作速度(230)
     #define POKESTRUCKDEALLINES     400          //拨弹电机卡弹后反转处理线数
     #define CHASSISMAXPOWERRATE     0.82F       //底盘限制极限功率（80W）比例(例如此值为0.9，则实际限制功率为0.9*80=72W）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
@@ -128,7 +128,7 @@
 
 #elif INFANTRY == 3     //哈士奇
     
-    #define PITCHMOTORCURRENTPLUSDIR        1           //pitch轴云台电机电流方向为正时转动方向     1 抬头         0 低头
+    #define PITCHMOTORCURRENTPLUSDIR        0           //pitch轴云台电机电流方向为正时转动方向     1 抬头         0 低头
     #define YAWMOTORCURRENTPLUSDIR          1           //yaw轴云台电机电流方向为正时转动方向       1 逆时针       0 顺时针
     #define PITCHMOTORENCODERPLUSEDIR       1           //pitch轴云台电机编码器增加时转动方向       1 抬头         0 低头
     #define YAWMOTORENCODERPLUSEDIR         1           //yaw轴云台电机编码器增加时转动方向         1 逆时针       0 顺时针

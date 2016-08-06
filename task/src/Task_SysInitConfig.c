@@ -66,6 +66,10 @@ void Task_SysInitConfig(void *Parameters)
     FricMotor_InitConfig();
     Chassis_InitConfig();
     
+#if USEESP8266 == 1
+    ESP8266_InitConfig();
+#endif
+    
     //延时保证陀螺仪正常初始化
     vTaskDelay(1000);
     MPU9250DMP_InitConfig(0);
@@ -74,7 +78,9 @@ void Task_SysInitConfig(void *Parameters)
     vTaskDelay(1000); 
     
     //生成CAN发送队列
-	Queue_CANSend = xQueueCreate(64, sizeof(CanSend_Type));		
+	Queue_CANSend = xQueueCreate(64, sizeof(CanSend_Type));	
+
+
     
     //////////////////////任务建立
     //监视器任务

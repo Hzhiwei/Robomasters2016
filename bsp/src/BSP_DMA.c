@@ -43,7 +43,7 @@ void BSP_DMA_InitConfig(void)
     DMA_InitStructure.DMA_PeripheralBaseAddr=   (uint32_t)(&USART3->DR);
     DMA_InitStructure.DMA_Memory0BaseAddr   =   (uint32_t)(ESP8266TXBuffer);
     DMA_InitStructure.DMA_DIR               =   DMA_DIR_MemoryToPeripheral;
-    DMA_InitStructure.DMA_BufferSize        =   ESP8266TXBufferLenght;
+    DMA_InitStructure.DMA_BufferSize        =   0;
     DMA_InitStructure.DMA_PeripheralInc     =   DMA_PeripheralInc_Disable;
     DMA_InitStructure.DMA_MemoryInc         =   DMA_MemoryInc_Enable;
     DMA_InitStructure.DMA_MemoryDataSize    =   DMA_MemoryDataSize_Byte;
