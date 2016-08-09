@@ -47,6 +47,9 @@ typedef struct {
 	
 		uint8_t press_left;
 		uint8_t press_right;
+        
+        uint8_t jumppress_left;
+        uint8_t jumppress_right;
 	}mouse;
 	
 	struct 
@@ -88,7 +91,8 @@ void DBUS_InitConfig(void);
 void DBUS_DataDecoding(void);
 void DBUS_ButtonCheckJump(portTickType CurrentTick);
 uint8_t DBUS_CheckPush(uint16_t Key);
-uint8_t DBUS_CheckJump(uint16_t Key);
+uint8_t DBUS_CheckJumpKey(uint16_t Key);
+uint8_t DBUS_CheckJumpMouse(uint8_t Key);
 
 
 #endif

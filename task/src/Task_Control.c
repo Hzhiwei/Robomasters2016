@@ -24,7 +24,7 @@ static void Control_KMSubschemaNormal(void);
 static void Control_KMSubschemaSupply(void);
 static void Control_KMSubschemaHalfauto(void);
 static void Control_KMSubschemaSwing(void);
-static void Control_KMSubschemaBigsample(void);
+static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag);
 static void Control_KMSubschemaFullauto(void);
 static void Control_KMSubschemaCircle(void);
 
@@ -147,7 +147,8 @@ void Task_Control(void *Parameters)
 
 //Debug模式下，此处用于debug，普通模式下用于键鼠控制
 #if DEBUGECONTROLRC == 1
-            Control_KMSubschemaHalfauto();
+//            Control_KMSubschemaHalfauto();
+            Control_KMSubschemaBigsample(0);
 #else		
             Control_KMMode();
 #endif
@@ -233,34 +234,99 @@ static void Control_RCMode(void)
   * @retval void
   */
 static void Control_KMMode(void)
-{  
+{
+    static uint8_t FristEnter[7] = {1, 1, 1, 1, 1, 1, 1};
+    
     if(KMSubschema_Normal == KMSubschema)
     {
+        FristEnter[1] = 1;
+        FristEnter[2] = 1;
+        FristEnter[3] = 1;
+        FristEnter[4] = 1;
+        FristEnter[5] = 1;
+        FristEnter[6] = 1;
+        
         Control_KMSubschemaNormal();
+        
+        FristEnter[0] = 0;
     }
     else if(KMSubschema_Supply == KMSubschema)
     {
+        FristEnter[0] = 1;
+        FristEnter[2] = 1;
+        FristEnter[3] = 1;
+        FristEnter[4] = 1;
+        FristEnter[5] = 1;
+        FristEnter[6] = 1;
+        
         Control_KMSubschemaSupply();
+        
+        FristEnter[1] = 0;
     }
-    else if(KMSubschema_Halfauto == KMSubschema)
-    {
-        Control_KMSubschemaHalfauto();
-    }
+//    else if(KMSubschema_Halfauto == KMSubschema)
+//    {
+//        FristEnter[0] = 1;
+//        FristEnter[1] = 0;
+//        FristEnter[3] = 0;
+//        FristEnter[4] = 0;
+//        FristEnter[5] = 0;
+//        FristEnter[6] = 0;
+//        
+//        Control_KMSubschemaHalfauto();
+//        
+//        FristEnter[2] = 0;
+//    }
     else if(KMSubschema_Swing == KMSubschema)
     {
+        FristEnter[0] = 1;
+        FristEnter[1] = 1;
+        FristEnter[2] = 1;
+        FristEnter[4] = 1;
+        FristEnter[5] = 1;
+        FristEnter[6] = 1;
+        
         Control_KMSubschemaSwing();
+        
+        FristEnter[3] = 0;
     }
     else if(KMSubschema_Bigsample == KMSubschema)
     {
-        Control_KMSubschemaBigsample();
+        FristEnter[0] = 1;
+        FristEnter[1] = 1;
+        FristEnter[2] = 1;
+        FristEnter[3] = 1;
+        FristEnter[5] = 1;
+        FristEnter[6] = 1;
+        
+        Control_KMSubschemaBigsample(FristEnter[4]);
+        
+        FristEnter[4] = 0;
     }
     else if(KMSubschema_Fullauto == KMSubschema)
     {
+        FristEnter[0] = 1;
+        FristEnter[1] = 1;
+        FristEnter[2] = 1;
+        FristEnter[3] = 1;
+        FristEnter[4] = 1;
+        FristEnter[6] = 1;
+        
         Control_KMSubschemaFullauto();
+        
+        FristEnter[5] = 0;
     }
     else if(KMSubschema_Circle == KMSubschema)
     {
+        FristEnter[0] = 1;
+        FristEnter[1] = 1;
+        FristEnter[2] = 1;
+        FristEnter[3] = 1;
+        FristEnter[4] = 1;
+        FristEnter[5] = 1;
+        
         Control_KMSubschemaCircle();
+        
+        FristEnter[6] = 0;
     }
 }
 
@@ -296,11 +362,11 @@ static void Control_KMSubschemaNormal(void)
     //云台控制
     if(DBUS_CheckPush(KEY_Q))
     {
-        TargetYaw = CloudParam.Yaw.TargetABSAngle + 1.0F;
+        TargetYaw = CloudParam.Yaw.TargetABSAngle + QESPINSPEED;
     }
     else if(DBUS_CheckPush(KEY_E))
     {
-        TargetYaw = CloudParam.Yaw.TargetABSAngle - 1.0F;
+        TargetYaw = CloudParam.Yaw.TargetABSAngle - QESPINSPEED;
     }
     else
     {
@@ -345,10 +411,10 @@ static void Control_KMSubschemaNormal(void)
 	Steering_Control(0);
     
     
+#if FRICTYPE == 1
     if(DBUS_ReceiveData.switch_right == 3)
     {
-#if FRICTYPE == 1
-        if(DBUS_ReceiveData.mouse.press_left)
+        if(DBUS_CheckJumpMouse(0))
         {
             Poke_CylinderAdjust(1);
         }
@@ -356,14 +422,17 @@ static void Control_KMSubschemaNormal(void)
         {
             Poke_CylinderAdjust(0);
         }
-#else
+    }
+#else  
+    if(DBUS_ReceiveData.switch_right == 3)
+    { 
         if(DBUS_ReceiveData.mouse.press_left)
         {
             Poke_MotorStep();
         }
         Poke_MotorAdjust(1);
-#endif
     }
+#endif
 }
 
 
@@ -437,33 +506,39 @@ static void Control_KMSubschemaSupply(void)
   */
 #define LastParam           7
 #define ForcastCloud        1
-
-
+static void Control_KMSubschemaHalfauto(void)
+{
     AngleF_Struct CurrentAngle;
     AngleF_Struct LastAngle[LastParam * 2 + 1];
     double FeendS = 0;
     float FeedParam = 60;
-static void Control_KMSubschemaHalfauto(void)
-{
+    
 #if ForcastCloud == 1
     
     int8_t index;
     
+    
 #if FRICTYPE == 1
-    if(DBUS_ReceiveData.switch_right == 2)
+    if(DBUS_ReceiveData.switch_right == 3)
     {
-        Poke_CylinderAdjust(1);
+        if(DBUS_CheckJumpMouse(0))
+        {
+            Poke_CylinderAdjust(1);
+        }
+        else
+        {
+            Poke_CylinderAdjust(0);
+        }
     }
-    else
-    {
-        Poke_CylinderAdjust(0);
+#else  
+    if(DBUS_ReceiveData.switch_right == 3)
+    { 
+        if(DBUS_ReceiveData.mouse.press_left)
+        {
+            Poke_MotorStep();
+        }
+        Poke_MotorAdjust(1);
     }
-#else
-    if(DBUS_ReceiveData.switch_right == 2)
-    {
-        Poke_MotorStep();
-    }
-    Poke_MotorAdjust(1);
 #endif
     
     //底盘控制
@@ -568,11 +643,11 @@ static void Control_KMSubschemaSwing(void)
     //云台控制
     if(DBUS_CheckPush(KEY_Q))
     {
-        TargetYaw = CloudParam.Yaw.TargetABSAngle + 1.0F;
+        TargetYaw = CloudParam.Yaw.TargetABSAngle + QESPINSPEED;
     }
     else if(DBUS_CheckPush(KEY_E))
     {
-        TargetYaw = CloudParam.Yaw.TargetABSAngle - 1.0F;
+        TargetYaw = CloudParam.Yaw.TargetABSAngle - QESPINSPEED;
     }
     else
     {
@@ -637,10 +712,11 @@ static void Control_KMSubschemaSwing(void)
         Yspeed = 0;
     }
     
+    
+#if FRICTYPE == 1
     if(DBUS_ReceiveData.switch_right == 3)
     {
-#if FRICTYPE == 1
-        if(DBUS_ReceiveData.mouse.press_left)
+        if(DBUS_CheckJumpMouse(0))
         {
             Poke_CylinderAdjust(1);
         }
@@ -648,14 +724,17 @@ static void Control_KMSubschemaSwing(void)
         {
             Poke_CylinderAdjust(0);
         }
-#else
+    }
+#else  
+    if(DBUS_ReceiveData.switch_right == 3)
+    { 
         if(DBUS_ReceiveData.mouse.press_left)
         {
             Poke_MotorStep();
         }
         Poke_MotorAdjust(1);
-#endif
     }
+#endif
     
     TargetRealAngle = (CloudParam.Yaw.RealABSAngle - SuperGyoParam.Angle) * 0.0174533F;
     Chassis_SpeedSet(SNEAKSPEED * Xspeed * cos(TargetRealAngle) + SNEAKSPEED * Yspeed * sin(TargetRealAngle), 
@@ -670,9 +749,48 @@ static void Control_KMSubschemaSwing(void)
   * @param  void
   * @retval void
   */
-static void Control_KMSubschemaBigsample(void)
+static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag)
 {
+    AngleF_Struct CurrentAngle;
+    static uint8_t TimeStamp = 255;
     
+    //防疯转
+    if(FristEnterFlag)
+    {
+        EnemyDataBuffer[EnemyDataBufferPoint].X = 0,
+        EnemyDataBuffer[EnemyDataBufferPoint].Y = 0;
+        EnemyDataBuffer[EnemyDataBufferPoint].Z = 1;
+    }
+    
+    //角度转换
+    CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 1);
+    
+    //云台角度设定
+    Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
+    Cloud_PitchAngleSet(CurrentAngle.V);
+    Cloud_Adjust(1);
+    
+    //新目标出现
+    if(DBUS_ReceiveData.switch_right == 3)
+    {
+#if FRICTYPE == 1
+        if(TimeStamp != EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp)
+        {
+            Poke_CylinderAdjust(1);
+        }
+        else
+        {
+            Poke_CylinderAdjust(0);
+        }
+#else
+        if(TimeStamp != EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp)
+        {
+            Poke_MotorStep();
+        }
+        Poke_MotorAdjust(1);
+#endif
+        TimeStamp = EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp;
+    }
 }
 
 

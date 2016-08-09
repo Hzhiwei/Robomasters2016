@@ -170,17 +170,17 @@ void Chassis_SendMotorParam(uint8_t mode)
         {
             FT.F = InfantryJudge.RealCurrent * 1000.0F;     //单位转换为A
         }
-        SendData.SendCanTxMsg.Data[0] = FT.u8[0];
-        SendData.SendCanTxMsg.Data[1] = FT.u8[1];
-        SendData.SendCanTxMsg.Data[2] = FT.u8[2];
-        SendData.SendCanTxMsg.Data[3] = FT.u8[3];
+        SendData.SendCanTxMsg.Data[0] = FT.U[0];
+        SendData.SendCanTxMsg.Data[1] = FT.U[1];
+        SendData.SendCanTxMsg.Data[2] = FT.U[2];
+        SendData.SendCanTxMsg.Data[3] = FT.U[3];
         
         //限制电流
         FT.F = ChassisMaxSumCurrent;
-        SendData.SendCanTxMsg.Data[4] = FT.u8[0];
-        SendData.SendCanTxMsg.Data[5] = FT.u8[1];
-        SendData.SendCanTxMsg.Data[6] = FT.u8[2];
-        SendData.SendCanTxMsg.Data[7] = FT.u8[3];
+        SendData.SendCanTxMsg.Data[4] = FT.U[0];
+        SendData.SendCanTxMsg.Data[5] = FT.U[1];
+        SendData.SendCanTxMsg.Data[6] = FT.U[2];
+        SendData.SendCanTxMsg.Data[7] = FT.U[3];
         
         xQueueSend(Queue_CANSend, &SendData, 10);
         
@@ -199,6 +199,10 @@ void Chassis_SendMotorParam(uint8_t mode)
     }
     else
     {
+        
+#if MOTORTYPE == 1
+        //3510电机不发送东西
+#else
         //目标速度全部置零
         SendData.SendCanTxMsg.StdId =   CHASSISSPEEDSETCANID;
         SendData.SendCanTxMsg.Data[0] = 0;
@@ -211,9 +215,6 @@ void Chassis_SendMotorParam(uint8_t mode)
         SendData.SendCanTxMsg.Data[7] = 0;
         xQueueSend(Queue_CANSend, &SendData, 10);
         
-#if MOTORTYPE == 1
-        //3510电机不发送东西
-#else
         SendData.SendCanTxMsg.StdId =   CHASSISCURRENTSETCANID;
         SendData.SendCanTxMsg.Data[0] = 0;
         SendData.SendCanTxMsg.Data[1] = 0;

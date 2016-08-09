@@ -793,7 +793,7 @@ int mpu_init(void)
 
     if (mpu_set_gyro_fsr(2000))
         return -1;
-    if (mpu_set_accel_fsr(2))
+    if (mpu_set_accel_fsr(4))
         return -1;
     if (mpu_set_lpf(98))
         return -1;

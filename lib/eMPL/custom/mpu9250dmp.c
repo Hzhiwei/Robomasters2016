@@ -131,9 +131,9 @@ uint8_t MPU9250_GetGyro(float *X, float *Y, float *Z)
     }
     else
     {
-        *X = 2000.0F * tmp[0] / 32768;
-        *Y = 2000.0F * tmp[1] / 32768;
-        *Z = 2000.0F * tmp[2] / 32768;
+        *X = 0.0610352F * tmp[0];
+        *Y = 0.0610352F * tmp[1];
+        *Z = 0.0610352F * tmp[2];
         
         return 0;
     }

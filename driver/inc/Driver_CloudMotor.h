@@ -26,8 +26,8 @@
     #define PitchABSUPLimit                 60.0F           //操作绝对角度上极限
     #define PitchABSDOWNLimit               -40.0F          //操作绝对角度下极限
     
-    #define PitchEncoderPassZeroBoundary    0               //Pitch电机编码器分界值（距此值判断过零
-    #define YawEncoderPassZeroBoundary      0               //Pitch电机编码器分界值（距此值判断过零
+    #define PitchEncoderPassZeroBoundary    1               //Pitch电机编码器分界值（距此值判断过零
+    #define YawEncoderPassZeroBoundary      1               //Pitch电机编码器分界值（距此值判断过零
 
 #elif INFANTRY == 2     //阿拉斯加
 
@@ -102,7 +102,7 @@
     #define PitchABSDOWNLimit               -40.0F
     
     #define PitchEncoderPassZeroBoundary    1
-    #define YawEncoderPassZeroBoundary      1
+    #define YawEncoderPassZeroBoundary      1000
 
 #endif
 

@@ -120,10 +120,10 @@ void Poke_MotorCurrent(int16_t Current)
 /**
   * @brief  拨弹电机步进一步
   * @param  void
-  * @retval void
+  * @retval 1 拨弹成功      0 拨弹失败
   * @note   拨弹电机处于非停止状态（working,struck）无效,考虑射频
   */
-void Poke_MotorStep(void)
+uint8_t Poke_MotorStep(void)
 {
     portTickType CurrentTick = xTaskGetTickCount();
     
@@ -132,7 +132,10 @@ void Poke_MotorStep(void)
     {
         PokeMotorParam.TargetLocation = PokeMotorParam.RealLocation - POKELINESPERSTEP;
         PokeMotorParam.LastShotTick = CurrentTick;
+        
+        return 1;
     }
+    return 0;
 }
 
 

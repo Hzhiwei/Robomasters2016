@@ -21,52 +21,53 @@ void ControlPID_InitConfig(void)
 {
 #if INFANTRY == 1       //ÈøÄ¦
     
-    PitchOPID.P = 9;
-    PitchOPID.I = 0.5;
+    PitchOPID.P = 10
+    ;
+    PitchOPID.I = 0;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
     PitchOPID.LastError = 0;
     PitchOPID.LastTick = 0;
-    PitchOPID.IMax = 10;
+    PitchOPID.IMax = 0;
     PitchOPID.PIDMax = 400;
     
     PitchIPID.P = 50;
-    PitchIPID.I = 5;
-    PitchIPID.D = 0;
+    PitchIPID.I = 0;
+    PitchIPID.D = 00;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;
-    PitchIPID.IMax = 300;
+    PitchIPID.IMax = 0;
     PitchIPID.PIDMax = 5000;
     
     YawOPID.P = 16;
-    YawOPID.I = 0.1;
+    YawOPID.I = 0;
     YawOPID.D = 0;
     YawOPID.CurrentError = 0;
     YawOPID.LastError = 0;
     YawOPID.LastTick = 0;
-    YawOPID.IMax = 5;
+    YawOPID.IMax = 0;
     YawOPID.PIDMax = 300;
     
     YawIPID.P = 80;
-    YawIPID.I = 5;
+    YawIPID.I = 0;
     YawIPID.D = 0;
     YawIPID.CurrentError = 0;
     YawIPID.LastError = 0;
     YawIPID.LastTick = 0;
-    YawIPID.IMax = 100;
+    YawIPID.IMax = 0;
     YawIPID.PIDMax = 5000;
     
-    ChassisOPID.P = 2;
+    ChassisOPID.P = 30;
     ChassisOPID.I = 0;
     ChassisOPID.D = 0;
     ChassisOPID.CurrentError = 0;
     ChassisOPID.LastError = 0;
     ChassisOPID.LastTick = 0;
     ChassisOPID.IMax = 0;
-    ChassisOPID.PIDMax = 300;
+    ChassisOPID.PIDMax = 700;
     
-    ChassisIPID.P = 5;
+    ChassisIPID.P = 1;
     ChassisIPID.I = 0;
     ChassisIPID.D = 0;
     ChassisIPID.CurrentError = 0;
@@ -104,9 +105,9 @@ void ControlPID_InitConfig(void)
     PitchOPID.IMax = 0;
     PitchOPID.PIDMax = 400;
     
-    PitchIPID.P = 40;
+    PitchIPID.P = 50;
     PitchIPID.I = 0;
-    PitchIPID.D = 0;
+    PitchIPID.D = 20;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;
@@ -114,21 +115,21 @@ void ControlPID_InitConfig(void)
     PitchIPID.PIDMax = 5000;
     
     YawOPID.P = 16;
-    YawOPID.I = 0.1;
+    YawOPID.I = 0;
     YawOPID.D = 0;
     YawOPID.CurrentError = 0;
     YawOPID.LastError = 0;
     YawOPID.LastTick = 0;
-    YawOPID.IMax = 5;
+    YawOPID.IMax = 0;
     YawOPID.PIDMax = 300;
     
     YawIPID.P = 80;
-    YawIPID.I = 5;
+    YawIPID.I = 0;
     YawIPID.D = 0;
     YawIPID.CurrentError = 0;
     YawIPID.LastError = 0;
     YawIPID.LastTick = 0;
-    YawIPID.IMax = 100;
+    YawIPID.IMax = 0;
     YawIPID.PIDMax = 5000;
     
     ChassisOPID.P = 1.4;
@@ -180,7 +181,7 @@ void ControlPID_InitConfig(void)
     
     PitchIPID.P = 40;
     PitchIPID.I = 0;
-    PitchIPID.D = 0;
+    PitchIPID.D = 20;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;
@@ -328,7 +329,7 @@ void ControlPID_InitConfig(void)
     
     PitchIPID.P = 60;
     PitchIPID.I = 0;
-    PitchIPID.D = 0;
+    PitchIPID.D = 30;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;
@@ -344,7 +345,7 @@ void ControlPID_InitConfig(void)
     YawOPID.IMax = 0;
     YawOPID.PIDMax = 300;
     
-    YawIPID.P = 100;
+    YawIPID.P = 60;
     YawIPID.I = 0;
     YawIPID.D = 0;
     YawIPID.CurrentError = 0;
@@ -583,11 +584,11 @@ int16_t Control_PitchPID(void)
 	
 	if(PitchIPID.LastTick != CurrentTick)
 	{
-        PitchIPID.Dout = PitchIPID.D * (PitchIPID.CurrentError - PitchIPID.LastError) * 5 / (CurrentTick - PitchIPID.LastTick);
+        PitchIPID.Dout = PitchIPID.D * (PitchIPID.LastError - PitchIPID.CurrentError) * 5 / (CurrentTick - PitchIPID.LastTick);
     }
     else
     {
-        PitchIPID.Dout = PitchIPID.D * (PitchIPID.CurrentError - PitchIPID.LastError) / (CurrentTick - PitchIPID.LastTick);
+        PitchIPID.Dout = PitchIPID.D * (PitchIPID.LastError - PitchIPID.CurrentError);
     }
 	
 	PitchIPID.PIDout = (PitchIPID.Pout + PitchIPID.Iout + PitchIPID.Dout);

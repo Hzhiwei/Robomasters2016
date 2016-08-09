@@ -65,10 +65,13 @@ uint8_t MPU9250_Update(void)
     
     float Pitch, Roll, Yaw;
     float OX, OY, OZ;
+    float GX, GY, GZ;
     
     result = MPU9250DMP_GetEuler(&Pitch, &Roll, &Yaw);
     if(result)return 1;
     result = MPU9250_GetGyro(&OX, &OY, &OZ);
+    if(result)return 1;
+    result = MPU9250_GetAccel(&GX, &GY, &GZ);
     if(result)return 1;
     
     Position.Euler.Pitch = Pitch;
@@ -78,6 +81,10 @@ uint8_t MPU9250_Update(void)
     Position.Real.OX = -OX - Omega_Offset.X;
     Position.Real.OY = -OY - Omega_Offset.Y;
     Position.Real.OZ = -OZ - Omega_Offset.Z;
+    
+    Position.Real.GX = GX;
+    Position.Real.GY = GY;
+    Position.Real.GZ = GZ;
     
     return 0;
 }
