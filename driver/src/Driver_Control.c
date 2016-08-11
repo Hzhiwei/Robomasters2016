@@ -889,6 +889,34 @@ int16_t Control_PokeIPID(void)
     return PokeIPID.PIDout;
 }
 
+
+/**
+  * @brief  拨弹电机吧速度环控制
+  * @param  目标速度
+  * @retval void
+  */
+int16_t Poke_MotorSpeedPID(int16_t Speed)
+{
+    PokeIPID.CurrentError = Speed - PokeMotorParam.RealSpeed;
+    
+    PokeIPID.Pout = PokeIPID.P * PokeIPID.CurrentError;
+    
+    PokeIPID.Iout += PokeIPID.CurrentError * PokeIPID.I;
+    PokeIPID.Iout = PokeIPID.Iout > PokeIPID.IMax ? PokeIPID.IMax : PokeIPID.Iout;
+    PokeIPID.Iout = PokeIPID.Iout < -PokeIPID.IMax ? -PokeIPID.IMax : PokeIPID.Iout;
+    
+    PokeIPID.Dout = PokeIPID.D * (PokeIPID.CurrentError - PokeIPID.LastError);
+    
+    PokeIPID.PIDout = -(PokeIPID.Pout + PokeIPID.Iout + PokeIPID.Dout);
+    
+    PokeIPID.PIDout = PokeIPID.PIDout > PokeIPID.PIDMax ? PokeIPID.PIDMax : PokeIPID.PIDout;
+    PokeIPID.PIDout = PokeIPID.PIDout < -PokeIPID.PIDMax ? -PokeIPID.PIDMax : PokeIPID.PIDout;
+    
+    PokeIPID.LastError = PokeIPID.CurrentError;
+    
+    return PokeIPID.PIDout;
+}
+
 #endif
 
 

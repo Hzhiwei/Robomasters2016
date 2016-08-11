@@ -20,7 +20,7 @@
 #include <math.h>
 
 #if INFANTRY == 7
-static void Control_BaseFullAuto(void);
+static void Control_BaseFullAuto(portTickType Tick);
 #else
 static void Control_KMMode(void);
 static void Control_KMSubschemaNormal(void);
@@ -168,7 +168,7 @@ void Task_Control(void *Parameters)
 #else	
             
 #if INFANTRY == 7
-            Control_BaseFullAuto();
+            Control_BaseFullAuto(CurrentControlTick);
 #else
             Control_KMMode();
 #endif
@@ -248,7 +248,6 @@ static void Control_RCMode(void)
     }
     Poke_MotorAdjust(1);
 #endif
-    
 }
 
 
@@ -284,55 +283,34 @@ static void Control_ProtectMode(void)
   * @retval void
   */
 #define LastParam           7
-#define ForcastCloud        0
 
-    AngleF_Struct CurrentAngle;
-    float FeedParam = 40;
-    double FeendS = 0;
+    static AngleF_Struct CurrentAngle;
+    static float FeedParam = 40;
+    static double FeendS = 0;
     static AngleF_Struct LastAngle[LastParam * 2 + 1];
-static void Control_BaseFullAuto(void)
+
+static void Control_BaseFullAuto(portTickType Tick)
 {
-    
-    
     int8_t index;
     
-#if FRICTYPE == 1
-    if(DBUS_ReceiveData.switch_right == 3)
-    {
-        if(DBUS_CheckJumpMouse(0))
-        {
-            Poke_CylinderAdjust(1);
-        }
-        else
-        {
-            Poke_CylinderAdjust(0);
-        }
-    }
-#else  
-    if(DBUS_ReceiveData.switch_right == 3)
-    { 
-        if(DBUS_ReceiveData.mouse.press_left)
-        {
-            Poke_MotorStep();
-        }
-        Poke_MotorAdjust(1);
-    }
-#endif
-    
     //预判结果
-    ForcastOnce(300, 100, &CurrentAngle, 0);
+    ForcastOnce(300, 80, &CurrentAngle, 0);
     
     //云台角度设定
     Cloud_YawAngleSet(CurrentAngle.H, AngleMode_OPP);
-    
-    
-    
-        //目标点转换为目标角度
-//    CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 0);
-//    
-//    Cloud_YawAngleSet(CurrentAngle.H, AngleMode_OPP);
-    
     Cloud_PitchAngleSet(CurrentAngle.V);
+    
+    //发射判断
+    if((EnemyDataBuffer[EnemyDataBufferPoint].Z < AUTOSHOTDISTANCE) &&              //指定距离内
+        (CurrentAngle.H > AUTOSHOTANGLE) && (CurrentAngle.H < -AUTOSHOTANGLE) &&    //指定角度内
+        (Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 30) % ENEMYDATABUFFERLENGHT].Tick < 2000))      //指定时间内
+    {
+        Poke_MotorSpeedAdjust(1);
+    }
+    else
+    {
+        Poke_MotorSpeedAdjust(0);
+    }
     
     //速度补偿计算
     FeendS = (CurrentAngle.H - LastAngle[LastParam * 2].H);

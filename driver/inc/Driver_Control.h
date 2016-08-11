@@ -58,6 +58,7 @@ void ControlPID_InitConfig(void);
 int16_t Control_YawPID(void);
 int16_t Control_PitchPID(void);
 int16_t Control_PokeIPID(void);
+int16_t Poke_MotorSpeedPID(int16_t Speed);
 void Control_ChassisPID(void);
 int16_t Control_FeedForwardYawPID(float FeedSpeed);
 

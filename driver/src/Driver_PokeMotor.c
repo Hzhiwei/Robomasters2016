@@ -181,6 +181,7 @@ void Poke_MotorAdjust(uint8_t mode)
             LastStruckDealTick = CurrentTick;
         }
     
+        //实际位置计算
         PokeMotorParam.RealLocation += PokeMotorParam.RealSpeed;
         
         PokeCurrent = Control_PokeIPID();
@@ -192,6 +193,56 @@ void Poke_MotorAdjust(uint8_t mode)
         Poke_MotorCurrent(0);
     }
 }
+
+
+/**
+  * @brief  拨弹电机速度控制函数
+  * @param  1 PID控制     0失控
+  * @retval void
+  * @note   此函数要求周期运行
+  */
+void Poke_MotorSpeedAdjust(uint8_t mode)
+{
+    int16_t PokeCurrent;
+    static portTickType StuckDealTick = 0;
+    
+    portTickType CurrentTick = xTaskGetTickCount();
+    
+    
+    if(mode)
+    {
+        PokeMotorParam.RealSpeed = POKEENCODERCenter - TIM3->CNT;
+        TIM3->CNT = POKEENCODERCenter;
+        
+        //误差小于30线
+        if(((PokeOPID.CurrentError < 30) && (PokeOPID.CurrentError > -30)))
+        {
+            PokeMotorParam.Status = PokeMotorParam_Working;
+        }
+            
+        if((PokeIPID.Iout > PokeIPID.IMax * 0.85F) || (PokeIPID.Iout < -PokeIPID.IMax * 0.85F))
+        {
+            PokeMotorParam.Status = PokeMotorParam_Stuck;
+            StuckDealTick = CurrentTick + 300;
+        }
+        
+        if(StuckDealTick > CurrentTick)
+        {
+            PokeCurrent = Poke_MotorSpeedPID(20);
+        }
+        else
+        {
+            PokeCurrent = Poke_MotorSpeedPID(-20);
+        }
+        
+        Poke_MotorCurrent(PokeCurrent);
+    }
+    else
+    {
+        Poke_MotorCurrent(0);
+    }
+}
+
 #endif
 
 

@@ -554,6 +554,8 @@ void USART1_IRQHandler(void)
                 EnemyDataBuffer[EnemyDataBufferPoint].Time = Buffer.I;
 
                 EnemyDataBuffer[EnemyDataBufferPoint].ID = PCDataBuffer[(PCDataBufferPoint + 3) % PCDATALENGTH];
+                
+                EnemyDataBuffer[EnemyDataBufferPoint].Tick = xTaskGetTickCountFromISR();
             }
         }
     }

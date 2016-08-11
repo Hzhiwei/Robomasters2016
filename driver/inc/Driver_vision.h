@@ -9,7 +9,7 @@
 
 
 #define PCDATALENGTH            26  //帧长
-#define ENEMYDATABUFFERLENGHT   30 //敌人数据帧
+#define ENEMYDATABUFFERLENGHT   60 //敌人数据帧
 #define FITDATANUMMIN           8   //最小拟合数据数据量
 
 
@@ -46,6 +46,7 @@ typedef struct
     float TimeStamp;
     int Time;
     char ID;
+    portTickType Tick;
 }Enemy_Struct;
 
 //点数据结构

@@ -123,6 +123,8 @@
     #define POKESTEPMINTIMECRACK    265         //步进最小时间间隔（ms）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
     #define MOUSESPINSPEED          50.0F       //鼠标自旋速度   
+    #define AUTOSHOTDISTANCE        2.8F        //自动射击距离限幅
+    #define AUTOSHOTANGLE           45          //自动射击角度限幅
 
 #endif
 /***************************************   ↑ 操作手参数  ↑ **********************************************/
@@ -196,7 +198,7 @@
     #define PITCHMOTORENCODERPLUSEDIR       1           //pitch轴云台电机编码器增加时转动方向       1 抬头         0 低头
     #define YAWMOTORENCODERPLUSEDIR         1           //yaw轴云台电机编码器增加时转动方向         1 逆时针       0 顺时针
     #define CANPORT                         1           //选择can端口
-    #define MOTORTYPE                       1           //电机种类                                 1 3510        0 35
+    #define MOTORTYPE                       0           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
 
 #endif

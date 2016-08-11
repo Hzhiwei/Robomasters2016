@@ -47,6 +47,9 @@ void StatusMachine_InitConfig(void)
 
 void StatusMachine_Update(void)
 {
+    static uint8_t RateCounter = 0;
+    static uint8_t BigSampleCounter = 0;
+    static uint8_t AttackCounter = 0;
     portTickType CurrentTick = xTaskGetTickCount();
     
     //帧率过低进保护
@@ -146,6 +149,57 @@ void StatusMachine_Update(void)
             else if(DBUS_CheckPush(KEY_G))
             {
                 KMSubschema = KMSubschema_Circle;
+            }
+            
+            //视觉指令
+            //降低发送频率减小串口负担
+            if(RateCounter == 4)
+            {
+                //敌方目标红色
+                if((DBUS_ReceiveData.ch1 > 600) && 
+                    (DBUS_ReceiveData.ch2 > 600) &&
+                    (DBUS_ReceiveData.ch3 < -600) &&
+                    (DBUS_ReceiveData.ch4 > 600))
+                {
+                    SendEnemyColor('R');
+                }
+                //敌方目标蓝色
+                else if((DBUS_ReceiveData.ch1 < -600) && 
+                    (DBUS_ReceiveData.ch2 > 600) &&
+                    (DBUS_ReceiveData.ch3 > 600) &&
+                    (DBUS_ReceiveData.ch4 > 600))
+                {
+                    SendEnemyColor('B');
+                }
+                //大符模式
+                else if(DBUS_ReceiveData.keyBoard.key_code & KEY_X)
+                {
+                    AttackCounter = 0;
+                    
+                    if(BigSampleCounter < VisiolModeChangeDataSendNum)
+                    {
+                        VisionType = VisionType_BigSample;
+                        SendPCOrder(PCOrder_BigSample);
+                        BigSampleCounter++;
+                    }
+                }
+                //自动射击模式（主机，单主控并不是）
+                else
+                {
+                    BigSampleCounter = 0;
+                    
+                    if(AttackCounter < VisiolModeChangeDataSendNum)
+                    {
+                        VisionType = VisionType_Attack;
+                        SendPCOrder(PCOrder_Attack);
+                        AttackCounter++;
+                    }
+                }
+                RateCounter = 0;
+            }
+            else
+            {
+                RateCounter++;
             }
         }
         //用于半自动回归
