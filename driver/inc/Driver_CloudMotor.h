@@ -104,6 +104,21 @@
     #define PitchEncoderPassZeroBoundary    1
     #define YawEncoderPassZeroBoundary      1000
 
+#elif INFANTRY == 7     //ป๙ตุ
+
+    #define PitchEncoderUPLimit             7850
+    #define PitchEncoderDOWNLimit           7030
+    #define PitchEncoderCenter              7360
+    #define YawEncoderLEFTLimit             4340
+    #define YawEncoderRIGHTLimit            2370
+    #define YawEncoderCenter                3335
+                
+    #define PitchABSUPLimit                 60.0F 
+    #define PitchABSDOWNLimit               -40.0F
+    
+    #define PitchEncoderPassZeroBoundary    2000
+    #define YawEncoderPassZeroBoundary      1000
+
 #endif
 
 

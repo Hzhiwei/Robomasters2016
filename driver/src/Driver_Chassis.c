@@ -38,6 +38,12 @@ void Chassis_InitConfig(void)
 }
 
 
+#if INFANTRY == 7
+
+
+#else
+
+
 /**
   * @brief  XY方向速度设置
   * @param  X速度
@@ -318,7 +324,7 @@ static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed)
 }
 
 
-
+#endif
 
 
 

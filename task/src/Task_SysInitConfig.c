@@ -67,7 +67,7 @@ void Task_SysInitConfig(void *Parameters)
     Chassis_InitConfig();
     
 #if USEESP8266 == 1
-//    ESP8266_InitConfig();
+    ESP8266_InitConfig();
 #endif
     
     //延时保证陀螺仪正常初始化
