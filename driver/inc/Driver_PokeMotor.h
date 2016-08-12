@@ -59,7 +59,7 @@ void Poke_CylinderControl(uint8_t Target);
 void Poke_MotorCurrent(int16_t Current);
 uint8_t Poke_MotorStep(void);
 void Poke_MotorAdjust(uint8_t mode);
-void Poke_MotorSpeedAdjust(uint8_t mode);
+void Poke_MotorSpeedAdjust(uint8_t mode, uint8_t speed);
 
 #endif
 

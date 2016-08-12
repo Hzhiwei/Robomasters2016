@@ -292,6 +292,8 @@ static void Control_ProtectMode(void)
 static void Control_BaseFullAuto(portTickType Tick)
 {
     int8_t index;
+    uint8_t ShootSpeed;
+    float distance = sqrt(EnemyDataBuffer[EnemyDataBufferPoint].Z * EnemyDataBuffer[EnemyDataBufferPoint].Z + EnemyDataBuffer[EnemyDataBufferPoint].Y * EnemyDataBuffer[EnemyDataBufferPoint].Y);
     
     //预判结果
     ForcastOnce(300, 80, &CurrentAngle, 0);
@@ -300,16 +302,38 @@ static void Control_BaseFullAuto(portTickType Tick)
     Cloud_YawAngleSet(CurrentAngle.H, AngleMode_OPP);
     Cloud_PitchAngleSet(CurrentAngle.V);
     
-    //发射判断
-    if((EnemyDataBuffer[EnemyDataBufferPoint].Z < AUTOSHOTDISTANCE) &&              //指定距离内
-        (CurrentAngle.H > AUTOSHOTANGLE) && (CurrentAngle.H < -AUTOSHOTANGLE) &&    //指定角度内
-        (Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 30) % ENEMYDATABUFFERLENGHT].Tick < 2000))      //指定时间内
+    //发射频率控制
+    if(distance < 0.4)
     {
-        Poke_MotorSpeedAdjust(1);
+        ShootSpeed = 30;
+    }
+    else if(distance < 3.2)
+    {
+        ShootSpeed = -distance * 5.36 + 32.152;
     }
     else
     {
-        Poke_MotorSpeedAdjust(0);
+        ShootSpeed =10;
+    }
+        
+    
+    //发射判断
+    if(DBUS_ReceiveData.switch_right == 2)
+    {
+        if(/*(EnemyDataBuffer[EnemyDataBufferPoint].Z < AUTOSHOTDISTANCE) && */             //指定距离内
+            (CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE) &&    //指定角度内
+            (Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 30) % ENEMYDATABUFFERLENGHT].Tick < 2000))      //指定时间内
+        {
+            Poke_MotorSpeedAdjust(1, ShootSpeed);
+        }
+        else
+        {
+            Poke_MotorSpeedAdjust(0, ShootSpeed);
+        }
+    }
+    else
+    {
+        Poke_MotorSpeedAdjust(0, ShootSpeed);
     }
     
     //速度补偿计算

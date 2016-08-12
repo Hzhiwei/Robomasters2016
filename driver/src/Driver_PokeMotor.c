@@ -196,15 +196,16 @@ void Poke_MotorAdjust(uint8_t mode)
 
 
 /**
-  * @brief  拨弹电机速度控制函数
+  * @brief  拨弹电机速度控制函数（基地专用）
   * @param  1 PID控制     0失控
   * @retval void
   * @note   此函数要求周期运行
   */
-void Poke_MotorSpeedAdjust(uint8_t mode)
+void Poke_MotorSpeedAdjust(uint8_t mode, uint8_t speed)
 {
     int16_t PokeCurrent;
     static portTickType StuckDealTick = 0;
+    static int8_t LastDir = 1;
     
     portTickType CurrentTick = xTaskGetTickCount();
     
@@ -220,20 +221,27 @@ void Poke_MotorSpeedAdjust(uint8_t mode)
             PokeMotorParam.Status = PokeMotorParam_Working;
         }
             
-        if((PokeIPID.Iout > PokeIPID.IMax * 0.85F) || (PokeIPID.Iout < -PokeIPID.IMax * 0.85F))
+        //卡弹
+        if(StuckDealTick < CurrentTick)
         {
-            PokeMotorParam.Status = PokeMotorParam_Stuck;
-            StuckDealTick = CurrentTick + 300;
+            if((PokeIPID.Iout > PokeIPID.IMax * 0.85F) || (PokeIPID.Iout < -PokeIPID.IMax * 0.85F))
+            {
+                PokeMotorParam.Status = PokeMotorParam_Stuck;
+                StuckDealTick = CurrentTick + 450;
+                LastDir *= -1;
+            }
         }
         
-        if(StuckDealTick > CurrentTick)
-        {
-            PokeCurrent = Poke_MotorSpeedPID(20);
-        }
-        else
-        {
-            PokeCurrent = Poke_MotorSpeedPID(-20);
-        }
+        PokeCurrent = Poke_MotorSpeedPID(LastDir * speed);
+        
+//        if(StuckDealTick > CurrentTick)
+//        {
+//            PokeCurrent = Poke_MotorSpeedPID(LastDir * 20);
+//        }
+//        else
+//        {
+//            PokeCurrent = Poke_MotorSpeedPID(LastDir * 20);
+//        }
         
         Poke_MotorCurrent(PokeCurrent);
     }

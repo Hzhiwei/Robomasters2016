@@ -123,8 +123,8 @@
     #define POKESTEPMINTIMECRACK    265         //步进最小时间间隔（ms）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
     #define MOUSESPINSPEED          50.0F       //鼠标自旋速度   
-    #define AUTOSHOTDISTANCE        2.8F        //自动射击距离限幅
-    #define AUTOSHOTANGLE           45          //自动射击角度限幅
+    #define AUTOSHOTDISTANCE        3.2F        //自动射击距离限幅
+    #define AUTOSHOTANGLE           25          //自动射击角度限幅
 
 #endif
 /***************************************   ↑ 操作手参数  ↑ **********************************************/

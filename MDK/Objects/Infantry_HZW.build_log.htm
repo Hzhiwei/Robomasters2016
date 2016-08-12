@@ -27,17 +27,26 @@ Project File Date:  08/05/2016
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 (build 20)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Infantry'
-compiling Driver_PokeMotor.c...
+compiling Task_Control.c...
+..\task\src\Task_Control.c(306): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(distance < 0.4)
+..\task\src\Task_Control.c(310): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      else if(distance < 3.2)
+..\task\src\Task_Control.c(312): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          ShootSpeed = -distance * 5.36 + 32.152;
+..\task\src\Task_Control.c(38): warning:  #177-D: function "Control_KMSubschemaHalfauto" was declared but never referenced
+  static void Control_KMSubschemaHalfauto(void);
+..\task\src\Task_Control.c: 4 warnings, 0 errors
 linking...
-Program Size: Code=46594 RO-data=4982 RW-data=592 ZI-data=31312  
-".\Objects\Infantry_HZW.axf" - 0 Error(s), 0 Warning(s).
+Program Size: Code=47198 RO-data=4986 RW-data=600 ZI-data=32152  
+".\Objects\Infantry_HZW.axf" - 0 Error(s), 4 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   F:\robotmasters\code\my\Infantry_HZW For Finals\MDK\RTE
   D:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
