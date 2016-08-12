@@ -36,6 +36,8 @@ static void Control_RCMode(void);
 static void Control_ProtectMode(void);
 
 static void Control_KMSubschemaHalfauto(void);
+static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag);
+
 
 
 //状态切换标志位
@@ -164,7 +166,8 @@ void Task_Control(void *Parameters)
 
 //Debug模式下，此处用于debug，普通模式下用于键鼠控制
 #if DEBUGECONTROLRC == 1
-            Control_KMSubschemaHalfauto();
+//            Control_KMSubschemaHalfauto();
+            Control_KMSubschemaBigsample(0);
 #else	
             
 #if INFANTRY == 7
@@ -947,141 +950,65 @@ static void Control_KMSubschemaCircle(void)
 #endif
 
 
-
-
-
-
-
-
-///**
-//  * @brief  键鼠模式子模式——Halfauto
-//  * @param  void
-//  * @retval void
-//  */
-//#define LastParam           7
-//#define ForcastCloud        0
-//static void Control_KMSubschemaHalfauto(void)
-//{
-//    AngleF_Struct CurrentAngle;
-//    AngleF_Struct LastAngle[LastParam * 2 + 1];
-//    double FeendS = 0;
-//    float FeedParam = 60;
-//    
-//#if ForcastCloud == 1
-//    
-//    int8_t index;
-//    
-//    
-//#if FRICTYPE == 1
-//    if(DBUS_ReceiveData.switch_right == 3)
-//    {
-//        if(DBUS_CheckJumpMouse(0))
-//        {
-//            Poke_CylinderAdjust(1);
-//        }
-//        else
-//        {
-//            Poke_CylinderAdjust(0);
-//        }
-//    }
-//#else  
-//    if(DBUS_ReceiveData.switch_right == 3)
-//    { 
-//        if(DBUS_ReceiveData.mouse.press_left)
-//        {
-//            Poke_MotorStep();
-//        }
-//        Poke_MotorAdjust(1);
-//    }
-//#endif
-//    
-//    //底盘控制
-////    Chassis_Adjust(0);
-//    
-//    //预判结果
-//    ForcastOnce(300, 100, &CurrentAngle, 0);
-//    
-//    //云台角度设定
-//    Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
-//    Cloud_PitchAngleSet(CurrentAngle.V);
-//    
-//    //速度补偿计算
-//    FeendS = (CurrentAngle.H - LastAngle[LastParam * 2].H);
-//    
-//    //云台调节
-//    Cloud_AutoAdjust(FeendS * FeedParam, 1);
-//    
-//    //历史值保存
-//    for (index = LastParam * 2; index > 0; index--)
-//    {
-//        LastAngle[index] = LastAngle[index - 1];
-//    }
-//    LastAngle[0] = CurrentAngle;
-//    
-//#else
-//    
-//    int8_t index;
-//    float ForcastParam1, ForcastParam2;
-//    
-//    if(DBUS_ReceiveData.switch_right == 3)
-//    {
-//#if FRICTYPE == 1
-//        if(DBUS_ReceiveData.mouse.press_left)
-//        {
-//            Poke_CylinderAdjust(1);
-//        }
-//        else
-//        {
-//            Poke_CylinderAdjust(0);
-//        }
-//#else
-//        if(DBUS_ReceiveData.mouse.press_left)
-//        {
-//            Poke_MotorStep();
-//        }
-//        Poke_MotorAdjust(1);
-//#endif
-//    }
-//    
-//    //底盘控制
-////    Chassis_Adjust(0);
-//    
-//    //角度转换
-//    CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 0);
-//    
-//    //云台角度设定
-//    Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
-//    Cloud_PitchAngleSet(CurrentAngle.V);
-//    
-//    //速度补偿计算
-//    ForcastParam1 = CurrentAngle.H;
-//    for(index = 0; index < LastParam; index++)
-//    {
-//        ForcastParam1 += LastAngle[index].H;
-//    }
-//    ForcastParam2 = 0;
-//    for(index = LastParam; index < LastParam * 2 + 1; index++)
-//    {
-//        ForcastParam2 += LastAngle[index].H;
-//    }
-//    FeendS = (ForcastParam1 - ForcastParam2) / LastParam / LastParam;
-//    
-////    FeendS = CurrentAngle.H - LastAngle[LastParam * 2].H;
-//    
-//    //云台调节
-//    Cloud_AutoAdjust(FeendS * FeedParam, 1);
-//    
-//    //历史值保存
-//    for (index = LastParam * 2 + 1 - 1; index > 0; index--)
-//    {
-//        LastAngle[index] = LastAngle[index - 1];
-//    }
-//    LastAngle[0] = CurrentAngle;
-//#endif
-//}
-
-
-
+  
+/**
+  * @brief  键鼠模式子模式——Bigsample
+  * @param  void
+  * @retval void
+  */
+static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag)
+{
+    AngleF_Struct CurrentAngle;
+    static uint16_t LastTimeStamp = 254;
+    static uint16_t LLastTimeStamp = 255;
+    static uint16_t LLLastTimeStamp = 256;
+    static uint16_t LLLLastTimeStamp = 257;
+    
+    //防疯转
+    if(FristEnterFlag)
+    {
+        EnemyDataBuffer[EnemyDataBufferPoint].X = 0,
+        EnemyDataBuffer[EnemyDataBufferPoint].Y = 0;
+        EnemyDataBuffer[EnemyDataBufferPoint].Z = 1;
+    }
+    
+    //角度转换
+    CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 1);
+    
+    //云台角度设定
+    Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
+    Cloud_PitchAngleSet(CurrentAngle.V);
+    Cloud_Adjust(1);
+    
+    //新目标出现
+    if(DBUS_ReceiveData.switch_right == 3)
+    {
+#if FRICTYPE == 1
+        if(TimeStamp != EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp)
+        {
+            Poke_CylinderAdjust(1);
+        }
+        else
+        {
+            Poke_CylinderAdjust(0);
+        }
+#else
+        if((LLLLastTimeStamp != LLLastTimeStamp) && 
+            (LLLastTimeStamp == LLastTimeStamp) && 
+            (LLastTimeStamp == LastTimeStamp) && 
+            (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
+        {
+            Poke_MotorStep();
+        }
+        Poke_MotorAdjust(1);
+#endif
+        LLLLastTimeStamp = LLLastTimeStamp;
+        LLLastTimeStamp = LLastTimeStamp;
+        LLastTimeStamp = LastTimeStamp;
+        LastTimeStamp = EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp;
+        
+    }
+}
 
 
 

@@ -4,7 +4,7 @@
 #define __CONFIG_H
 
 
-#define DEBUGECONTROLRC             0           //debug模式遥控控制
+#define DEBUGECONTROLRC             1           //debug模式遥控控制
 #define USEESP8266                  1           //使用ESP8266返回裁判系统数据
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/

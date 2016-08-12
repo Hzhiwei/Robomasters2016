@@ -485,14 +485,13 @@ void ControlPID_InitConfig(void)
 #elif INFANTRY == 7     //ป๙ตุ
 
     
-    PitchOPID.P = 10
-    ;
-    PitchOPID.I = 0;
+    PitchOPID.P = 10;
+    PitchOPID.I = 0.01;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
     PitchOPID.LastError = 0;
     PitchOPID.LastTick = 0;
-    PitchOPID.IMax = 0;
+    PitchOPID.IMax = 5;
     PitchOPID.PIDMax = 400;
     
     PitchIPID.P = 50;

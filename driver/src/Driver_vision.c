@@ -218,6 +218,16 @@ uint8_t ForcastCore(uint16_t SampleTime, uint16_t ForcastTime, Point_Struct *For
     Lz = E * Fz - Hz * C;
     Mz = A * E - C * C;
     Nz = B * E - C * D;
+    
+    //数据非法
+    if((!(Mx * Kx - Jx * Nx)) ||
+        (!Kx) ||
+        (!C) ||
+        (!(Mz * Kz - Jz * Nz)) ||
+        (!Kz))
+    {
+        return 1;
+    }
 
     Pax = (Ix * Nx - Lx * Kx) / (Mx * Kx - Jx * Nx);
     Pbx = -(Ix + Pax * Jx)  / Kx;

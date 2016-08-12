@@ -328,8 +328,15 @@ static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed)
 
 
 
-
-
+/**
+  * @brief  向底盘发送停止数据
+  * @param  void
+  * @retval void
+  */
+void Chassis_BaseStop(void)
+{
+    
+}
 
 
 
