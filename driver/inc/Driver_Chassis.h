@@ -12,6 +12,8 @@
 #define CURRENTCONTROLCANID             0x35        //给3510发送电流的ID号
 #endif
 
+#define BASECHASSISCONTROLCANID         0x303
+
 #define LFCHASSISCONTROLCANID           0x75
 #define MaxWheelSpeed                   900
 #define ChassisLimitCurrent             2750            //底盘电流限制极限
@@ -99,6 +101,7 @@ static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed);
 void Chassis_MotorDebug(void);
 #endif
 
+void Chassis_BaseControl(uint8_t mode, float Target);
 
 
 #endif

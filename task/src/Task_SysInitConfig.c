@@ -33,6 +33,8 @@
 #include "Task_CANSend.h"
 #include "Task_Control.h"
 
+#include "bsp_oled.h"
+#include "drv_gui.h"
 
 #include "Driver_ESP8266.h"
 /**
@@ -66,8 +68,10 @@ void Task_SysInitConfig(void *Parameters)
     FricMotor_InitConfig();
     Chassis_InitConfig();
     
-#if USEESP8266 == 1
+#if USEESP8266orOLED == 1
     ESP8266_InitConfig();
+#elif USEESP8266orOLED == 0
+    OLED_Init();
 #endif
     
     //延时保证陀螺仪正常初始化

@@ -105,6 +105,13 @@ AngleF_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t Pi
     Y0 = Y;
     Z0 = Z;
     
+    if((X0 == 0) && (Y0 == 0) && (Z0 == 0))
+    {
+        ReturnData.H = 0;
+        ReturnData.V = 0;
+        return ReturnData;
+    }
+    
     ReturnData.H =  - atan(X / Z0) * 57.2958F;
     
     distance = sqrt(X0 * X0 + Z0 * Z0);

@@ -21,8 +21,7 @@ void ControlPID_InitConfig(void)
 {
 #if INFANTRY == 1       //ÈøÄ¦
     
-    PitchOPID.P = 10
-    ;
+    PitchOPID.P = 10;
     PitchOPID.I = 0;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
@@ -31,16 +30,16 @@ void ControlPID_InitConfig(void)
     PitchOPID.IMax = 0;
     PitchOPID.PIDMax = 400;
     
-    PitchIPID.P = 50;
+    PitchIPID.P = 80;
     PitchIPID.I = 0;
-    PitchIPID.D = 00;
+    PitchIPID.D = 20;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;
     PitchIPID.IMax = 0;
     PitchIPID.PIDMax = 5000;
     
-    YawOPID.P = 16;
+    YawOPID.P = 9;
     YawOPID.I = 0;
     YawOPID.D = 0;
     YawOPID.CurrentError = 0;
@@ -51,7 +50,7 @@ void ControlPID_InitConfig(void)
     
     YawIPID.P = 80;
     YawIPID.I = 0;
-    YawIPID.D = 0;
+    YawIPID.D = 20;
     YawIPID.CurrentError = 0;
     YawIPID.LastError = 0;
     YawIPID.LastTick = 0;

@@ -80,4 +80,7 @@
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_Monitor.h
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_CANSend.h
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_Control.h
+.\objects\task_sysinitconfig.o: ..\oled\bsp_oled.h
+.\objects\task_sysinitconfig.o: ..\oled\drv_gui.h
+.\objects\task_sysinitconfig.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_ESP8266.h

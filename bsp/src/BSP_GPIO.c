@@ -60,14 +60,14 @@ void BSP_GPIO_InitConfig(void)
     
     
     //USART3
-    GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_OType  =   GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Pin    =   GPIO_Pin_10 | GPIO_Pin_11;
     GPIO_InitStructure.GPIO_PuPd   =   GPIO_PuPd_UP;
     GPIO_InitStructure.GPIO_Speed  =   GPIO_Speed_100MHz;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
-    GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_USART3);
-    GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_USART3);
+//    GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_USART3);
+//    GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_USART3);
     
     
     //UART4(Judge)

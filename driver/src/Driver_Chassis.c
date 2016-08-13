@@ -333,9 +333,59 @@ static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed)
   * @param  void
   * @retval void
   */
-void Chassis_BaseStop(void)
+void Chassis_BaseControl(uint8_t mode, float Target)
 {
+    static  CanSend_Type   SendData;
+    FormatTrans FT;
     
+#if CANPORT == 1
+    SendData.CANx = 1;
+#else
+    SendData.CANx = 2;
+#endif
+    
+    SendData.SendCanTxMsg.DLC   =   8;
+    SendData.SendCanTxMsg.IDE   =   CAN_ID_STD;
+    SendData.SendCanTxMsg.RTR   =   CAN_RTR_Data;
+    SendData.SendCanTxMsg.StdId =   BASECHASSISCONTROLCANID;
+    
+    if(mode == 0)
+    {
+        SendData.SendCanTxMsg.Data[1] = 0;
+        SendData.SendCanTxMsg.Data[0] = 0;
+        SendData.SendCanTxMsg.Data[3] = 0;
+        SendData.SendCanTxMsg.Data[2] = 0;
+        SendData.SendCanTxMsg.Data[5] = 0;
+        SendData.SendCanTxMsg.Data[4] = 0;
+        SendData.SendCanTxMsg.Data[7] = 0;
+        SendData.SendCanTxMsg.Data[6] = 0;
+    }
+    else if(mode == 2)
+    {
+        FT.F = Target;
+        
+        SendData.SendCanTxMsg.Data[1] = 2;
+        SendData.SendCanTxMsg.Data[0] = FT.U[0];
+        SendData.SendCanTxMsg.Data[3] = FT.U[1];
+        SendData.SendCanTxMsg.Data[2] = FT.U[2];
+        SendData.SendCanTxMsg.Data[5] = FT.U[3];
+        SendData.SendCanTxMsg.Data[4] = 0;
+        SendData.SendCanTxMsg.Data[7] = 0;
+        SendData.SendCanTxMsg.Data[6] = 0;
+    }
+    else
+    {
+        SendData.SendCanTxMsg.Data[1] = 1;
+        SendData.SendCanTxMsg.Data[0] = 0;
+        SendData.SendCanTxMsg.Data[3] = 0;
+        SendData.SendCanTxMsg.Data[2] = 0;
+        SendData.SendCanTxMsg.Data[5] = 0;
+        SendData.SendCanTxMsg.Data[4] = 0;
+        SendData.SendCanTxMsg.Data[7] = 0;
+        SendData.SendCanTxMsg.Data[6] = 0;
+    }
+    
+    xQueueSend(Queue_CANSend, &SendData, 10);
 }
 
 

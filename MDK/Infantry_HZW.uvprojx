@@ -373,7 +373,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,MOTION_DRIVER_TARGET_MSP430,MPU9250</Define>
               <Undefine></Undefine>
-              <IncludePath>..\bsp\inc;..\core;..\driver\inc;..\lib\eMPL;..\lib\eMPL\custom;..\lib\freertos\inc;..\lib\std\inc;..\system\sim_IIC;..\task\inc;..\user;..\system\StringDecoding</IncludePath>
+              <IncludePath>..\bsp\inc;..\core;..\driver\inc;..\lib\eMPL;..\lib\eMPL\custom;..\lib\freertos\inc;..\lib\std\inc;..\system\sim_IIC;..\task\inc;..\user;..\system\StringDecoding;..\oled</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -735,6 +735,21 @@
               <FileName>StringDecoding.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\system\StringDecoding\StringDecoding.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>oled</GroupName>
+          <Files>
+            <File>
+              <FileName>drv_gui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\oled\drv_gui.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\oled\bsp_oled.c</FilePath>
             </File>
           </Files>
         </Group>

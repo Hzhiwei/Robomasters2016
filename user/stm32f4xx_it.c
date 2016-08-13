@@ -395,7 +395,7 @@ void UART4_IRQHandler(void)
 {
     FormatTrans FT;
     
-#if USEESP8266 == 1
+#if USEESP8266orOLED == 1
     uint16_t JudgeDataLenght, index;
 #endif
     
@@ -466,7 +466,7 @@ void UART4_IRQHandler(void)
     }
    
 //使用ESP8266发送上位机数据
-#if USEESP8266 == 1
+#if USEESP8266orOLED == 1
     if(ESP8266APPortLinkFlag)
     {
         JudgeDataLenght = JudgeBufferLength - DMA1_Stream2->NDTR;

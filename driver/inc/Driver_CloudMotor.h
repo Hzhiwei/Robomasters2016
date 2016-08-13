@@ -16,9 +16,9 @@
 //角度限幅
 #if INFANTRY == 1       //萨摩
 
-    #define PitchEncoderUPLimit             1550            //云台机械上限编码器值
-    #define PitchEncoderDOWNLimit           520            //云台机械下限编码器值
-    #define PitchEncoderCenter              860            //云台Pitch水平编码器值
+    #define PitchEncoderUPLimit             5500            //云台机械上限编码器值
+    #define PitchEncoderDOWNLimit           4550            //云台机械下限编码器值
+    #define PitchEncoderCenter              4820            //云台Pitch水平编码器值
     #define YawEncoderLEFTLimit             5600            //云台机械左极限编码器值
     #define YawEncoderRIGHTLimit            3800            //云台机械右极限编码器值
     #define YawEncoderCenter                4650            //云台Yaw中编码器值

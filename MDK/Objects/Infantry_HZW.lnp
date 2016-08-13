@@ -50,6 +50,8 @@
 ".\objects\startup_stm32f40_41xxx.o"
 ".\objects\sim_iic.o"
 ".\objects\stringdecoding.o"
+".\objects\drv_gui.o"
+".\objects\bsp_oled.o"
 --strict --scatter ".\Objects\Infantry_HZW.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

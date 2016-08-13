@@ -50,7 +50,14 @@ void StatusMachine_Update(void)
     static uint8_t RateCounter = 0;
     static uint8_t BigSampleCounter = 0;
     static uint8_t AttackCounter = 0;
+    static portTickType LastPCShutdownSignalTick = 0;
     portTickType CurrentTick = xTaskGetTickCount();
+    
+#if INFANTRY == 7
+    FricStatus = FricStatus_Working;
+    ControlMode = ControlMode_KM;
+    return;
+#endif
     
     //帧率过低进保护
     if(DBUSFrameRate < 3)
@@ -126,20 +133,20 @@ void StatusMachine_Update(void)
                 KMSubschema = KMSubschema_Supply;
             }
             //半自动模式
-//            else if(DBUS_ReceiveData.mouse.press_right)
-//            {
-//                KMSubschema = KMSubschema_Halfauto;
-//            }
+            else if(DBUS_ReceiveData.mouse.press_right)
+            {
+                KMSubschema = KMSubschema_Halfauto;
+            }
             //摇摆模式
             else if(DBUS_CheckPush(KEY_F))
             {
                 KMSubschema = KMSubschema_Swing;
             }
-            //大符模式
-            else if(DBUS_CheckPush(KEY_X))
-            {
-                KMSubschema = KMSubschema_Bigsample;
-            }
+            //大符模式(现改为在下面单独处理)
+//            else if(DBUS_CheckPush(KEY_X))
+//            {
+//                KMSubschema = KMSubschema_Bigsample;
+//            }
             //全自动模式
             else if(DBUS_CheckPush(KEY_C))
             {
@@ -178,9 +185,13 @@ void StatusMachine_Update(void)
                     
                     if(BigSampleCounter < VisiolModeChangeDataSendNum)
                     {
-                        VisionType = VisionType_BigSample;
                         SendPCOrder(PCOrder_BigSample);
                         BigSampleCounter++;
+                    }
+                    else
+                    {
+//                        VisionType = VisionType_BigSample;
+                        SendPCOrder(PCOrder_BigSample);
                     }
                 }
                 //自动射击模式（主机，单主控并不是）
@@ -190,7 +201,7 @@ void StatusMachine_Update(void)
                     
                     if(AttackCounter < VisiolModeChangeDataSendNum)
                     {
-                        VisionType = VisionType_Attack;
+//                        VisionType = VisionType_Attack;
                         SendPCOrder(PCOrder_Attack);
                         AttackCounter++;
                     }
@@ -202,17 +213,35 @@ void StatusMachine_Update(void)
                 RateCounter++;
             }
         }
+        
+        
         //用于半自动回归
-//        else if((KMSubschema == KMSubschema_Halfauto) && (!DBUS_ReceiveData.mouse.press_right))
-//        {
-//            KMSubschema = KMSubschema_Normal;
-//        }
+        else if((KMSubschema == KMSubschema_Halfauto) && (!DBUS_ReceiveData.mouse.press_right))
+        {
+            KMSubschema = KMSubschema_Normal;
+        }
 /*******************************************  ↑   模式   ↑  *******************************************/
     }
     else
     {
         FricStatus = FricStatus_Stop;
         KMSubschema = KMSubschema_Normal;
+        
+        //关机
+        if((DBUS_ReceiveData.ch1 > 600) && 
+            (DBUS_ReceiveData.ch2 < -600) &&
+            (DBUS_ReceiveData.ch3 < -600) &&
+            (DBUS_ReceiveData.ch4 > 600))
+        {
+            if(LastPCShutdownSignalTick + 5000 < CurrentTick)
+            {
+                SendPCOrder(PCOrder_Shutdown);
+            }
+        }
+        else
+        {
+            LastPCShutdownSignalTick = CurrentTick;
+        }
     }
 }
 
