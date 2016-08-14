@@ -1,5 +1,6 @@
 .\objects\task_monitor.o: ..\task\src\Task_Monitor.c
 .\objects\task_monitor.o: ..\user\Handler.h
+.\objects\task_monitor.o: ..\user\Config.h
 .\objects\task_monitor.o: ..\core\stm32f4xx.h
 .\objects\task_monitor.o: ..\core\core_cm4.h
 .\objects\task_monitor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -50,6 +51,9 @@
 .\objects\task_monitor.o: ..\lib\freertos\inc\queue.h
 .\objects\task_monitor.o: ..\lib\freertos\inc\semphr.h
 .\objects\task_monitor.o: ..\lib\freertos\inc\event_groups.h
+.\objects\task_monitor.o: ..\oled\drv_gui.h
+.\objects\task_monitor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\task_monitor.o: ..\oled\bsp_oled.h
 .\objects\task_monitor.o: ..\task\inc\Task_Monitor.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_Bell.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_DBUS.h
@@ -59,5 +63,4 @@
 .\objects\task_monitor.o: ..\driver\inc\Driver_Chassis.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_CloudMotor.h
-.\objects\task_monitor.o: ..\user\Config.h
 .\objects\task_monitor.o: ..\driver\inc\Driver_SuperGyroscope.h

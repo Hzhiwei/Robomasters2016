@@ -267,7 +267,30 @@ void CAN2_RX0_IRQHandler(void)
         
 //电机种类为3510
 #if MOTORTYPE == 1
-    #warning 3510 motor is CAN data has not benn deal
+        //左前轮
+        case    LFCHASSISCANID  :
+        {
+            ChassisFrameCounter[0]++;
+            break;
+        }
+        //右前轮
+        case    RFCHASSISCANID  :
+        {
+            ChassisFrameCounter[1]++;
+            break;
+        }
+        //左后轮
+        case    LBCHASSISCANID  :
+        {
+            ChassisFrameCounter[2]++;
+            break;
+        }
+        //右后轮
+        case    RBCHASSISCANID  :
+        {
+            ChassisFrameCounter[3]++;
+            break;
+        }
 #else       //35电机
         //左前轮
         case    LFCHASSISCANID  :
@@ -515,10 +538,11 @@ void USART1_IRQHandler(void)
 
         if (PCDataBuffer[(PCDataBufferPoint + 24) % PCDATALENGTH] == (Sum & 0xFF))       //校检通过
         {
+            PCFrameCounter++;
+            
             if(PCDataBuffer[(PCDataBufferPoint + 3) % PCDATALENGTH] != 0)       //ID!=0
             {
                 VisionUpdataFlag = 1;
-                PCFrameCounter++;
                 
                 EnemyDataBufferPoint = (EnemyDataBufferPoint + 1) % ENEMYDATABUFFERLENGHT;
                 

@@ -52,3 +52,7 @@
 .\objects\driver_bell.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_bell.o: ..\lib\freertos\inc\event_groups.h
 .\objects\driver_bell.o: ..\user\Handler.h
+.\objects\driver_bell.o: ..\user\Config.h
+.\objects\driver_bell.o: ..\oled\drv_gui.h
+.\objects\driver_bell.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\driver_bell.o: ..\oled\bsp_oled.h

@@ -51,4 +51,8 @@
 .\objects\main.o: ..\lib\freertos\inc\semphr.h
 .\objects\main.o: ..\lib\freertos\inc\event_groups.h
 .\objects\main.o: ..\user\Handler.h
+.\objects\main.o: ..\user\Config.h
+.\objects\main.o: ..\oled\drv_gui.h
+.\objects\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\main.o: ..\oled\bsp_oled.h
 .\objects\main.o: ..\task\inc\Task_SysInitConfig.h

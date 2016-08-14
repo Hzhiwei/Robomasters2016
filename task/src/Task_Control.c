@@ -229,7 +229,7 @@ static void Control_RCMode(void)
     //底盘控制
     Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
     Chassis_SpeedSet(DBUS_ReceiveData.ch2, DBUS_ReceiveData.ch1);
-    Chassis_Adjust(1);
+    Chassis_Adjust(1, 0);
 	
     //舵机舱门控制
 	Steering_Control(2);
@@ -266,7 +266,7 @@ static void Control_ProtectMode(void)
     Cloud_Adjust(0);
 #else
     Cloud_Adjust(0);
-    Chassis_Adjust(0);
+    Chassis_Adjust(0, 0);
 	Steering_Control(2);
 #endif
     
@@ -532,7 +532,7 @@ static void Control_KMSubschemaNormal(void)
     
     Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
     Chassis_SpeedSet(MAXWORKINGSPEED * Xspeed, MAXWORKINGSPEED * Yspeed);
-    Chassis_Adjust(1);
+    Chassis_Adjust(1, 0);
 	
     //舵机舱门控制
 	Steering_Control(0);
@@ -619,7 +619,7 @@ static void Control_KMSubschemaSupply(void)
     
     Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
     Chassis_SpeedSet(SNEAKSPEED * Xspeed, SNEAKSPEED * Yspeed);
-    Chassis_Adjust(1);
+    Chassis_Adjust(1, 1);
 	
     //舵机舱门控制
 	Steering_Control(1);
@@ -635,7 +635,6 @@ static void Control_KMSubschemaSupply(void)
 static void Control_KMSubschemaHalfauto(void)
 {
     int8_t index;
-    uint8_t ShootSpeed;
     float distance = sqrt(EnemyDataBuffer[EnemyDataBufferPoint].Z * EnemyDataBuffer[EnemyDataBufferPoint].Z + EnemyDataBuffer[EnemyDataBufferPoint].Y * EnemyDataBuffer[EnemyDataBufferPoint].Y);
     static AngleF_Struct CurrentAngle;
     
@@ -801,7 +800,7 @@ static void Control_KMSubschemaSwing(void)
     Chassis_SpeedSet(SNEAKSPEED * Xspeed * cos(TargetRealAngle) + SNEAKSPEED * Yspeed * sin(TargetRealAngle), 
                     -SNEAKSPEED * Xspeed * sin(TargetRealAngle) - SNEAKSPEED * Yspeed * cos(TargetRealAngle));
     
-    Chassis_Adjust(1);
+    Chassis_Adjust(1, 0);
 }
 
   
@@ -904,7 +903,7 @@ static void Control_KMSubschemaCircle(void)
     //底盘控制
     Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
     Chassis_SpeedSet(0, 0);
-    Chassis_Adjust(1);
+    Chassis_Adjust(1, 0);
 }
 
 #endif

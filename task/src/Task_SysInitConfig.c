@@ -72,6 +72,9 @@ void Task_SysInitConfig(void *Parameters)
     ESP8266_InitConfig();
 #elif USEESP8266orOLED == 0
     OLED_Init();
+    Oled_Handler = GUI_WidgetText_Create(0, 0, 78, 64);
+    GUI_WidgetText_SetRim(Oled_Handler, IS);
+    GUI_WidgetText_Show(Oled_Handler, IS, IS);
 #endif
     
     //延时保证陀螺仪正常初始化

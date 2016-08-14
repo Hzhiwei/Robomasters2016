@@ -51,6 +51,9 @@
 .\objects\driver_fricmotor.o: ..\lib\freertos\inc\queue.h
 .\objects\driver_fricmotor.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_fricmotor.o: ..\lib\freertos\inc\event_groups.h
+.\objects\driver_fricmotor.o: ..\oled\drv_gui.h
+.\objects\driver_fricmotor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\driver_fricmotor.o: ..\oled\bsp_oled.h
 .\objects\driver_fricmotor.o: ..\task\inc\Task_CANSend.h
 .\objects\driver_fricmotor.o: ..\driver\inc\Driver_Control.h
 .\objects\driver_fricmotor.o: ..\driver\inc\Driver_FricMotor.h

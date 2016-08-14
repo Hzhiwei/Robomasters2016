@@ -48,8 +48,9 @@ void OLED_DrawSomeBits(int16_t x, int16_t y, uint8_t wrtData, uint8_t effBits, \
 void OLED_DrawBmp(int16_t x, int16_t y, uint16_t showW, uint16_t showH, \
         BmpInfoStructTypedDef* bmpInfo, InvChoose InvSW);
 void OLED_Print6x8Str(int16_t x,int16_t y,uint16_t showW,uint16_t showH,
-        uint8_t* pWrtData,InvChoose InvSW,ISorNOT isRefresh);
+        char* pWrtData,InvChoose InvSW,ISorNOT isRefresh);
 uint8_t* OLED_TextPrint(void* fmt, ...);
+void OLED_Clear(void);
 
 
 #endif

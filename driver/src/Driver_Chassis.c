@@ -79,13 +79,9 @@ void Chassis_TargetDirectionSet(float Target)
   * @param  void  
   * @retval void
   */
-void Chassis_Adjust(uint8_t mode)
+void Chassis_Adjust(uint8_t mode,uint8_t supply)
 {
     int16_t WheelSpeed[4];
-    int16_t PowerSum;
-    
-    int16_t ABSSpeed[4];
-    
     Control_ChassisPID();
     
     //麦轮解算
@@ -122,16 +118,17 @@ void Chassis_Adjust(uint8_t mode)
     }
 #endif
     
-    Chassis_SendMotorParam(mode);
+    Chassis_SendMotorParam(mode, supply);
 }
 
 
 /**
   * @brief  发送速度与限制电流
   * @param  模式  1 发送数据结构中的目标速度与限制电流     0 限制速度与限制电流为0（用于紧急停机）
+  * @param  补给站模式  1 使用补给站模式，后轮释放     0 不使用补给站模式
   * @retval void
   */
-void Chassis_SendMotorParam(uint8_t mode)
+void Chassis_SendMotorParam(uint8_t mode,uint8_t supply)
 {
     static  CanSend_Type   SendData;
     
@@ -149,10 +146,22 @@ void Chassis_SendMotorParam(uint8_t mode)
     SendData.SendCanTxMsg.IDE   =   CAN_ID_STD;
     SendData.SendCanTxMsg.RTR   =   CAN_RTR_Data;
     
+#if MOTORTYPE == 1
+    if(supply)
+    {
+        SendData.SendCanTxMsg.StdId =   CHASSISSUPPLYSPEEDSETCANID;
+    }
+    else
+    {
+        SendData.SendCanTxMsg.StdId =   CHASSISSPEEDSETCANID;
+    }
+#else
+    SendData.SendCanTxMsg.StdId =   CHASSISSPEEDSETCANID;
+#endif
+    
     if(mode)
     {
         //目标速度
-        SendData.SendCanTxMsg.StdId =   CHASSISSPEEDSETCANID;
         SendData.SendCanTxMsg.Data[1] = ChassisParam.LF.TargetSpeed >> 8;
         SendData.SendCanTxMsg.Data[0] = ChassisParam.LF.TargetSpeed;
         SendData.SendCanTxMsg.Data[3] = ChassisParam.RF.TargetSpeed >> 8;

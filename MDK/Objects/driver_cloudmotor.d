@@ -56,3 +56,6 @@
 .\objects\driver_cloudmotor.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\driver_cloudmotor.o: ..\driver\inc\Driver_SuperGyroscope.h
 .\objects\driver_cloudmotor.o: ..\user\Handler.h
+.\objects\driver_cloudmotor.o: ..\oled\drv_gui.h
+.\objects\driver_cloudmotor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\driver_cloudmotor.o: ..\oled\bsp_oled.h

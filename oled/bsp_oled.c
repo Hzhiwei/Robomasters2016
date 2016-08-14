@@ -307,11 +307,11 @@ void OLED_RefreshGram(void)
   * @param  None
   * @retval None
 */
-static void OLED_Clear(void)
+void OLED_Clear(void)
 {
   for(uint8_t page=0;page<8;page++)
   {
-    for(uint8_t column=0;column<OLED_HEIGHT;column++)
+    for(uint8_t column=0;column<OLED_WIDTH;column++)
       OLED_Gram[column][page] = 0;
   }
   //¸üÐÂÏÔ´æ
@@ -498,7 +498,7 @@ void OLED_DrawBmp(int16_t x, int16_t y, uint16_t showW, uint16_t showH, \
   * @retval None
   */
 void OLED_Print6x8Str(int16_t x,int16_t y,uint16_t showW,uint16_t showH,
-        uint8_t* pWrtData,InvChoose InvSW,ISorNOT isRefresh)
+        char* pWrtData,InvChoose InvSW,ISorNOT isRefresh)
 {
   int16_t xPos = x;
   int16_t yPos = y;

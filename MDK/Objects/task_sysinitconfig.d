@@ -51,6 +51,10 @@
 .\objects\task_sysinitconfig.o: ..\lib\freertos\inc\semphr.h
 .\objects\task_sysinitconfig.o: ..\lib\freertos\inc\event_groups.h
 .\objects\task_sysinitconfig.o: ..\user\Handler.h
+.\objects\task_sysinitconfig.o: ..\user\Config.h
+.\objects\task_sysinitconfig.o: ..\oled\drv_gui.h
+.\objects\task_sysinitconfig.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\task_sysinitconfig.o: ..\oled\bsp_oled.h
 .\objects\task_sysinitconfig.o: ..\lib\eMPL\custom\mpu9250dmp.h
 .\objects\task_sysinitconfig.o: ..\lib\eMPL\inv_mpu.h
 .\objects\task_sysinitconfig.o: ..\lib\eMPL\inv_mpu_dmp_motion_driver.h
@@ -69,7 +73,6 @@
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Chassis.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_mpu9250.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Control.h
-.\objects\task_sysinitconfig.o: ..\user\Config.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_Steering.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_PokeMotor.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_FricMotor.h
@@ -80,7 +83,4 @@
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_Monitor.h
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_CANSend.h
 .\objects\task_sysinitconfig.o: ..\task\inc\Task_Control.h
-.\objects\task_sysinitconfig.o: ..\oled\bsp_oled.h
-.\objects\task_sysinitconfig.o: ..\oled\drv_gui.h
-.\objects\task_sysinitconfig.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\task_sysinitconfig.o: ..\driver\inc\Driver_ESP8266.h

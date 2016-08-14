@@ -3,6 +3,7 @@
 
 #include "Task_Monitor.h"
 
+#include "bsp_oled.h"
 #include "Driver_Bell.h"
 #include "Driver_DBUS.h"
 #include "Driver_Judge.h"
@@ -23,13 +24,15 @@ int16_t speed = 0;
   */
 void Task_Monitor(void *Parameters)
 {
+    static uint8_t WarningCounter = 0;
+    uint8_t WarningLocation = 0;
     //系统状态，每一位对应一个错误，0正常，1错误
 /****************************************************************
     15  |   14  |   13  |   12  |   11  |   10  |   9   |   8   |
         |       |       |       |       |裁判系统|左前底盘|右前底盘|
 -----------------------------------------------------------------
     7   |   6   |   5   |   4   |   3   |   2   |   1   |   0   |
-左后底盘|右后底盘|底盘Gyr|    -  |    -  |  Yaw  | Pitch |  DBUS |
+左后底盘|右后底盘|底盘Gyr|    -  | vision|  Yaw  | Pitch |  DBUS |
 ****************************************************************/
     uint16_t SysErrorStatus = 0;
     
@@ -153,56 +156,151 @@ void Task_Monitor(void *Parameters)
         
 /**************************  ↑   数据帧率统计   ↑  **************************/
 /**************************************************************************************************/
-/**************************  ↓   警告标志置位   ↓  **************************/
-        //DBUS
-        if(SysErrorStatus & 0x0001)
+/**************************  ↓   警告   ↓  **************************/
+        if(WarningCounter == 0)
         {
-            Bell_BarkWarning(2, MAXAWarning);
+            WarningLocation = 0;
+            GUI_WidgetText_SetText(Oled_Handler, "");
+            
+#if INFANTRY == 7
+            
+            //yaw云台电机
+            if(SysErrorStatus & 0x0004)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "Yaw   ");
+#endif
+                WarningLocation++;
+            }
+            //pitch云台电机
+            if(SysErrorStatus & 0x0002)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "Pitch ");
+#endif
+                WarningLocation++;
+            }
+            //底盘陀螺仪
+            if(SysErrorStatus & 0x0020)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "GROY  ");
+#endif
+                WarningLocation++;
+            }
+            //裁判系统
+            if(SysErrorStatus & 0x0400)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "Judge ");
+#endif
+                WarningLocation++;
+            }
+            //无警告
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "OK    ");
+#endif
+                WarningLocation++;
+            }
+            
+#else
+            
+            //DBUS
+            if(SysErrorStatus & 0x0001)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "DBUS  ");
+#endif
+                WarningLocation++;
+            }
+            //yaw云台电机
+            if(SysErrorStatus & 0x0004)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "Yaw   ");
+#endif
+                WarningLocation++;
+            }
+            //pitch云台电机
+            if(SysErrorStatus & 0x0002)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "Pitch ");
+#endif
+                WarningLocation++;
+            }
+            //底盘陀螺仪
+            if(SysErrorStatus & 0x0020)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "Groy  ");
+#endif
+                WarningLocation++;
+            }
+            //左前底盘电机
+            if(SysErrorStatus & 0x0040)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "LF    ");
+#endif
+                WarningLocation++;
+            }
+            //右前底盘电机
+            if(SysErrorStatus & 0x0080)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "RF    ");
+#endif
+                WarningLocation++;
+            }
+            //左后底盘电机
+            if(SysErrorStatus & 0x0100)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "LB    ");
+#endif
+                WarningLocation++;
+            }
+            //右后底盘电机
+            if(SysErrorStatus & 0x0200)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "RB    ");
+#endif
+                WarningLocation++;
+            }
+            //裁判系统
+            if(SysErrorStatus & 0x0400)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "Judge ");
+#endif
+                WarningLocation++;
+            }
+            //无警告
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "OK    ");
+#endif
+                WarningLocation++;
+            }
+            
+#endif
+            
+        GUI_WidgetText_Show(Oled_Handler, IS, IS);
+            
         }
-        //yaw云台电机
-        else if(SysErrorStatus & 0x0004)
-        {
-            Bell_BarkWarning(3, MAXAWarning);
-        }
-        //pitch云台电机
-        else if(SysErrorStatus & 0x0002)
-        {
-            Bell_BarkWarning(4, MAXAWarning);
-        }
-        //底盘陀螺仪
-        else if(SysErrorStatus & 0x0020)
-        {
-            Bell_BarkWarning(7, MAXAWarning);
-        }
-        //左前底盘电机
-        else if(SysErrorStatus & 0x0040)
-        {
-            Bell_BarkWarning(8, MAXAWarning);
-        }
-        //右前底盘电机
-        else if(SysErrorStatus & 0x0080)
-        {
-            Bell_BarkWarning(9, MAXAWarning);
-        }
-        //左后底盘电机
-        else if(SysErrorStatus & 0x0100)
-        {
-            Bell_BarkWarning(10, MAXAWarning);
-        }
-        //右后底盘电机
-        else if(SysErrorStatus & 0x0200)
-        {
-            Bell_BarkWarning(11, MAXAWarning);
-        }
-        //裁判系统
-        else if(SysErrorStatus & 0x0400)
-        {
-            Bell_BarkWarning(12, MAXAWarning);
-        }
-        //无警告
         else
         {
-            Bell_BarkWarning(0, MAXAWarning);
+            if(WarningCounter >= 2)
+            {
+                WarningCounter = 0;
+            }
+            else
+            {
+                WarningCounter++;
+            }
         }
 /**************************  ↑   警告标志置位   ↑  **************************/
 

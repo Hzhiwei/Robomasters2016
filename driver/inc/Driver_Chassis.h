@@ -3,7 +3,7 @@
 #ifndef __DRIVER_CHASSIS_H
 #define __DRIVER_CHASSIS_H
 
-
+#include "Config.h"
 #include "OSinclude.h"
 #include "stm32f4xx.h"
 
@@ -21,12 +21,22 @@
 
 
 //底盘电机CANID
+#if MOTORTYPE == 1
+#define LFCHASSISCANID                  0x201
+#define RFCHASSISCANID                  0x202
+#define LBCHASSISCANID                  0x203
+#define RBCHASSISCANID                  0x204
+#else
 #define LFCHASSISCANID                  0x41
 #define RFCHASSISCANID                  0x42
 #define LBCHASSISCANID                  0x43
 #define RBCHASSISCANID                  0x44
+#endif
+
 //底盘电机速度控制
 #define CHASSISSPEEDSETCANID            0x46
+//3510底盘电机补给站模式
+#define CHASSISSUPPLYSPEEDSETCANID      0x156
 //底盘电机电流控制
 #define CHASSISCURRENTSETCANID          0x40
 
@@ -93,8 +103,8 @@ __DRIVER_CHASSIS_EXT uint16_t ChassisFrameRate[4];
 void Chassis_InitConfig(void);
 void Chassis_SpeedSet(float XSpeed, float YSpeed);
 void Chassis_TargetDirectionSet(float Target);
-void Chassis_Adjust(uint8_t mode);
-void Chassis_SendMotorParam(uint8_t mode);
+void Chassis_Adjust(uint8_t mode,uint8_t supply);
+void Chassis_SendMotorParam(uint8_t mode,uint8_t supply);
 static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed);
 
 #if MOTORTYPE == 0

@@ -51,3 +51,7 @@
 .\objects\task_cansend.o: ..\lib\freertos\inc\semphr.h
 .\objects\task_cansend.o: ..\lib\freertos\inc\event_groups.h
 .\objects\task_cansend.o: ..\user\Handler.h
+.\objects\task_cansend.o: ..\user\Config.h
+.\objects\task_cansend.o: ..\oled\drv_gui.h
+.\objects\task_cansend.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\task_cansend.o: ..\oled\bsp_oled.h

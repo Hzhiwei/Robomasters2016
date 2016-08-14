@@ -51,6 +51,9 @@
 .\objects\driver_chassis.o: ..\lib\freertos\inc\queue.h
 .\objects\driver_chassis.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_chassis.o: ..\lib\freertos\inc\event_groups.h
+.\objects\driver_chassis.o: ..\oled\drv_gui.h
+.\objects\driver_chassis.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\driver_chassis.o: ..\oled\bsp_oled.h
 .\objects\driver_chassis.o: ..\user\CommonDataStructure.h
 .\objects\driver_chassis.o: ..\task\inc\Task_CANSend.h
 .\objects\driver_chassis.o: ..\driver\inc\Driver_Judge.h

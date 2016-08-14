@@ -31,6 +31,7 @@ void BSP_UART_InitConfig(void)
     
     
     //USART3£¨ESP8266£©
+#if USEESP8266orOLEDorOLED == 1
     USART_InitStructure.USART_BaudRate              =   115200;
     USART_InitStructure.USART_HardwareFlowControl   =   USART_HardwareFlowControl_None;
     USART_InitStructure.USART_Mode                  =   USART_Mode_Rx | USART_Mode_Tx;
@@ -43,6 +44,7 @@ void BSP_UART_InitConfig(void)
     USART_DMACmd(USART3, USART_DMAReq_Rx, ENABLE);
     
     USART_Cmd(USART3, ENABLE);
+#endif
     
     
     //UART4(Judge)
