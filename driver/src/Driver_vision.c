@@ -72,9 +72,6 @@ void Vision_InitConfig(void)
     EnemyDataBuffer[EnemyDataBufferPoint].X = 0;
     EnemyDataBuffer[EnemyDataBufferPoint].Y = 0;
     EnemyDataBuffer[EnemyDataBufferPoint].Z = 1;
-    
-    //默认视觉模式Attack
-    VisionType = VisionType_Attack;
 }
 
 
@@ -313,7 +310,10 @@ void SendPCOrder(PCOrder_Enum order)
         if(PCOrder_Attack == order)
         {
             DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
-            while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+            if (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE)      //确保 DMA 可以被设置
+            {
+                return;
+            }                
             DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
             DMA2_Stream7->M0AR = (uint32_t)AttackModeOrder;     //设置数据
             DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量
@@ -322,7 +322,10 @@ void SendPCOrder(PCOrder_Enum order)
         else if(PCOrder_BigSample == order)
         {
             DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
-            while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+            if (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE)      //确保 DMA 可以被设置
+            {
+                return;
+            }            
             DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
             DMA2_Stream7->M0AR = (uint32_t)BigSymbolModeOrder;  //设置数据
             DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量
@@ -331,7 +334,10 @@ void SendPCOrder(PCOrder_Enum order)
         else if(PCOrder_Shutdown == order)
         {
             DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
-            while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+            if (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE)      //确保 DMA 可以被设置
+            {
+                return;
+            }            
             DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
             DMA2_Stream7->M0AR = (uint32_t)ShutdownOrder;       //设置数据
             DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量
@@ -351,7 +357,10 @@ void SendEnemyColor(char Co)
     if('B' == Co)
     {
         DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
-        while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+        if (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE)      //确保 DMA 可以被设置
+        {
+            return;
+        }            
         DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
         DMA2_Stream7->M0AR = (uint32_t)BlueEnemyOrder;      //设置数据
         DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量
@@ -360,7 +369,10 @@ void SendEnemyColor(char Co)
     else
     {
         DMA_Cmd(DMA2_Stream7, DISABLE);                     //关闭 DMA 传输
-        while (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE){} //确保 DMA 可以被设置
+        if (DMA_GetCmdStatus(DMA2_Stream7) != DISABLE)      //确保 DMA 可以被设置
+        {
+            return;
+        }            
         DMA_ClearFlag(DMA2_Stream7, DMA_FLAG_TCIF7 | DMA_FLAG_HTIF7);       //清空标志位
         DMA2_Stream7->M0AR = (uint32_t)RedEnemyOrder;       //设置数据
         DMA_SetCurrDataCounter(DMA2_Stream7, PCDATALENGTH); //数据传输量

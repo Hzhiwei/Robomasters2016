@@ -59,3 +59,4 @@
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_CloudMotor.h
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_StatusMachine.h
 .\objects\driver_statusmachine.o: ..\driver\inc\Driver_SuperGyroscope.h
+.\objects\driver_statusmachine.o: ..\oled\bsp_oled.h

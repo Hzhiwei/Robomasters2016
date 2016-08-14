@@ -12,6 +12,8 @@
 #include "Driver_StatusMachine.h"
 #include "Driver_SuperGyroscope.h"
 
+#include "bsp_oled.h"
+
 
 /*
 wasd前后左右控制
@@ -42,22 +44,82 @@ void StatusMachine_InitConfig(void)
             左拨码开关2：键盘控制，右拨码开关3打开摩擦轮，鼠标右键自动射击
             QE自旋
   */
-    uint8_t FristToKM = 1;
-
-
+uint8_t FristToKM = 1;
 void StatusMachine_Update(void)
 {
+    
+//基地直接进入自动模式
+#if INFANTRY == 7
+    
+    static char Color = 'R';
+    static uint32_t PushCounter = 0;
+    static uint8_t RedCounter = 0, BlueCounter = 0, OffCounter = 0;
+    
+    if(GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_9))
+    {
+        PushCounter = 0;
+    }
+    else
+    {
+        PushCounter++;
+    }
+    
+    if(PushCounter == 1)        //切换颜色
+    {
+        if(Color == 'R')
+        {
+            Color = 'B';
+            BlueCounter = 10;
+            RedCounter = 0;
+            OffCounter = 0;
+            OLED_Print6x8Str(100, 0, 30, 8, (uint8_t *)"BLUE", INV_OFF, IS);
+        }
+        else
+        {
+            Color = 'R';
+            BlueCounter = 0;
+            RedCounter = 10;
+            OffCounter = 0;
+            OLED_Print6x8Str(100, 0, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
+        }
+    }
+    else if(PushCounter == 1000)
+    {
+        BlueCounter = 0;
+        RedCounter = 0;
+        OffCounter = 50;
+        OLED_Print6x8Str(100, 0, 30, 8, (uint8_t *)"OFF", INV_OFF, IS);
+    }
+    
+    if(BlueCounter)
+    {
+        SendEnemyColor('B');
+        BlueCounter--;
+    }
+    else if(RedCounter)
+    {
+        SendEnemyColor('R');
+        RedCounter--;
+    }
+    else if(OffCounter)
+    {
+        SendPCOrder(PCOrder_Shutdown);
+        OffCounter--;
+    }
+    
+    
+    FricStatus = FricStatus_Working;
+    ControlMode = ControlMode_KM;
+    
+    return;
+    
+#else
+    
     static uint8_t RateCounter = 0;
     static uint8_t BigSampleCounter = 0;
     static uint8_t AttackCounter = 0;
     static portTickType LastPCShutdownSignalTick = 0;
     portTickType CurrentTick = xTaskGetTickCount();
-    
-#if INFANTRY == 7
-    FricStatus = FricStatus_Working;
-    ControlMode = ControlMode_KM;
-    return;
-#endif
     
     //帧率过低进保护
     if(DBUSFrameRate < 3)
@@ -93,6 +155,8 @@ void StatusMachine_Update(void)
             FricStatus = FricStatus_Stop;
         }
 /*******************************************  ↑  摩擦轮  ↑  *******************************************/
+        
+        //自动修改键鼠子模式
         KMSubschema = KMSubschema_Normal;
     }
     //键鼠模式
@@ -101,16 +165,8 @@ void StatusMachine_Update(void)
 /*******************************************  ↓  摩擦轮  ↓  *******************************************/
         if((DBUS_ReceiveData.switch_right == 3) || (DBUS_ReceiveData.switch_right == 2))
         {
-//            if(DBUS_ReceiveData.keyBoard.key_code & KEY_Z)
-//            {
-//                //暴击模式
-//                FricStatus = FricStatus_Crazy;
-//            }
-//            else
-//            {
-                //正常工作
-                FricStatus = FricStatus_Working;
-//            }
+            //正常工作
+            FricStatus = FricStatus_Working;
         }
         else
         {
@@ -124,9 +180,17 @@ void StatusMachine_Update(void)
             KMSubschema = KMSubschema_Normal;
         }
         
+        if(KMSubschema == KMSubschema_Halfauto)
+        {
+            KMSubschema = KMSubschema_Normal;
+        }
+        
         //只允许在Normal模式下进行模式切换
         if(KMSubschema == KMSubschema_Normal)
         {
+            BigSampleCounter = 0;
+            AttackCounter = 0;
+            
             //补给站模式
             if(DBUS_CheckPush(KEY_CTRL))
             {
@@ -142,11 +206,11 @@ void StatusMachine_Update(void)
             {
                 KMSubschema = KMSubschema_Swing;
             }
-            //大符模式(现改为在下面单独处理)
-//            else if(DBUS_CheckPush(KEY_X))
-//            {
-//                KMSubschema = KMSubschema_Bigsample;
-//            }
+            //大符模式
+            else if(DBUS_CheckPush(KEY_X))
+            {
+                KMSubschema = KMSubschema_Bigsample;
+            }
             //全自动模式
             else if(DBUS_CheckPush(KEY_C))
             {
@@ -157,65 +221,71 @@ void StatusMachine_Update(void)
             {
                 KMSubschema = KMSubschema_Circle;
             }
-            
-            //视觉指令
-            //降低发送频率减小串口负担
-            if(RateCounter == 4)
-            {
-                //敌方目标红色
-                if((DBUS_ReceiveData.ch1 > 600) && 
-                    (DBUS_ReceiveData.ch2 > 600) &&
-                    (DBUS_ReceiveData.ch3 < -600) &&
-                    (DBUS_ReceiveData.ch4 > 600))
-                {
-                    SendEnemyColor('R');
-                }
-                //敌方目标蓝色
-                else if((DBUS_ReceiveData.ch1 < -600) && 
-                    (DBUS_ReceiveData.ch2 > 600) &&
-                    (DBUS_ReceiveData.ch3 > 600) &&
-                    (DBUS_ReceiveData.ch4 > 600))
-                {
-                    SendEnemyColor('B');
-                }
-                //大符模式
-                else if(DBUS_ReceiveData.keyBoard.key_code & KEY_X)
-                {
-                    AttackCounter = 0;
-                    
-                    if(BigSampleCounter < VisiolModeChangeDataSendNum)
-                    {
-                        VisionType = VisionType_BigSample;
-                        SendPCOrder(PCOrder_BigSample);
-                        BigSampleCounter++;
-                    }
-                    else
-                    {
-                        VisionType = VisionType_BigSample;
-                        SendPCOrder(PCOrder_BigSample);
-                    }
-                }
-                //自动射击模式（主机，单主控并不是）
-                else
-                {
-                    BigSampleCounter = 0;
-                    
-                    if(AttackCounter < VisiolModeChangeDataSendNum)
-                    {
-//                        VisionType = VisionType_Attack;
-                        SendPCOrder(PCOrder_Attack);
-                        AttackCounter++;
-                    }
-                }
-                RateCounter = 0;
-            }
-            else
-            {
-                RateCounter++;
-            }
         }
+        
+        
+        //视觉指令
+        //降低发送频率减小串口负担
+        if(RateCounter == 4)
+        {
+            //切换红色目标
+            if((DBUS_ReceiveData.ch1 > 600) && 
+                (DBUS_ReceiveData.ch2 > 600) &&
+                (DBUS_ReceiveData.ch3 < -600) &&
+                (DBUS_ReceiveData.ch4 > 600))
+            {
+                SendEnemyColor('R');
+            }
+            //切换蓝色目标
+            else if((DBUS_ReceiveData.ch1 < -600) && 
+                (DBUS_ReceiveData.ch2 > 600) &&
+                (DBUS_ReceiveData.ch3 > 600) &&
+                (DBUS_ReceiveData.ch4 > 600))
+            {
+                SendEnemyColor('B');
+            }
+            //大符模式
+            else if(KMSubschema == KMSubschema_Bigsample)
+            {
+                AttackCounter = 0;
+                if(BigSampleCounter < VisiolModeChangeDataSendNum)
+                {
+                    SendPCOrder(PCOrder_BigSample);
+                    BigSampleCounter++;
+                }
+//                else
+//                {
+//                    SendPCOrder(PCOrder_BigSample);
+//                }
+            }
+            //自动射击模式
+            else if(KMSubschema == KMSubschema_Halfauto)
+            {
+                BigSampleCounter = 0;
+                if(AttackCounter < VisiolModeChangeDataSendNum)
+                {
+                    SendPCOrder(PCOrder_Attack);
+                    AttackCounter++;
+                }
+            }
+            RateCounter = 0;
+        }
+        else
+        {
+            RateCounter++;
+        }
+    
+    
+        
+        
+        
+        
+        
+        
+        
+        
         //用于半自动回归
-        else if((KMSubschema == KMSubschema_Halfauto) && (!DBUS_ReceiveData.mouse.press_right))
+        if((KMSubschema == KMSubschema_Halfauto) && (!DBUS_ReceiveData.mouse.press_right))
         {
             KMSubschema = KMSubschema_Normal;
         }
@@ -242,6 +312,9 @@ void StatusMachine_Update(void)
             LastPCShutdownSignalTick = CurrentTick;
         }
     }
+    
+#endif
+    
 }
 
 

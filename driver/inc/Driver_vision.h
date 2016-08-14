@@ -20,12 +20,6 @@
 #endif
 
 
-//视觉模式
-typedef enum
-{
-    VisionType_Attack,
-    VisionType_BigSample
-}VisionType_Enum;
 
 
 //PC指令枚举
@@ -77,10 +71,6 @@ typedef struct
     AngleI_Struct Target;       //目标角度（编码器单位，中间为0，左正右负）
     portTickType TargetTick;         //在此绝对时间到达目标角度
 }ForcastControl_Struct;
-
-
-//视觉模式
-__DRIVER_VISION_EXT VisionType_Enum VisionType;
 
 
 //主机原始数据缓存

@@ -75,6 +75,9 @@ void Task_SysInitConfig(void *Parameters)
     Oled_Handler = GUI_WidgetText_Create(0, 0, 78, 64);
     GUI_WidgetText_SetRim(Oled_Handler, IS);
     GUI_WidgetText_Show(Oled_Handler, IS, IS);
+#if INFANTRY == 7
+    OLED_Print6x8Str(100, 0, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
+#endif
 #endif
     
     //延时保证陀螺仪正常初始化
@@ -95,7 +98,7 @@ void Task_SysInitConfig(void *Parameters)
                 "Task_Monitor",
                 512,
                 NULL,
-                2,
+                3,
                 NULL);
     
     //CAN发送任务
@@ -115,12 +118,12 @@ void Task_SysInitConfig(void *Parameters)
                 NULL);
                 
     //蜂鸣器鸣叫任务
-	xTaskCreate(Task_BellBark,
-				"Task_BellCycle",
-				64,
-				NULL,
-				2,
-				NULL);
+//	xTaskCreate(Task_BellBark,
+//				"Task_BellCycle",
+//				64,
+//				NULL,
+//				2,
+//				NULL);
                 
     DMA_Cmd(DMA1_Stream0, DISABLE);
     while(DMA_GetCmdStatus(DMA1_Stream0) != DISABLE);

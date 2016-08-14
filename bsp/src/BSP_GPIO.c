@@ -1,4 +1,5 @@
 
+#include "Config.h"
 #include "BSP_GPIO.h"
 #include "OSinclude.h"
 
@@ -166,15 +167,31 @@ void BSP_GPIO_InitConfig(void)
     GPIO_SetBits(GPIOB, GPIO_Pin_12);
     
     
-    //Ç¹Ä¦²ÁÂÖ(C6,C7),¶æ»ú(C9)
+    //Ç¹Ä¦²ÁÂÖ(C6,C7)
     GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_OType  =   GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_Pin    =   GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Pin    =   GPIO_Pin_6 | GPIO_Pin_7;
     GPIO_InitStructure.GPIO_Speed  =   GPIO_Speed_50MHz;
     GPIO_Init(GPIOC, &GPIO_InitStructure);
     GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_TIM8);
     GPIO_PinAFConfig(GPIOC, GPIO_PinSource7, GPIO_AF_TIM8);
+    
+#if INFANTRY == 7
+    //¿ª¹Ø
+    GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_PuPd   =   GPIO_PuPd_UP;
+    GPIO_InitStructure.GPIO_Pin    =   GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Speed  =   GPIO_Speed_50MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+#else
+    //¶æ»ú(C9)
+    GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_OType  =   GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Pin    =   GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Speed  =   GPIO_Speed_50MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
     GPIO_PinAFConfig(GPIOC, GPIO_PinSource9, GPIO_AF_TIM8);
+#endif
 }
 
 

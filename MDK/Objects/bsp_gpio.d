@@ -1,4 +1,5 @@
 .\objects\bsp_gpio.o: ..\bsp\src\BSP_GPIO.c
+.\objects\bsp_gpio.o: ..\user\Config.h
 .\objects\bsp_gpio.o: ..\bsp\inc\BSP_GPIO.h
 .\objects\bsp_gpio.o: ..\core\stm32f4xx.h
 .\objects\bsp_gpio.o: ..\core\core_cm4.h
