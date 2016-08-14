@@ -95,7 +95,7 @@ void Task_SysInitConfig(void *Parameters)
                 "Task_Monitor",
                 512,
                 NULL,
-                4,
+                2,
                 NULL);
     
     //CAN发送任务
@@ -103,7 +103,7 @@ void Task_SysInitConfig(void *Parameters)
                 "Task_CANSend",
                 200,
                 NULL,
-                3,
+                4,
                 NULL);
     
     //控制任务
@@ -111,7 +111,7 @@ void Task_SysInitConfig(void *Parameters)
                 "Task_Control",
                 512,
                 NULL,
-                2,
+                4,
                 NULL);
                 
     //蜂鸣器鸣叫任务
@@ -119,7 +119,7 @@ void Task_SysInitConfig(void *Parameters)
 				"Task_BellCycle",
 				64,
 				NULL,
-				6,
+				2,
 				NULL);
                 
     DMA_Cmd(DMA1_Stream0, DISABLE);
