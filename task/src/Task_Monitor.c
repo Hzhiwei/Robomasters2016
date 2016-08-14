@@ -98,6 +98,15 @@ void Task_Monitor(void *Parameters)
         {
             SysErrorStatus &= 0xFFFB;
         }
+        //视觉帧率过低
+        if(PCFrameRate < 2)
+        {
+            SysErrorStatus |= 0x0008;
+        }
+        else
+        {
+            SysErrorStatus &= 0xFFF7;
+        }
         //底盘陀螺仪帧率过低
         if(SuperGyoFrameRate < 30)
         {
@@ -180,6 +189,14 @@ void Task_Monitor(void *Parameters)
 #endif
                 WarningLocation++;
             }
+            //主机串口
+            if(SysErrorStatus & 0x0008)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "PC    ");
+#endif
+                WarningLocation++;
+            }
             //底盘陀螺仪
             if(SysErrorStatus & 0x0020)
             {
@@ -197,6 +214,7 @@ void Task_Monitor(void *Parameters)
                 WarningLocation++;
             }
             //无警告
+            if(WarningLocation)
             {
 #if USEESP8266orOLEDorOLED == 0
                 GUI_WidgetText_AddText(Oled_Handler, "OK    ");
@@ -279,6 +297,7 @@ void Task_Monitor(void *Parameters)
                 WarningLocation++;
             }
             //无警告
+            if(WarningLocation)
             {
 #if USEESP8266orOLEDorOLED == 0
                 GUI_WidgetText_AddText(Oled_Handler, "OK    ");

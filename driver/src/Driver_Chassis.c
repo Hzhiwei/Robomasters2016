@@ -366,38 +366,38 @@ void Chassis_BaseControl(uint8_t mode, float Target)
     
     if(mode == 0)
     {
-        SendData.SendCanTxMsg.Data[1] = 0;
         SendData.SendCanTxMsg.Data[0] = 0;
-        SendData.SendCanTxMsg.Data[3] = 0;
+        SendData.SendCanTxMsg.Data[1] = 0;
         SendData.SendCanTxMsg.Data[2] = 0;
-        SendData.SendCanTxMsg.Data[5] = 0;
+        SendData.SendCanTxMsg.Data[3] = 0;
         SendData.SendCanTxMsg.Data[4] = 0;
-        SendData.SendCanTxMsg.Data[7] = 0;
+        SendData.SendCanTxMsg.Data[5] = 0;
         SendData.SendCanTxMsg.Data[6] = 0;
+        SendData.SendCanTxMsg.Data[7] = 0;
     }
     else if(mode == 2)
     {
         FT.F = Target;
         
-        SendData.SendCanTxMsg.Data[1] = 2;
-        SendData.SendCanTxMsg.Data[0] = FT.U[0];
-        SendData.SendCanTxMsg.Data[3] = FT.U[1];
-        SendData.SendCanTxMsg.Data[2] = FT.U[2];
-        SendData.SendCanTxMsg.Data[5] = FT.U[3];
-        SendData.SendCanTxMsg.Data[4] = 0;
-        SendData.SendCanTxMsg.Data[7] = 0;
+        SendData.SendCanTxMsg.Data[0] = 2;
+        SendData.SendCanTxMsg.Data[1] = FT.U[0];
+        SendData.SendCanTxMsg.Data[2] = FT.U[1];
+        SendData.SendCanTxMsg.Data[3] = FT.U[2];
+        SendData.SendCanTxMsg.Data[4] = FT.U[3];
+        SendData.SendCanTxMsg.Data[5] = 0;
         SendData.SendCanTxMsg.Data[6] = 0;
+        SendData.SendCanTxMsg.Data[7] = 0;
     }
     else
     {
-        SendData.SendCanTxMsg.Data[1] = 1;
-        SendData.SendCanTxMsg.Data[0] = 0;
-        SendData.SendCanTxMsg.Data[3] = 0;
+        SendData.SendCanTxMsg.Data[0] = 1;
+        SendData.SendCanTxMsg.Data[1] = 0;
         SendData.SendCanTxMsg.Data[2] = 0;
-        SendData.SendCanTxMsg.Data[5] = 0;
+        SendData.SendCanTxMsg.Data[3] = 0;
         SendData.SendCanTxMsg.Data[4] = 0;
-        SendData.SendCanTxMsg.Data[7] = 0;
+        SendData.SendCanTxMsg.Data[5] = 0;
         SendData.SendCanTxMsg.Data[6] = 0;
+        SendData.SendCanTxMsg.Data[7] = 0;
     }
     
     xQueueSend(Queue_CANSend, &SendData, 10);

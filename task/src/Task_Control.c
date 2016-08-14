@@ -292,6 +292,7 @@ static void Control_BaseFullAuto(portTickType Tick)
 {
     int8_t index;
     uint8_t ShootSpeed;
+    static uint8_t FristFindTarget = 1;
     float distance = sqrt(EnemyDataBuffer[EnemyDataBufferPoint].Z * EnemyDataBuffer[EnemyDataBufferPoint].Z + EnemyDataBuffer[EnemyDataBufferPoint].Y * EnemyDataBuffer[EnemyDataBufferPoint].Y);
     static AngleF_Struct CurrentAngle;
     static float FeedParam = 40;
@@ -330,7 +331,7 @@ static void Control_BaseFullAuto(portTickType Tick)
         }
         else
         {
-            Poke_MotorSpeedAdjust(0, SuperGyoParam.Angle + CurrentAngle.H + SuperGyoParam.Offset);
+            Poke_MotorSpeedAdjust(0, ShootSpeed);
         }
 //    }
 //    else
@@ -341,17 +342,27 @@ static void Control_BaseFullAuto(portTickType Tick)
     //底盘旋转判断
     if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 10) % ENEMYDATABUFFERLENGHT].Tick < 800)      //指定时间内
     {
-        if((CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE))          //指定角度内
+        if(FristFindTarget)
         {
-            Chassis_BaseControl(0, 0);
+            Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);
         }
         else
         {
-            Chassis_BaseControl(2, CurrentAngle.H + SuperGyoParam.Angle + SuperGyoParam.Offset);
+            if((CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE))          //指定角度内
+            {
+                Chassis_BaseControl(0, 0);
+            }
+            else
+            {
+                Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);
+            }
         }
+        
+        FristFindTarget = 0;
     }
     else
     {
+        FristFindTarget = 1;
         Chassis_BaseControl(1, 0);
     }
     
