@@ -36,7 +36,7 @@
 //底盘电机速度控制
 #define CHASSISSPEEDSETCANID            0x46
 //3510底盘电机补给站模式
-#define CHASSISSUPPLYSPEEDSETCANID      0x156
+#define CHASSISSUPPLYSPEEDSETCANID      0x155
 //底盘电机电流控制
 #define CHASSISCURRENTSETCANID          0x40
 

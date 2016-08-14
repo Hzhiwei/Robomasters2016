@@ -266,7 +266,7 @@ static void Control_ProtectMode(void)
     Cloud_Adjust(0);
 #else
     Cloud_Adjust(0);
-    Chassis_Adjust(0, 0);
+//    Chassis_Adjust(0, 0);
 	Steering_Control(2);
 #endif
     
@@ -339,7 +339,7 @@ static void Control_BaseFullAuto(portTickType Tick)
 //    }
     
     //底盘旋转判断
-    if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 30) % ENEMYDATABUFFERLENGHT].Tick < 500)      //指定时间内
+    if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 10) % ENEMYDATABUFFERLENGHT].Tick < 800)      //指定时间内
     {
         if((CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE))          //指定角度内
         {
@@ -347,7 +347,7 @@ static void Control_BaseFullAuto(portTickType Tick)
         }
         else
         {
-            Chassis_BaseControl(2, 0);
+            Chassis_BaseControl(2, CurrentAngle.H + SuperGyoParam.Angle + SuperGyoParam.Offset);
         }
     }
     else

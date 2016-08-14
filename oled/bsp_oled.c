@@ -498,7 +498,7 @@ void OLED_DrawBmp(int16_t x, int16_t y, uint16_t showW, uint16_t showH, \
   * @retval None
   */
 void OLED_Print6x8Str(int16_t x,int16_t y,uint16_t showW,uint16_t showH,
-        char* pWrtData,InvChoose InvSW,ISorNOT isRefresh)
+        uint8_t* pWrtData,InvChoose InvSW,ISorNOT isRefresh)
 {
   int16_t xPos = x;
   int16_t yPos = y;

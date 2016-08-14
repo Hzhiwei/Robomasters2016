@@ -485,21 +485,21 @@ void ControlPID_InitConfig(void)
 
     
     PitchOPID.P = 10;
-    PitchOPID.I = 0.01;
+    PitchOPID.I = 0.2;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
     PitchOPID.LastError = 0;
     PitchOPID.LastTick = 0;
-    PitchOPID.IMax = 5;
+    PitchOPID.IMax = 20;
     PitchOPID.PIDMax = 400;
     
-    PitchIPID.P = 50;
-    PitchIPID.I = 0;
+    PitchIPID.P = 75;
+    PitchIPID.I = 10;
     PitchIPID.D = 00;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;
-    PitchIPID.IMax = 0;
+    PitchIPID.IMax = 2000;
     PitchIPID.PIDMax = 5000;
     
     YawOPID.P = 16;

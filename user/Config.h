@@ -5,21 +5,21 @@
 
 
 #define DEBUGECONTROLRC             0           //debug模式遥控控制
-#define USEESP8266orOLEDorOLED      1           //1 使用ESP8266返回裁判系统数据           0 使用oled显示装态
+#define USEESP8266orOLEDorOLED      0           //1 使用ESP8266返回裁判系统数据           0 使用oled显示装态
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
 #define INFANTRY                    1           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 小英雄       7 基地
 
 #if INFANTRY == 1               //萨摩参数↓
 
-    #define FRICMOTORWORKINGSPEED   280         //摩擦轮工作速度(170)
+    #define FRICMOTORWORKINGSPEED   270         //摩擦轮工作速度(170)
     #define POKESTRUCKDEALLINES     400         //拨弹电机卡弹后反转处理线数
     #define CHASSISMAXPOWERRATE     1.0F        //底盘限制极限功率（80W）比例(例如此值为0.9，则实际限制功率为0.9*80=72W）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
     #define POKESTEPMINTIMECRACK    265         //步进最小时间间隔（ms）
     #define MAXWORKINGSPEED         850         //正常运动速度（最大900）
     #define DEPOTABSPITCH           -8.0F       //进补给站云台pitch绝对角度值（0为水平，-20 ~ 20）  
-    #define SNEAKSPEED              150         //潜行速度
+    #define SNEAKSPEED              500         //潜行速度
     #define SWINGMODELIMIT          30          //摇摆模式单边限幅(慎重修改，不得高于40，否则此模式可能失效)
     #define SWINGMODEOMEGA          90          //摇摆模式角速度
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
@@ -36,7 +36,7 @@
     #define POKESTEPMINTIMECRACK    265         //步进最小时间间隔（ms）
     #define MAXWORKINGSPEED         850         //正常运动速度（最大900）
     #define DEPOTABSPITCH           -8.0F       //进补给站云台pitch绝对角度值（0为水平，-20 ~ 20）  
-    #define SNEAKSPEED              150         //潜行速度
+    #define SNEAKSPEED              500         //潜行速度
     #define SWINGMODELIMIT          30          //摇摆模式单边限幅(慎重修改，不得高于40，否则此模式可能失效)
     #define SWINGMODEOMEGA          90          //摇摆模式角速度
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
@@ -53,7 +53,7 @@
     #define POKESTEPMINTIMECRACK    265         //步进最小时间间隔（ms）
     #define MAXWORKINGSPEED         850         //正常运动速度（最大900）
     #define DEPOTABSPITCH           -8.0F       //进补给站云台pitch绝对角度值（0为水平，-20 ~ 20）  
-    #define SNEAKSPEED              150         //潜行速度
+    #define SNEAKSPEED              500         //潜行速度
     #define SWINGMODELIMIT          30          //摇摆模式单边限幅(慎重修改，不得高于40，否则此模式可能失效)
     #define SWINGMODEOMEGA          90          //摇摆模式角速度
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
@@ -70,7 +70,7 @@
     #define POKESTEPMINTIMECRACK    265         //步进最小时间间隔（ms）
     #define MAXWORKINGSPEED         850         //正常运动速度（最大900）
     #define DEPOTABSPITCH           -8.0F       //进补给站云台pitch绝对角度值（0为水平，-20 ~ 20）  
-    #define SNEAKSPEED              150         //潜行速度
+    #define SNEAKSPEED              500         //潜行速度
     #define SWINGMODELIMIT          30          //摇摆模式单边限幅(慎重修改，不得高于40，否则此模式可能失效)
     #define SWINGMODEOMEGA          90          //摇摆模式角速度
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
@@ -88,7 +88,7 @@
     #define POKESTEPMINTIMECRACK    265         //步进最小时间间隔（ms）
     #define MAXWORKINGSPEED         850         //正常运动速度（最大900）
     #define DEPOTABSPITCH           -8.0F       //进补给站云台pitch绝对角度值（0为水平，-20 ~ 20）  
-    #define SNEAKSPEED              150         //潜行速度
+    #define SNEAKSPEED              500         //潜行速度
     #define SWINGMODELIMIT          30          //摇摆模式单边限幅(慎重修改，不得高于40，否则此模式可能失效)
     #define SWINGMODEOMEGA          90          //摇摆模式角速度
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
@@ -105,7 +105,7 @@
     #define POKESTEPMINTIMECRACK    265         //步进最小时间间隔（ms）
     #define MAXWORKINGSPEED         850         //正常运动速度（最大900）
     #define DEPOTABSPITCH           -8.0F       //进补给站云台pitch绝对角度值（0为水平，-20 ~ 20）  
-    #define SNEAKSPEED              150         //潜行速度
+    #define SNEAKSPEED              500         //潜行速度
     #define SWINGMODELIMIT          30          //摇摆模式单边限幅(慎重修改，不得高于40，否则此模式可能失效)
     #define SWINGMODEOMEGA          90          //摇摆模式角速度
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
@@ -124,7 +124,7 @@
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
     #define MOUSESPINSPEED          50.0F       //鼠标自旋速度   
     #define AUTOSHOTDISTANCE        3.2F        //自动射击距离限幅
-    #define AUTOSHOTANGLE           25          //自动射击角度限幅
+    #define AUTOSHOTANGLE           30          //自动射击角度限幅
 
 #endif
 /***************************************   ↑ 操作手参数  ↑ **********************************************/
@@ -146,7 +146,7 @@
     #define PITCHMOTORENCODERPLUSEDIR       1           //pitch轴云台电机编码器增加时转动方向       1 抬头         0 低头
     #define YAWMOTORENCODERPLUSEDIR         1           //yaw轴云台电机编码器增加时转动方向         1 逆时针       0 顺时针
     #define CANPORT                         1           //选择can端口
-    #define MOTORTYPE                       0           //电机种类                                 1 3510        0 35
+    #define MOTORTYPE                       1           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
 
 #elif INFANTRY == 3     //哈士奇
@@ -156,7 +156,7 @@
     #define PITCHMOTORENCODERPLUSEDIR       1           //pitch轴云台电机编码器增加时转动方向       1 抬头         0 低头
     #define YAWMOTORENCODERPLUSEDIR         1           //yaw轴云台电机编码器增加时转动方向         1 逆时针       0 顺时针
     #define CANPORT                         1           //选择can端口
-    #define MOTORTYPE                       0           //电机种类                                 1 3510        0 35
+    #define MOTORTYPE                       1           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
 
 #elif INFANTRY == 4     //金毛
@@ -176,7 +176,7 @@
     #define PITCHMOTORENCODERPLUSEDIR       1           //pitch轴云台电机编码器增加时转动方向       1 抬头         0 低头
     #define YAWMOTORENCODERPLUSEDIR         1           //yaw轴云台电机编码器增加时转动方向         1 逆时针       0 顺时针
     #define CANPORT                         1           //选择can端口
-    #define MOTORTYPE                       0           //电机种类                                 1 3510        0 35
+    #define MOTORTYPE                       1           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
 
 

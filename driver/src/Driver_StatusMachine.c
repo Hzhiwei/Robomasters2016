@@ -101,16 +101,16 @@ void StatusMachine_Update(void)
 /*******************************************  ↓  摩擦轮  ↓  *******************************************/
         if((DBUS_ReceiveData.switch_right == 3) || (DBUS_ReceiveData.switch_right == 2))
         {
-            if(DBUS_ReceiveData.keyBoard.key_code & KEY_Z)
-            {
-                //暴击模式
-                FricStatus = FricStatus_Crazy;
-            }
-            else
-            {
+//            if(DBUS_ReceiveData.keyBoard.key_code & KEY_Z)
+//            {
+//                //暴击模式
+//                FricStatus = FricStatus_Crazy;
+//            }
+//            else
+//            {
                 //正常工作
                 FricStatus = FricStatus_Working;
-            }
+//            }
         }
         else
         {
@@ -185,12 +185,13 @@ void StatusMachine_Update(void)
                     
                     if(BigSampleCounter < VisiolModeChangeDataSendNum)
                     {
+                        VisionType = VisionType_BigSample;
                         SendPCOrder(PCOrder_BigSample);
                         BigSampleCounter++;
                     }
                     else
                     {
-//                        VisionType = VisionType_BigSample;
+                        VisionType = VisionType_BigSample;
                         SendPCOrder(PCOrder_BigSample);
                     }
                 }
@@ -213,8 +214,6 @@ void StatusMachine_Update(void)
                 RateCounter++;
             }
         }
-        
-        
         //用于半自动回归
         else if((KMSubschema == KMSubschema_Halfauto) && (!DBUS_ReceiveData.mouse.press_right))
         {

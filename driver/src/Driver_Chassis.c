@@ -82,6 +82,12 @@ void Chassis_TargetDirectionSet(float Target)
 void Chassis_Adjust(uint8_t mode,uint8_t supply)
 {
     int16_t WheelSpeed[4];
+    
+#if MOTORTYPE == 0
+    int16_t PowerSum;
+    int16_t ABSSpeed[4];
+#endif
+    
     Control_ChassisPID();
     
     //ÂóÂÖ½âËã
