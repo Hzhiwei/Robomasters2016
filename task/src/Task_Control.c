@@ -296,7 +296,7 @@ static void Control_BaseFullAuto(portTickType Tick)
     static float FeedParam = 40;
     static double FeendS = 0;
     static AngleF_Struct LastAngle[LastParam * 2 + 1];
-    static uint8_t LastDataNum = 0;
+    static uint8_t LastDataNum = 0;     //此变量用于解决视觉帧率低于控制帧率导致多次在控制函数中调节底盘时由于视觉帧未更新导致角度错误问题
     
     //预判结果
     ForcastOnce(300, 80, &CurrentAngle, 0);
@@ -653,7 +653,7 @@ static void Control_KMSubschemaHalfauto(portTickType Tick)
     int8_t index;
     float distance = sqrt(EnemyDataBuffer[EnemyDataBufferPoint].Z * EnemyDataBuffer[EnemyDataBufferPoint].Z + EnemyDataBuffer[EnemyDataBufferPoint].Y * EnemyDataBuffer[EnemyDataBufferPoint].Y);
     static AngleF_Struct CurrentAngle;
-    static uint8_t LastDataNum = 0;
+    static uint8_t LastDataNum = 0;     //此变量用于解决视觉帧率低于控制帧率导致多次在控制函数中调节底盘时由于视觉帧未更新导致角度错误问题
     
 #if INFANTRY == 1
     static float FeedParam = 15;
