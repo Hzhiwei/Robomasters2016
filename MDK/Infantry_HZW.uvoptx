@@ -164,6 +164,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -247,6 +248,11 @@
           <count>9</count>
           <WinNumber>1</WinNumber>
           <ItemText>CurrentAngle.H + SuperGyoParam.Angle + SuperGyoParam.Offset</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>EnemyDataBuffer[EnemyDataBufferPoint],0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

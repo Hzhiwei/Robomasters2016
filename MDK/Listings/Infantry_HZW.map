@@ -2625,8 +2625,8 @@ Image Symbol Table
     i.Cloud_PitchAngleSet                    0x080034a0   Section        0  driver_cloudmotor.o(i.Cloud_PitchAngleSet)
     i.Cloud_YawAngleSet                      0x0800356c   Section        0  driver_cloudmotor.o(i.Cloud_YawAngleSet)
     i.ControlPID_InitConfig                  0x080035e4   Section        0  driver_control.o(i.ControlPID_InitConfig)
-    i.Control_BaseFullAuto                   0x08003848   Section        0  task_control.o(i.Control_BaseFullAuto)
-    Control_BaseFullAuto                     0x08003849   Thumb Code  1108  task_control.o(i.Control_BaseFullAuto)
+    i.Control_BaseFullAuto                   0x0800384c   Section        0  task_control.o(i.Control_BaseFullAuto)
+    Control_BaseFullAuto                     0x0800384d   Thumb Code  1104  task_control.o(i.Control_BaseFullAuto)
     i.Control_FeedForwardYawPID              0x08003c9c   Section        0  driver_control.o(i.Control_FeedForwardYawPID)
     i.Control_PitchPID                       0x08003f50   Section        0  driver_control.o(i.Control_PitchPID)
     i.Control_PokeIPID                       0x080041dc   Section        0  driver_control.o(i.Control_PokeIPID)
@@ -3978,8 +3978,8 @@ Memory Map of the image
     0x0800346e   0x00000032   Code   RO          919    i.Cloud_AutoAdjust  driver_cloudmotor.o
     0x080034a0   0x000000cc   Code   RO          920    i.Cloud_PitchAngleSet  driver_cloudmotor.o
     0x0800356c   0x00000078   Code   RO          921    i.Cloud_YawAngleSet  driver_cloudmotor.o
-    0x080035e4   0x00000264   Code   RO          603    i.ControlPID_InitConfig  driver_control.o
-    0x08003848   0x00000454   Code   RO         1060    i.Control_BaseFullAuto  task_control.o
+    0x080035e4   0x00000268   Code   RO          603    i.ControlPID_InitConfig  driver_control.o
+    0x0800384c   0x00000450   Code   RO         1060    i.Control_BaseFullAuto  task_control.o
     0x08003c9c   0x000002b4   Code   RO          605    i.Control_FeedForwardYawPID  driver_control.o
     0x08003f50   0x0000028c   Code   RO          606    i.Control_PitchPID  driver_control.o
     0x080041dc   0x000001e0   Code   RO          607    i.Control_PokeIPID  driver_control.o
@@ -4383,7 +4383,7 @@ Image component sizes
         48         20          0          0          0       1017   driver_bell.o
        268         34          0         20         84       3276   driver_chassis.o
        564         56          0          0         60       5033   driver_cloudmotor.o
-      3416        164          0          0        528       5603   driver_control.o
+      3420        168          0          0        528       5603   driver_control.o
        528         46          0         12        128       3305   driver_dbus.o
          0          0          0          2       1664       1112   driver_esp8266.o
         76         12          0          0          0       1036   driver_fricmotor.o
@@ -4416,14 +4416,14 @@ Image component sizes
        340         32          0          0          0       1489   system_stm32f4xx.o
          0          0          0        263          0        682   task_bell.o
        160         14          0          0          0        615   task_cansend.o
-      1708        164          0         24        120       3075   task_control.o
+      1704        162          0         24        120       3075   task_control.o
        696        118          0          3          0       1175   task_monitor.o
        436         80          0          0          0        753   task_sysinitconfig.o
       3510        458          0         56        240      24463   tasks.o
       1170        108          0         16         40      14315   timers.o
 
     ----------------------------------------------------------------------
-     42442       2670       5042        612      33104     578840   Object Totals
+     42442       2672       5042        612      33104     578840   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         34          0          8         16          2          0   (incl. Padding)
 
@@ -4580,9 +4580,9 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     56550       3530       5842        612      33204     556752   Grand Totals
-     56550       3530       5842        120      33204     556752   ELF Image Totals (compressed)
-     56550       3530       5842        120          0          0   ROM Totals
+     56550       3532       5842        612      33204     556752   Grand Totals
+     56550       3532       5842        120      33204     556752   ELF Image Totals (compressed)
+     56550       3532       5842        120          0          0   ROM Totals
 
 ==============================================================================
 

@@ -340,11 +340,11 @@ static void Control_BaseFullAuto(portTickType Tick)
 //    }
     
     //底盘旋转判断
-    if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 10) % ENEMYDATABUFFERLENGHT].Tick < 800)      //指定时间内
+    if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Tick < 250)      //指定时间内
     {
         if(FristFindTarget)
         {
-            Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);
+            Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);   
         }
         else
         {
@@ -357,7 +357,6 @@ static void Control_BaseFullAuto(portTickType Tick)
                 Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);
             }
         }
-        
         FristFindTarget = 0;
     }
     else
