@@ -152,7 +152,7 @@ static void OLED_WriteCommand(uint8_t iic_command);
 static void IIC_Delay(void)
 {
 	__nop();__nop();__nop();__nop();__nop();__nop();
-//	__nop();__nop();__nop();__nop();__nop();__nop();
+	__nop();__nop();__nop();__nop();__nop();__nop();
 }
 
 

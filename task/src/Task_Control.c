@@ -22,10 +22,10 @@
 #if INFANTRY == 7
 static void Control_BaseFullAuto(portTickType Tick);
 #else
-static void Control_KMMode(void);
+static void Control_KMMode(portTickType Tick);
 static void Control_KMSubschemaNormal(void);
 static void Control_KMSubschemaSupply(void);
-static void Control_KMSubschemaHalfauto(void);
+static void Control_KMSubschemaHalfauto(portTickType Tick);
 static void Control_KMSubschemaSwing(void);
 static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag);
 static void Control_KMSubschemaFullauto(void);
@@ -35,8 +35,6 @@ static void Control_KMSubschemaCircle(void);
 static void Control_RCMode(void);
 static void Control_ProtectMode(void);
 
-static void Control_KMSubschemaHalfauto(void);
-static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag);
 
 
 
@@ -166,14 +164,14 @@ void Task_Control(void *Parameters)
 
 //Debug模式下，此处用于debug，普通模式下用于键鼠控制
 #if DEBUGECONTROLRC == 1
-            Control_KMSubschemaHalfauto();
+            Control_KMSubschemaHalfauto(CurrentControlTick);
 //            Control_KMSubschemaBigsample(0);
 #else	
             
 #if INFANTRY == 7
             Control_BaseFullAuto(CurrentControlTick);
 #else
-            Control_KMMode();
+            Control_KMMode(CurrentControlTick);
 #endif
             
 #endif
@@ -298,6 +296,7 @@ static void Control_BaseFullAuto(portTickType Tick)
     static float FeedParam = 40;
     static double FeendS = 0;
     static AngleF_Struct LastAngle[LastParam * 2 + 1];
+    static uint8_t LastDataNum = 0;
     
     //预判结果
     ForcastOnce(300, 80, &CurrentAngle, 0);
@@ -344,7 +343,10 @@ static void Control_BaseFullAuto(portTickType Tick)
     {
         if(FristFindTarget)
         {
-            Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);   
+            if(LastDataNum != EnemyDataBufferPoint)
+            {
+                Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);   
+            }
         }
         else
         {
@@ -354,7 +356,10 @@ static void Control_BaseFullAuto(portTickType Tick)
             }
             else
             {
-                Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);
+                if(LastDataNum != EnemyDataBufferPoint)
+                {
+                    Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);
+                }
             }
         }
         FristFindTarget = 0;
@@ -388,7 +393,7 @@ static void Control_BaseFullAuto(portTickType Tick)
   * @param  void
   * @retval void
   */
-static void Control_KMMode(void)
+static void Control_KMMode(portTickType Tick)
 {
     static uint8_t FristEnter[7] = {1, 1, 1, 1, 1, 1, 1};
     
@@ -427,7 +432,7 @@ static void Control_KMMode(void)
         FristEnter[5] = 1;
         FristEnter[6] = 1;
         
-        Control_KMSubschemaHalfauto();
+        Control_KMSubschemaHalfauto(Tick);
         
         FristEnter[2] = 0;
     }
@@ -642,11 +647,13 @@ static void Control_KMSubschemaSupply(void)
   * @retval void
   */
 #define LastParam           7
-static void Control_KMSubschemaHalfauto(void)
+    static uint8_t FristFindTarget = 1;
+static void Control_KMSubschemaHalfauto(portTickType Tick)
 {
     int8_t index;
     float distance = sqrt(EnemyDataBuffer[EnemyDataBufferPoint].Z * EnemyDataBuffer[EnemyDataBufferPoint].Z + EnemyDataBuffer[EnemyDataBufferPoint].Y * EnemyDataBuffer[EnemyDataBufferPoint].Y);
     static AngleF_Struct CurrentAngle;
+    static uint8_t LastDataNum = 0;
     
 #if INFANTRY == 1
     static float FeedParam = 15;
@@ -658,15 +665,40 @@ static void Control_KMSubschemaHalfauto(void)
     static double FeendS = 0;
     static AngleF_Struct LastAngle[LastParam * 2 + 1];
     
-    //预判结果
-//    if(EnemyDataBuffer[EnemyDataBufferPoint].Z < 2.2)
-//    {
-        ForcastOnce(300, 80, &CurrentAngle, 0);
-//    }
-//    else if(EnemyDataBuffer[EnemyDataBufferPoint].Z < 3)
-//    {
-//        ForcastOnce(300, 100, &CurrentAngle, 0);
-//    }
+    //底盘旋转判断
+    if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Tick < 250)      //指定时间内
+    {
+        if(FristFindTarget)
+        {
+            if(LastDataNum != EnemyDataBufferPoint)
+            {
+                Chassis_TargetDirectionSet(- atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle);   
+            }
+        }
+        else
+        {
+            if((CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE))          //指定角度内
+            {
+                ;
+            }
+            else
+            {
+                if(LastDataNum != EnemyDataBufferPoint)
+                {
+                    Chassis_TargetDirectionSet(- atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle);
+                }
+            }
+        }
+        FristFindTarget = 0;
+    }
+    else
+    {
+        FristFindTarget = 1;
+    }
+    Chassis_Adjust(1, 0);
+    
+    //预判
+    ForcastOnce(300, 80, &CurrentAngle, 0);
     
     //云台角度设定
     Cloud_YawAngleSet(CurrentAngle.H, AngleMode_OPP);
@@ -694,6 +726,8 @@ static void Control_KMSubschemaHalfauto(void)
         LastAngle[index] = LastAngle[index - 1];
     }
     LastAngle[0] = CurrentAngle;
+    
+    LastDataNum = EnemyDataBufferPoint;
 }
 
 
