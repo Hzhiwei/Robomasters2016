@@ -1,4 +1,5 @@
 .\objects\driver_judge.o: ..\driver\src\Driver_Judge.c
+.\objects\driver_judge.o: ..\user\Config.h
 .\objects\driver_judge.o: ..\driver\inc\Driver_Judge.h
 .\objects\driver_judge.o: ..\core\stm32f4xx.h
 .\objects\driver_judge.o: ..\core\core_cm4.h

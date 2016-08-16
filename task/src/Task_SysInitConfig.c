@@ -76,7 +76,8 @@ void Task_SysInitConfig(void *Parameters)
     GUI_WidgetText_SetRim(Oled_Handler, IS);
     GUI_WidgetText_Show(Oled_Handler, IS, IS);
 #if INFANTRY == 7
-    OLED_Print6x8Str(100, 0, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
+    OLED_Print6x8Str(80, 00, 42, 8, (uint8_t *)"Target:", INV_OFF, IS);
+    OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
 #endif
 #endif
     

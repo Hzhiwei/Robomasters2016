@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "OSinclude.h"
 #include "Driver_DBUS.h"
+#include "Driver_Judge.h"
 #include "Driver_vision.h"
 #include "Driver_Control.h"
 #include "Driver_mpu9250.h"
@@ -54,7 +55,9 @@ void StatusMachine_Update(void)
     static char Color = 'R';
     static uint32_t PushCounter = 0;
     static uint8_t RedCounter = 0, BlueCounter = 0, OffCounter = 0;
+    static uint16_t ColorSendCounter = 0;
     
+    //按键判断
     if(GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_9))
     {
         PushCounter = 0;
@@ -64,6 +67,7 @@ void StatusMachine_Update(void)
         PushCounter++;
     }
     
+    //颜色计数器置位
     if(PushCounter == 1)        //切换颜色
     {
         if(Color == 'R')
@@ -72,7 +76,7 @@ void StatusMachine_Update(void)
             BlueCounter = 10;
             RedCounter = 0;
             OffCounter = 0;
-            OLED_Print6x8Str(100, 0, 30, 8, (uint8_t *)"BLUE", INV_OFF, IS);
+            OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"BLUE", INV_OFF, IS);
         }
         else
         {
@@ -80,7 +84,7 @@ void StatusMachine_Update(void)
             BlueCounter = 0;
             RedCounter = 10;
             OffCounter = 0;
-            OLED_Print6x8Str(100, 0, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
+            OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
         }
     }
     else if(PushCounter == 1000)
@@ -88,9 +92,31 @@ void StatusMachine_Update(void)
         BlueCounter = 0;
         RedCounter = 0;
         OffCounter = 50;
-        OLED_Print6x8Str(100, 0, 30, 8, (uint8_t *)"OFF", INV_OFF, IS);
+        OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"OFF", INV_OFF, IS);
+    }
+    else        //每10s发送颜色切换指令，保证颜色正确
+    {
+        if(ColorSendCounter >= 2000)
+        {
+            if(Color == 'R')
+            {
+                RedCounter += 2;
+            }
+            else
+            {
+                BlueCounter += 2;
+            }
+            
+            ColorSendCounter = 0;
+        }
+        else
+        {
+            ColorSendCounter++;
+        }
     }
     
+    
+    //发送指令
     if(BlueCounter)
     {
         SendEnemyColor('B');
@@ -106,6 +132,18 @@ void StatusMachine_Update(void)
         SendPCOrder(PCOrder_Shutdown);
         OffCounter--;
     }
+    
+//    OLED_Print6x8Str(80, 20, 30, 8, (uint8_t *)OLED_TextPrint("%d", InfantryJudge.ShootNum), INV_OFF, IS);
+//    
+//    if(InfantryJudge.BulletUseUp)
+//    {
+//        OLED_Print6x8Str(80, 30, 30, 8, (uint8_t *)OLED_TextPrint("NB"), INV_OFF, IS);
+//    }
+//    else
+//    {
+//        OLED_Print6x8Str(80, 30, 30, 8, (uint8_t *)OLED_TextPrint("HB"), INV_OFF, IS);
+//    }
+    
     
     
     FricStatus = FricStatus_Working;

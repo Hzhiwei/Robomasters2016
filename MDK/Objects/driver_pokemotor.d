@@ -16,6 +16,7 @@
 .\objects\driver_pokemotor.o: ..\lib\freertos\inc\semphr.h
 .\objects\driver_pokemotor.o: ..\lib\freertos\inc\event_groups.h
 .\objects\driver_pokemotor.o: ..\driver\inc\Driver_Judge.h
+.\objects\driver_pokemotor.o: ..\user\Config.h
 .\objects\driver_pokemotor.o: ..\core\stm32f4xx.h
 .\objects\driver_pokemotor.o: ..\core\core_cm4.h
 .\objects\driver_pokemotor.o: ..\core\core_cmInstr.h
@@ -51,5 +52,4 @@
 .\objects\driver_pokemotor.o: ..\lib\std\inc\stm32f4xx_dcmi.h
 .\objects\driver_pokemotor.o: ..\lib\std\inc\stm32f4xx_fsmc.h
 .\objects\driver_pokemotor.o: ..\driver\inc\Driver_Control.h
-.\objects\driver_pokemotor.o: ..\user\Config.h
 .\objects\driver_pokemotor.o: ..\driver\inc\Driver_PokeMotor.h

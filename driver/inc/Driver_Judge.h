@@ -2,6 +2,7 @@
 #define __DRIVER_JUDGE_H
 
 
+#include "Config.h"
 #include "stm32f4xx.h"
 #include "OSinclude.h"
 
@@ -90,6 +91,11 @@ typedef struct
     portTickType LastHartTick;          //上次受伤害时间 
     float LastShotSpeed;                //上次射击速度
     portTickType LastShotTick;          //上次射击时间
+#if INFANTRY == 7
+    uint16_t ShootNum;                  //已发射子弹数
+    uint8_t BulletUseUp;                //1 基地子弹射完          0 基地子弹未射完
+    uint16_t ShootFail;                 //发射失败时间 
+#endif
 }InfantryJudge_Struct;
 
 

@@ -298,90 +298,111 @@ static void Control_BaseFullAuto(portTickType Tick)
     static AngleF_Struct LastAngle[LastParam * 2 + 1];
     static uint8_t LastDataNum = 0;     //此变量用于解决视觉帧率低于控制帧率导致多次在控制函数中调节底盘时由于视觉帧未更新导致角度错误问题
     
-    //预判结果
-    ForcastOnce(300, 80, &CurrentAngle, 0);
     
-    //云台角度设定
-    Cloud_YawAngleSet(CurrentAngle.H, AngleMode_OPP);
-    Cloud_PitchAngleSet(CurrentAngle.V);
-    
-    //发射频率控制
-    if(distance < 0.4)
-    {
-        ShootSpeed = 30;
-    }
-    else if(distance < 3.5)
-    {
-        ShootSpeed = -distance * 5.36 + 32.152;
-    }
-    else
-    {
-        ShootSpeed =10;
-    }
-    
-    //发射判断
-//    if(DBUS_ReceiveData.switch_right == 2)
-//    {
-        if((EnemyDataBuffer[EnemyDataBufferPoint].Z < AUTOSHOTDISTANCE) &&              //指定距离内
-            (CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE) &&    //指定角度内
-            (Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 30) % ENEMYDATABUFFERLENGHT].Tick < 2000))      //指定时间内
+     //长时间未出子弹认为子弹用光
+     if((SHOOTUSEOFFTICK <= InfantryJudge.ShootFail) && (SHOOTUSEOFFNUM <= InfantryJudge.ShootNum))
+     {
+         InfantryJudge.BulletUseUp = 1;
+     }
+     
+     //子弹未用光，自动射击
+     if(InfantryJudge.BulletUseUp == 0)
+     {
+        //预判结果
+        ForcastOnce(300, 80, &CurrentAngle, 0);
+        
+        //云台角度设定
+        Cloud_YawAngleSet(CurrentAngle.H, AngleMode_OPP);
+        Cloud_PitchAngleSet(CurrentAngle.V);
+        
+        //发射频率控制
+        if(distance < 0.4)
         {
-            Poke_MotorSpeedAdjust(1, ShootSpeed);
+            ShootSpeed = 30;
+        }
+        else if(distance < 3.5)
+        {
+            ShootSpeed = -distance * 5.36 + 32.152;
         }
         else
         {
-            Poke_MotorSpeedAdjust(0, ShootSpeed);
+            ShootSpeed =10;
         }
-//    }
-//    else
-//    {
-//        Poke_MotorSpeedAdjust(0, ShootSpeed);
-//    }
-    
-    //底盘旋转判断
-    if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Tick < 250)      //指定时间内
-    {
-        if(FristFindTarget)
-        {
-            if(LastDataNum != EnemyDataBufferPoint)
+        
+        //发射判断
+    //    if(DBUS_ReceiveData.switch_right == 2)
+    //    {
+            if((EnemyDataBuffer[EnemyDataBufferPoint].Z < AUTOSHOTDISTANCE) &&              //指定距离内
+                (CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE) &&    //指定角度内
+                (Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 30) % ENEMYDATABUFFERLENGHT].Tick < 2000))      //指定时间内
             {
-                Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);   
-            }
-        }
-        else
-        {
-            if((CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE))          //指定角度内
-            {
-                Chassis_BaseControl(0, 0);
+                Poke_MotorSpeedAdjust(1, ShootSpeed);
+                InfantryJudge.ShootFail++;      //发射失败时间自增
             }
             else
             {
+                Poke_MotorSpeedAdjust(0, ShootSpeed);
+            }
+    //    }
+    //    else
+    //    {
+    //        Poke_MotorSpeedAdjust(0, ShootSpeed);
+    //    }
+            
+        
+        //底盘旋转判断
+        if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Tick < 250)      //指定时间内
+        {
+            if(FristFindTarget)
+            {
                 if(LastDataNum != EnemyDataBufferPoint)
                 {
-                    Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);
+                    Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);   
                 }
             }
+            else
+            {
+                if((CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE))          //指定角度内
+                {
+                    Chassis_BaseControl(0, 0);
+                }
+                else
+                {
+                    if(LastDataNum != EnemyDataBufferPoint)
+                    {
+                        Chassis_BaseControl(2,  - atan(EnemyDataBuffer[EnemyDataBufferPoint].X / EnemyDataBuffer[EnemyDataBufferPoint].Z) * 57.2958F + SuperGyoParam.Angle + SuperGyoParam.Offset);
+                    }
+                }
+            }
+            FristFindTarget = 0;
         }
-        FristFindTarget = 0;
+        else
+        {
+            FristFindTarget = 1;
+            Chassis_BaseControl(1, 0);
+        }
+        
+        //速度补偿计算
+        FeendS = (CurrentAngle.H - LastAngle[LastParam * 2].H);
+        
+        //云台调节
+        Cloud_AutoAdjust(FeendS * FeedParam, 1);
+        
+        //历史值保存
+        for (index = LastParam * 2; index > 0; index--)
+        {
+            LastAngle[index] = LastAngle[index - 1];
+        }
+        LastAngle[0] = CurrentAngle;
     }
     else
     {
-        FristFindTarget = 1;
         Chassis_BaseControl(1, 0);
+        Cloud_YawAngleSet(0, AngleMode_OPP);
+        Cloud_PitchAngleSet(0);
+        Cloud_Adjust(1);
+        Poke_MotorSpeedAdjust(0, ShootSpeed);
     }
-    
-    //速度补偿计算
-    FeendS = (CurrentAngle.H - LastAngle[LastParam * 2].H);
-    
-    //云台调节
-    Cloud_AutoAdjust(FeendS * FeedParam, 1);
-    
-    //历史值保存
-    for (index = LastParam * 2; index > 0; index--)
-    {
-        LastAngle[index] = LastAngle[index - 1];
-    }
-    LastAngle[0] = CurrentAngle;
 }
 
 

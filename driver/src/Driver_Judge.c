@@ -1,6 +1,8 @@
 
 #define __DRIVER_GLOBALS
 
+
+#include "Config.h"
 #include "Driver_Judge.h"
 
 
@@ -180,6 +182,11 @@ void Judge_InitConfig(void)
     InfantryJudge.LastShotTick = 0;
     JudgeFrameCounter = 0;
     JudgeFrameRate = 0;
+#if INFANTRY == 7
+    InfantryJudge.ShootNum = 0;
+    InfantryJudge.BulletUseUp = 0;
+    InfantryJudge.ShootFail = 0;
+#endif
 }
 
 

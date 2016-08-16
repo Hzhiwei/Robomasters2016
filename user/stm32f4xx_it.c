@@ -477,6 +477,10 @@ void UART4_IRQHandler(void)
     {
         JudgeFrameCounter++;        //帧数增加
         
+        InfantryJudge.ShootNum++;
+        
+        InfantryJudge.ShootFail = 0;
+        
         //子弹射速
         FT.U[3] = JudgeDataBuffer[9];
         FT.U[2] = JudgeDataBuffer[8];

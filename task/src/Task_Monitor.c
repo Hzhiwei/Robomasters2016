@@ -214,7 +214,7 @@ void Task_Monitor(void *Parameters)
                 WarningLocation++;
             }
             //无警告
-            if(WarningLocation)
+            if(WarningLocation == 0)
             {
 #if USEESP8266orOLEDorOLED == 0
                 GUI_WidgetText_AddText(Oled_Handler, "OK    ");
@@ -297,7 +297,7 @@ void Task_Monitor(void *Parameters)
                 WarningLocation++;
             }
             //无警告
-            if(WarningLocation)
+            if(WarningLocation == 0)
             {
 #if USEESP8266orOLEDorOLED == 0
                 GUI_WidgetText_AddText(Oled_Handler, "OK    ");
