@@ -68,6 +68,10 @@ void Task_SysInitConfig(void *Parameters)
     FricMotor_InitConfig();
     Chassis_InitConfig();
     
+    //延时保证陀螺仪正常初始化
+    vTaskDelay(1000);
+    MPU9250DMP_InitConfig(0);
+    
 #if USEESP8266orOLED == 1
     ESP8266_InitConfig();
 #elif USEESP8266orOLED == 0
@@ -81,9 +85,6 @@ void Task_SysInitConfig(void *Parameters)
 #endif
 #endif
     
-    //延时保证陀螺仪正常初始化
-    vTaskDelay(1000);
-    MPU9250DMP_InitConfig(0);
     
     //等待底盘陀螺仪初始化完成
     vTaskDelay(1000); 

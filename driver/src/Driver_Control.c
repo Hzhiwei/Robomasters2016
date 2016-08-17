@@ -169,23 +169,23 @@ void ControlPID_InitConfig(void)
     
 #elif INFANTRY == 3     //¹þÊ¿Ææ
     
-    PitchOPID.P = 9;
+    PitchOPID.P = 20;
     PitchOPID.I = 00;
-    PitchOPID.D = 0;
+    PitchOPID.D = 0.05;
     PitchOPID.CurrentError = 0;
     PitchOPID.LastError = 0;
     PitchOPID.LastTick = 0;
     PitchOPID.IMax = 0;
     PitchOPID.PIDMax = 500;
     
-    PitchIPID.P = 40;
+    PitchIPID.P = 30;
     PitchIPID.I = 0;
-    PitchIPID.D = 20;
+    PitchIPID.D = 5;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;
     PitchIPID.IMax = 0;
-    PitchIPID.PIDMax = 5000;
+    PitchIPID.PIDMax = 3000;
     
     YawOPID.P = 15;
     YawOPID.I = 0;
@@ -203,7 +203,7 @@ void ControlPID_InitConfig(void)
     YawIPID.LastError = 0;
     YawIPID.LastTick = 0;
     YawIPID.IMax = 0;
-    YawIPID.PIDMax = 5000;
+    YawIPID.PIDMax = 3000;
     
     ChassisOPID.P = 12;
     ChassisOPID.I = 0;

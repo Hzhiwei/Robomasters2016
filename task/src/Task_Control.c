@@ -687,7 +687,7 @@ static void Control_KMSubschemaHalfauto(portTickType Tick)
     static AngleF_Struct LastAngle[LastParam * 2 + 1];
     
     //底盘旋转判断
-    if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Tick < 250)      //指定时间内
+    if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 5) % ENEMYDATABUFFERLENGHT].Tick < 500)      //指定时间内
     {
         if(FristFindTarget)
         {
@@ -716,6 +716,7 @@ static void Control_KMSubschemaHalfauto(portTickType Tick)
     {
         FristFindTarget = 1;
     }
+    Chassis_SpeedSet(0, 0);
     Chassis_Adjust(1, 0);
     
     //预判

@@ -47,13 +47,22 @@ typedef struct
     float X;
     float Y;
     float Z;
-}Offset_TypeDef;
+}XYZOffset_TypeDef;
+
+
+typedef struct
+{
+    float Pitch;
+    float Roll;
+    float Yaw;
+}EulerOffset_TypeDef;
 
 
 //姿态数据
 __MPU9250_EXT MPU9250_TypeDef Position;
 //偏差数据数据
-__MPU9250_EXT Offset_TypeDef Omega_Offset;
+__MPU9250_EXT XYZOffset_TypeDef Omega_Offset;
+__MPU9250_EXT EulerOffset_TypeDef Euler_Offset;
 
 
 void MPU9250_InitConfig(void);

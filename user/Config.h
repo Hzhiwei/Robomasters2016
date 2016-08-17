@@ -8,7 +8,7 @@
 #define USEESP8266orOLEDorOLED      0           //1 使用ESP8266返回裁判系统数据           0 使用oled显示装态
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
-#define INFANTRY                    7           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 小英雄       7 基地
+#define INFANTRY                    3           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 小英雄       7 基地
 
 #if INFANTRY == 1               //萨摩参数↓
 
@@ -44,7 +44,9 @@
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
     #define CIRCLEMODEDELAY         10000       //圈圈模式受到伤害旋转时间 
     #define QESPINSPEED             1.0F        //QE自旋速度   
-    #define MOUSESPINSPEED          50.0F       //鼠标自旋速度   
+    #define MOUSESPINSPEED          50.0F       //鼠标自旋速度 
+    #define AUTOSHOTDISTANCE        3.2F        //自动射击距离限幅
+    #define AUTOSHOTANGLE           30          //自动射击角度限幅   
 
 #elif INFANTRY == 3               //哈士奇参数↓
 
@@ -130,7 +132,7 @@
     #define AUTOSHOTDISTANCE        3.2F        //自动射击距离限幅
     #define AUTOSHOTANGLE           30          //自动射击角度限幅
     #define SHOOTUSEOFFTICK         1600        //连续发射失败时间长于此数据认为子弹用光
-    #define SHOOTUSEOFFNUM          3         //已发射子弹多于此数量可进行use up判断
+    #define SHOOTUSEOFFNUM          150         //已发射子弹多于此数量可进行use up判断
 
 #endif
 /***************************************   ↑ 操作手参数  ↑ **********************************************/

@@ -18,27 +18,30 @@ void Task_CANSend(void *Parameters)
         
          if(CANSendData.CANx == 1)
         {
-            //CAN¹ÊÕÏÖØÆô
-            if(CAN1->ESR)
-            {
-                CAN1->MCR |= 0x02;
-                CAN1->MCR &= 0xFD;
-            }
             
-            while(!(CAN1->TSR & 0x1C000000));
+            do
+            {
+                //CAN¹ÊÕÏÖØÆô
+                if(CAN1->ESR)
+                {
+                    CAN1->MCR |= 0x02;
+                    CAN1->MCR &= 0xFD;
+                }
+            }while(!(CAN1->TSR & 0x1C000000));
             
             CAN_Transmit(CAN1, &(CANSendData.SendCanTxMsg));
         }
         else
         {
-            //CAN¹ÊÕÏÖØÆô
-            if(CAN2->ESR)
+            do
             {
-                CAN2->MCR |= 0x02;
-                CAN2->MCR &= 0xFD;
-            }
-            
-            while(!(CAN2->TSR & 0x1C000000));
+                //CAN¹ÊÕÏÖØÆô
+                if(CAN2->ESR)
+                {
+                    CAN2->MCR |= 0x02;
+                    CAN2->MCR &= 0xFD;
+                }
+            }while(!(CAN2->TSR & 0x1C000000));
             
             CAN_Transmit(CAN2, &(CANSendData.SendCanTxMsg));
         }

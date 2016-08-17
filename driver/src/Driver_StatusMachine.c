@@ -226,9 +226,6 @@ void StatusMachine_Update(void)
         //只允许在Normal模式下进行模式切换
         if(KMSubschema == KMSubschema_Normal)
         {
-            BigSampleCounter = 0;
-            AttackCounter = 0;
-            
             //补给站模式
             if(DBUS_CheckPush(KEY_CTRL))
             {
@@ -250,14 +247,19 @@ void StatusMachine_Update(void)
                 KMSubschema = KMSubschema_Bigsample;
             }
             //全自动模式
-            else if(DBUS_CheckPush(KEY_C))
-            {
-                KMSubschema = KMSubschema_Fullauto;
-            }
+//            else if(DBUS_CheckPush(KEY_C))
+//            {
+//                KMSubschema = KMSubschema_Fullauto;
+//            }
             //圈圈模式
             else if(DBUS_CheckPush(KEY_G))
             {
                 KMSubschema = KMSubschema_Circle;
+            }
+            else
+            {
+                BigSampleCounter = 0;
+                AttackCounter = 0;
             }
         }
         
@@ -285,7 +287,6 @@ void StatusMachine_Update(void)
             //大符模式
             else if(KMSubschema == KMSubschema_Bigsample)
             {
-                AttackCounter = 0;
                 if(BigSampleCounter < VisiolModeChangeDataSendNum)
                 {
                     SendPCOrder(PCOrder_BigSample);
@@ -299,7 +300,6 @@ void StatusMachine_Update(void)
             //自动射击模式
             else if(KMSubschema == KMSubschema_Halfauto)
             {
-                BigSampleCounter = 0;
                 if(AttackCounter < VisiolModeChangeDataSendNum)
                 {
                     SendPCOrder(PCOrder_Attack);
