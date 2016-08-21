@@ -318,7 +318,7 @@ void ControlPID_InitConfig(void)
 #elif INFANTRY == 5     //¹·µ°
     
     PitchOPID.P = 9;
-    PitchOPID.I = 00;
+    PitchOPID.I = 0;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
     PitchOPID.LastError = 0;

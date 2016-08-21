@@ -4,11 +4,11 @@
 #define __CONFIG_H
 
 
-#define DEBUGECONTROLRC             0           //debug模式遥控控制
+#define DEBUGECONTROLRC             1           //debug模式遥控控制
 #define USEESP8266orOLEDorOLED      0           //1 使用ESP8266返回裁判系统数据           0 使用oled显示装态
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
-#define INFANTRY                    3           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 小英雄       7 基地
+#define INFANTRY                    5           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 小英雄       7 基地
 
 #if INFANTRY == 1               //萨摩参数↓
 
@@ -28,6 +28,8 @@
     #define MOUSESPINSPEED          50.0F       //鼠标自旋速度   
     #define AUTOSHOTDISTANCE        3.2F        //自动射击距离限幅
     #define AUTOSHOTANGLE           30          //自动射击角度限幅 
+    #define BIGSAMPLEOFFSETXPARAM   0.001       //大符X轴鼠标偏移调节倍率
+    #define BIGSAMPLEOFFSETYPARAM   0.001       //大符X轴鼠标偏移调节倍率
     
 #elif INFANTRY == 2               //阿拉斯加参数↓
 
@@ -46,7 +48,9 @@
     #define QESPINSPEED             1.0F        //QE自旋速度   
     #define MOUSESPINSPEED          50.0F       //鼠标自旋速度 
     #define AUTOSHOTDISTANCE        3.2F        //自动射击距离限幅
-    #define AUTOSHOTANGLE           30          //自动射击角度限幅   
+    #define AUTOSHOTANGLE           30          //自动射击角度限幅  
+    #define BIGSAMPLEOFFSETXPARAM   0.001       //大符X轴鼠标偏移调节倍率
+    #define BIGSAMPLEOFFSETYPARAM   0.001       //大符X轴鼠标偏移调节倍率 
 
 #elif INFANTRY == 3               //哈士奇参数↓
 
@@ -66,6 +70,8 @@
     #define MOUSESPINSPEED          50.0F       //鼠标自旋速度 
     #define AUTOSHOTDISTANCE        3.2F        //自动射击距离限幅
     #define AUTOSHOTANGLE           30          //自动射击角度限幅  
+    #define BIGSAMPLEOFFSETXPARAM   0.001       //大符X轴鼠标偏移调节倍率
+    #define BIGSAMPLEOFFSETYPARAM   0.001       //大符X轴鼠标偏移调节倍率
 
 #elif INFANTRY == 4               //金毛
 
@@ -82,7 +88,9 @@
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
     #define CIRCLEMODEDELAY         10000       //圈圈模式受到伤害旋转时间  
     #define QESPINSPEED             1.0F        //QE自旋速度  
-    #define MOUSESPINSPEED          50.0F       //鼠标自旋速度    
+    #define MOUSESPINSPEED          50.0F       //鼠标自旋速度  
+    #define BIGSAMPLEOFFSETXPARAM   0.001       //大符X轴鼠标偏移调节倍率
+    #define BIGSAMPLEOFFSETYPARAM   0.001       //大符X轴鼠标偏移调节倍率  
 
 
 #elif INFANTRY == 5               //狗蛋
@@ -100,7 +108,11 @@
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
     #define CIRCLEMODEDELAY         10000       //圈圈模式受到伤害旋转时间  
     #define QESPINSPEED             1.0F        //QE自旋速度  
-    #define MOUSESPINSPEED          50.0F       //鼠标自旋速度      
+    #define MOUSESPINSPEED          50.0F       //鼠标自旋速度 
+    #define AUTOSHOTDISTANCE        3.2F        //自动射击距离限幅
+    #define AUTOSHOTANGLE           30          //自动射击角度限幅  
+    #define BIGSAMPLEOFFSETXPARAM   0.001       //大符X轴鼠标偏移调节倍率
+    #define BIGSAMPLEOFFSETYPARAM   0.001       //大符X轴鼠标偏移调节倍率    
 
 #elif INFANTRY == 6               //比特参数↓
 

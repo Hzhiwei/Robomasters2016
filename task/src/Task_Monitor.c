@@ -232,6 +232,14 @@ void Task_Monitor(void *Parameters)
 #endif
                 WarningLocation++;
             }
+            //pitch云台电机
+            if(SysErrorStatus & 0x0002)
+            {
+#if USEESP8266orOLEDorOLED == 0
+                GUI_WidgetText_AddText(Oled_Handler, "Pitch ");
+#endif
+                WarningLocation++;
+            }
             //yaw云台电机
             if(SysErrorStatus & 0x0004)
             {
@@ -240,11 +248,11 @@ void Task_Monitor(void *Parameters)
 #endif
                 WarningLocation++;
             }
-            //pitch云台电机
-            if(SysErrorStatus & 0x0002)
+            //主机串口
+            if(SysErrorStatus & 0x0008)
             {
 #if USEESP8266orOLEDorOLED == 0
-                GUI_WidgetText_AddText(Oled_Handler, "Pitch ");
+                GUI_WidgetText_AddText(Oled_Handler, "PC    ");
 #endif
                 WarningLocation++;
             }

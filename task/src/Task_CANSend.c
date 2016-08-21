@@ -26,6 +26,9 @@ void Task_CANSend(void *Parameters)
                 {
                     CAN1->MCR |= 0x02;
                     CAN1->MCR &= 0xFD;
+//                    CAN1->MCR |= 0x01;
+//                    CAN1->MCR &= 0xFE;
+//                    vTaskDelay(1);
                 }
             }while(!(CAN1->TSR & 0x1C000000));
             
@@ -40,6 +43,7 @@ void Task_CANSend(void *Parameters)
                 {
                     CAN2->MCR |= 0x02;
                     CAN2->MCR &= 0xFD;
+//                    vTaskDelay(1);
                 }
             }while(!(CAN2->TSR & 0x1C000000));
             

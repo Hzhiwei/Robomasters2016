@@ -93,7 +93,7 @@ AngleF_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t Pi
     float X0, Y0, Z0;
     
     //考虑荒地上底盘不水平情况，进行坐标轴距离变换（仅Pitch轴）
-//    OneAngle = RealPitch - (PitchEncoder - PitchCenter) * 0.04395F - atan(Z / Y);
+//    OneAngle = CloudParam.Pitch.RealABSAngle - (PitchEncoder - PitchEncoderCenter) * 0.04395F - atan(Z / Y);
 //    X0 = X;
 //    Y0 = sqrt(Z * Z + Y * Y) * sin(OneAngle);
 //    Z0 = sqrt(Z * Z + Y * Y) * cos(OneAngle);
@@ -278,7 +278,7 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleF_Struct *Fo
                                     ForcastPoint.Z,
                                     Position.Euler.Pitch,
                                     CloudParam.Pitch.RealEncoderAngle,
-                                    1);
+                                    0);
         
         return 0;
     }
@@ -291,7 +291,7 @@ uint8_t ForcastOnce(uint16_t SampleTime, uint16_t ForcastTime, AngleF_Struct *Fo
                                     EnemyDataBuffer[EnemyDataBufferPoint].Z,
                                     Position.Euler.Pitch,
                                     CloudParam.Pitch.RealEncoderAngle,
-                                    1);
+                                    0);
         
         return 1;
     }

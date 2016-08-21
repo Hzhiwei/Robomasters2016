@@ -717,7 +717,7 @@ static void Control_KMSubschemaHalfauto(portTickType Tick)
         FristFindTarget = 1;
     }
     Chassis_SpeedSet(0, 0);
-    Chassis_Adjust(1, 0);
+//    Chassis_Adjust(1, 0);
     
     //预判
     ForcastOnce(300, 80, &CurrentAngle, 0);
@@ -883,6 +883,11 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag)
     static uint16_t LLLastTimeStamp = 256;
     static uint16_t LLLLastTimeStamp = 257;
     
+    static float OffsetX = 0, OffsetY = 0;
+    
+    OffsetX -= DBUS_ReceiveData.mouse.x * BIGSAMPLEOFFSETXPARAM;
+    OffsetY -= DBUS_ReceiveData.mouse.y * BIGSAMPLEOFFSETYPARAM;
+    
     //防疯转
     if(FristEnterFlag)
     {
@@ -895,8 +900,8 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag)
     CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 1);
     
     //云台角度设定
-    Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H, AngleMode_ABS);
-    Cloud_PitchAngleSet(CurrentAngle.V);
+    Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H + OffsetX, AngleMode_ABS);
+    Cloud_PitchAngleSet(CurrentAngle.V + OffsetY);
     Cloud_Adjust(1);
     
     //新目标出现
