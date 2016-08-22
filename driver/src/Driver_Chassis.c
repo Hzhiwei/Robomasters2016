@@ -88,7 +88,11 @@ void Chassis_Adjust(uint8_t mode,uint8_t supply)
     int16_t ABSSpeed[4];
 #endif
     
-    Control_ChassisPID();
+    //补给站模式不进行角度闭环
+    if(!supply)
+    {
+        Control_ChassisPID();
+    }
     
     //麦轮解算
     MecanumCalculate(ChassisParam.TargetVX, ChassisParam.TargetVY, ChassisParam.TargetOmega, WheelSpeed);

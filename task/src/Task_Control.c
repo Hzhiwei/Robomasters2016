@@ -19,6 +19,7 @@
 
 #include <math.h>
 
+
 #if INFANTRY == 7
 static void Control_BaseFullAuto(portTickType Tick);
 #else
@@ -417,6 +418,12 @@ static void Control_BaseFullAuto(portTickType Tick)
 static void Control_KMMode(portTickType Tick)
 {
     static uint8_t FristEnter[7] = {1, 1, 1, 1, 1, 1, 1};
+    static KMSubschema_Enum LastKMSubschema = KMSubschema_Normal;
+    
+    if((LastKMSubschema == KMSubschema_Supply) && (KMSubschema != KMSubschema_Supply))
+    {
+        ChassisParam.TargetABSAngle = SuperGyoParam.Angle;
+    }
     
     if(KMSubschema_Normal == KMSubschema)
     {
@@ -509,6 +516,8 @@ static void Control_KMMode(portTickType Tick)
         
         FristEnter[6] = 0;
     }
+    
+    LastKMSubschema = KMSubschema;
 }
 
 
@@ -622,7 +631,7 @@ static void Control_KMSubschemaSupply(void)
     {
         TargetYaw = CloudParam.Yaw.TargetABSAngle - MOUSESPINSPEED * DBUS_ReceiveData.mouse.x / 2000.0F;
     }
-    Cloud_YawAngleSet(TargetYaw, AngleMode_ABS);
+    Cloud_YawAngleSet(SuperGyoParam.Angle, AngleMode_ABS);
     Cloud_PitchAngleSet(DEPOTABSPITCH);
     Cloud_Adjust(1);
     
@@ -653,7 +662,8 @@ static void Control_KMSubschemaSupply(void)
         Yspeed = 0;
     }
     
-    Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
+    //补给站模式不进行角度闭环，手动设置角速度
+    ChassisParam.TargetOmega = DBUS_ReceiveData.mouse.x * 2;
     Chassis_SpeedSet(SNEAKSPEED * Xspeed, SNEAKSPEED * Yspeed);
     Chassis_Adjust(1, 1);
 	
@@ -717,7 +727,7 @@ static void Control_KMSubschemaHalfauto(portTickType Tick)
         FristFindTarget = 1;
     }
     Chassis_SpeedSet(0, 0);
-//    Chassis_Adjust(1, 0);
+    Chassis_Adjust(1, 0);
     
     //预判
     ForcastOnce(300, 80, &CurrentAngle, 0);

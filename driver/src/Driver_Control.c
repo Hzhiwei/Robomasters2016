@@ -57,7 +57,7 @@ void ControlPID_InitConfig(void)
     YawIPID.IMax = 0;
     YawIPID.PIDMax = 5000;
     
-    ChassisOPID.P = 30;
+    ChassisOPID.P = 25;
     ChassisOPID.I = 0;
     ChassisOPID.D = 0;
     ChassisOPID.CurrentError = 0;
@@ -484,7 +484,7 @@ void ControlPID_InitConfig(void)
 #elif INFANTRY == 7     //ป๙ตุ
 
     
-    PitchOPID.P = 10;
+    PitchOPID.P = 12;
     PitchOPID.I = 0.2;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
@@ -493,7 +493,7 @@ void ControlPID_InitConfig(void)
     PitchOPID.IMax = 20;
     PitchOPID.PIDMax = 400;
     
-    PitchIPID.P = 50;
+    PitchIPID.P = 35;
     PitchIPID.I = 10;
     PitchIPID.D = -50;
     PitchIPID.CurrentError = 0;

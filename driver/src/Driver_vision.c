@@ -83,20 +83,55 @@ void Vision_InitConfig(void)
   * @param  0 不考虑重力加速度      1 考虑重力加速度
   * @retval 角度(编码器，中间为0）
   */
+//    AngleF_Struct ReturnData;
+//    float distance;
+//    float X0, Y0, Z0;
+//    float L;
+//    float AngleA;
 AngleF_Struct RecToPolar(float X, float Y, float Z, float RealPitch, uint16_t PitchEncoder, uint8_t mode)
 {
+    
+//    L = sqrt(X * X + Z * Z);
+//    AngleA = (CloudParam.Pitch.RealABSAngle - (CloudParam.Pitch.RealEncoderAngle - PitchEncoderCenter) * 0.04395F) * 0.0087266F;
+//    X0 = X;
+//    Y0 = L * sin(AngleA);
+//    Z0 = Z;
+//    distance = L * cos(AngleA);
+//    
+//    if((X0 == 0) && (Y0 == 0) && (Z0 == 0))
+//    {
+//        ReturnData.H = 0;
+//        ReturnData.V = 0;
+//        return ReturnData;
+//    }
+//    
+//    ReturnData.H =  - atan(X0 / Z0) * 57.2958F;
+//    
+//    if(mode == 0)
+//    {
+//    //不考虑重力加速度
+//        ReturnData.V = -atan(Y0 / distance) * 57.2958F;
+//    }
+//    else
+//    {
+//    //考虑重力加速度
+//        ReturnData.V = (atan(((ACCofGravity * distance * distance) / (GUNSpeed * GUNSpeed) - Y0) / sqrt(Y0 * Y0 + distance * distance)) - atan(Y0 / distance)) / 2 * 57.2958F;
+//    }
+//    
+//    return ReturnData;
+
+
+
+
+
+
+
+
+
     AngleF_Struct ReturnData;
     float Distance = sqrt(X * X + Z * Z);
-    float distance;
-//    float radian;
-//    float OneAngle;
+    float distance;;
     float X0, Y0, Z0;
-    
-    //考虑荒地上底盘不水平情况，进行坐标轴距离变换（仅Pitch轴）
-//    OneAngle = CloudParam.Pitch.RealABSAngle - (PitchEncoder - PitchEncoderCenter) * 0.04395F - atan(Z / Y);
-//    X0 = X;
-//    Y0 = sqrt(Z * Z + Y * Y) * sin(OneAngle);
-//    Z0 = sqrt(Z * Z + Y * Y) * cos(OneAngle);
     
     X0 = X;
     Y0 = Y;

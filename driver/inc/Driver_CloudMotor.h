@@ -78,7 +78,7 @@
 
     #define PitchEncoderUPLimit             5830
     #define PitchEncoderDOWNLimit           4910
-    #define PitchEncoderCenter              5154
+    #define PitchEncoderCenter              5066
     #define YawEncoderLEFTLimit             10400
     #define YawEncoderRIGHTLimit            8200
     #define YawEncoderCenter                9265
