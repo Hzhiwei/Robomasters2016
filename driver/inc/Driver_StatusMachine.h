@@ -4,6 +4,7 @@
 
 
 #include "stm32f4xx.h"
+#include "OSinclude.h"
 
 
 #define VisiolModeChangeDataSendNum     10
@@ -54,7 +55,7 @@ __DRIVER_STATUSMACHINE_EXT uint8_t                  ShotFlag;               //ÿ
 
 
 void StatusMachine_InitConfig(void);
-void StatusMachine_Update(void);
+void StatusMachine_Update(portTickType Tick);
 
 
 #endif

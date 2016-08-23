@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Infantry_HZW.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Infantry_HZW.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Mon Aug 22 15:42:52 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Tue Aug 23 11:22:06 2016
 <BR><P>
 <H3>Maximum Stack Usage =        424 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1422,7 +1422,7 @@ Global Symbols
 <P><STRONG><a name="[d]"></a>BusFault_Handler</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.BusFault_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
-<P><STRONG><a name="[27]"></a>CAN1_RX0_IRQHandler</STRONG> (Thumb, 368 bytes, Stack size 16 bytes, stm32f4xx_it.o(i.CAN1_RX0_IRQHandler))
+<P><STRONG><a name="[27]"></a>CAN1_RX0_IRQHandler</STRONG> (Thumb, 372 bytes, Stack size 16 bytes, stm32f4xx_it.o(i.CAN1_RX0_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = CAN1_RX0_IRQHandler &rArr; CAN_Receive
 </UL>
 <BR>[Calls]<UL><LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Receive
@@ -1511,7 +1511,7 @@ Global Symbols
 <LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMSubschemaCircle
 </UL>
 
-<P><STRONG><a name="[111]"></a>CloudMotorCurrent</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, driver_cloudmotor.o(i.CloudMotorCurrent))
+<P><STRONG><a name="[111]"></a>CloudMotorCurrent</STRONG> (Thumb, 72 bytes, Stack size 16 bytes, driver_cloudmotor.o(i.CloudMotorCurrent))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = CloudMotorCurrent &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
@@ -2228,8 +2228,8 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_SysInitConfig
 </UL>
 
-<P><STRONG><a name="[182]"></a>StatusMachine_Update</STRONG> (Thumb, 586 bytes, Stack size 8 bytes, driver_statusmachine.o(i.StatusMachine_Update))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = StatusMachine_Update &rArr; SendPCOrder
+<P><STRONG><a name="[182]"></a>StatusMachine_Update</STRONG> (Thumb, 590 bytes, Stack size 16 bytes, driver_statusmachine.o(i.StatusMachine_Update))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = StatusMachine_Update &rArr; SendPCOrder
 </UL>
 <BR>[Calls]<UL><LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetTickCount
 <LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendPCOrder
@@ -2355,7 +2355,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> task_sysinitconfig.o(i.Task_SysInitConfig)
 </UL>
-<P><STRONG><a name="[6c]"></a>Task_Control</STRONG> (Thumb, 386 bytes, Stack size 8 bytes, task_control.o(i.Task_Control))
+<P><STRONG><a name="[6c]"></a>Task_Control</STRONG> (Thumb, 388 bytes, Stack size 8 bytes, task_control.o(i.Task_Control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 376<LI>Call Chain = Task_Control &rArr; Control_KMMode &rArr; Control_KMSubschemaHalfauto &rArr; ForcastOnce &rArr; RecToPolar &rArr; __hardfp_atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetTickCount
@@ -3915,7 +3915,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Adjust
 </UL>
 
-<P><STRONG><a name="[118]"></a>Control_KMMode</STRONG> (Thumb, 292 bytes, Stack size 8 bytes, task_control.o(i.Control_KMMode))
+<P><STRONG><a name="[118]"></a>Control_KMMode</STRONG> (Thumb, 294 bytes, Stack size 8 bytes, task_control.o(i.Control_KMMode))
 <BR><BR>[Stack]<UL><LI>Max Depth = 368<LI>Call Chain = Control_KMMode &rArr; Control_KMSubschemaHalfauto &rArr; ForcastOnce &rArr; RecToPolar &rArr; __hardfp_atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Control_KMSubschemaSwing
@@ -3929,8 +3929,8 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[6c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task_Control
 </UL>
 
-<P><STRONG><a name="[11d]"></a>Control_KMSubschemaBigsample</STRONG> (Thumb, 500 bytes, Stack size 48 bytes, task_control.o(i.Control_KMSubschemaBigsample))
-<BR><BR>[Stack]<UL><LI>Max Depth = 280<LI>Call Chain = Control_KMSubschemaBigsample &rArr; RecToPolar &rArr; __hardfp_atan &rArr; __kernel_poly &rArr; __aeabi_dmul
+<P><STRONG><a name="[11d]"></a>Control_KMSubschemaBigsample</STRONG> (Thumb, 538 bytes, Stack size 56 bytes, task_control.o(i.Control_KMSubschemaBigsample))
+<BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = Control_KMSubschemaBigsample &rArr; RecToPolar &rArr; __hardfp_atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[125]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RecToPolar
 <LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_YawAngleSet

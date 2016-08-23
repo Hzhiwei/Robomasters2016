@@ -2,7 +2,6 @@
 #define __DRIVER_STATUSMACHINE_GLOBALS
 
 #include "Config.h"
-#include "OSinclude.h"
 #include "Driver_DBUS.h"
 #include "Driver_Judge.h"
 #include "Driver_vision.h"
@@ -46,7 +45,7 @@ void StatusMachine_InitConfig(void)
             QE自旋
   */
 uint8_t FristToKM = 1;
-void StatusMachine_Update(void)
+void StatusMachine_Update(portTickType Tick)
 {
     
 //基地直接进入自动模式
@@ -57,97 +56,91 @@ void StatusMachine_Update(void)
     static uint8_t RedCounter = 0, BlueCounter = 0, OffCounter = 0;
     static uint16_t ColorSendCounter = 0;
     
-    //按键判断
-    if(GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_9))
+    if(Tick > 8000)
     {
-        PushCounter = 0;
-    }
-    else
-    {
-        PushCounter++;
-    }
-    
-    //颜色计数器置位
-    if(PushCounter == 1)        //切换颜色
-    {
-        if(Color == 'R')
+        //按键判断
+        if(GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_9))
         {
-            Color = 'B';
-            BlueCounter = 10;
-            RedCounter = 0;
-            OffCounter = 0;
-            OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"BLUE", INV_OFF, IS);
+            PushCounter = 0;
         }
         else
         {
-            Color = 'R';
-            BlueCounter = 0;
-            RedCounter = 10;
-            OffCounter = 0;
-            OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
+            PushCounter++;
         }
-    }
-    else if(PushCounter == 1000)
-    {
-        BlueCounter = 0;
-        RedCounter = 0;
-        OffCounter = 50;
-        OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"OFF", INV_OFF, IS);
-    }
-    else        //每10s发送颜色切换指令，保证颜色正确
-    {
-        if(ColorSendCounter >= 2000)
+        
+        //颜色计数器置位
+        if(PushCounter == 1)        //切换颜色
         {
             if(Color == 'R')
             {
-                RedCounter += 2;
+                Color = 'B';
+                BlueCounter = 10;
+                RedCounter = 0;
+                OffCounter = 0;
+                OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"BLUE", INV_OFF, IS);
             }
             else
             {
-                BlueCounter += 2;
+                Color = 'R';
+                BlueCounter = 0;
+                RedCounter = 10;
+                OffCounter = 0;
+                OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
             }
-            
-            ColorSendCounter = 0;
         }
-        else
+        else if(PushCounter == 1000)
         {
-            ColorSendCounter++;
+            BlueCounter = 0;
+            RedCounter = 0;
+            OffCounter = 50;
+            OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"OFF", INV_OFF, IS);
         }
+        else        //每10s发送颜色切换指令，保证颜色正确
+        {
+            if(ColorSendCounter >= 2000)
+            {
+                if(Color == 'R')
+                {
+                    RedCounter += 2;
+                }
+                else
+                {
+                    BlueCounter += 2;
+                }
+                
+                ColorSendCounter = 0;
+            }
+            else
+            {
+                ColorSendCounter++;
+            }
+        }
+        
+        
+        //发送指令
+        if(BlueCounter)
+        {
+            SendEnemyColor('B');
+            BlueCounter--;
+        }
+        else if(RedCounter)
+        {
+            SendEnemyColor('R');
+            RedCounter--;
+        }
+        else if(OffCounter)
+        {
+            SendPCOrder(PCOrder_Shutdown);
+            OffCounter--;
+        }
+        
+        FricStatus = FricStatus_Working;
+        ControlMode = ControlMode_KM;
     }
-    
-    
-    //发送指令
-    if(BlueCounter)
+    else
     {
-        SendEnemyColor('B');
-        BlueCounter--;
+        ControlMode = ControlMode_Protect;
     }
-    else if(RedCounter)
-    {
-        SendEnemyColor('R');
-        RedCounter--;
-    }
-    else if(OffCounter)
-    {
-        SendPCOrder(PCOrder_Shutdown);
-        OffCounter--;
-    }
-    
-//    OLED_Print6x8Str(80, 20, 30, 8, (uint8_t *)OLED_TextPrint("%d", InfantryJudge.ShootNum), INV_OFF, IS);
-//    
-//    if(InfantryJudge.BulletUseUp)
-//    {
-//        OLED_Print6x8Str(80, 30, 30, 8, (uint8_t *)OLED_TextPrint("NB"), INV_OFF, IS);
-//    }
-//    else
-//    {
-//        OLED_Print6x8Str(80, 30, 30, 8, (uint8_t *)OLED_TextPrint("HB"), INV_OFF, IS);
-//    }
-    
-    
-    
-    FricStatus = FricStatus_Working;
-    ControlMode = ControlMode_KM;
     
     return;
     
@@ -231,20 +224,22 @@ void StatusMachine_Update(void)
             {
                 KMSubschema = KMSubschema_Supply;
             }
+#if AUTOSUPPORT == 1
             //半自动模式
             else if(DBUS_ReceiveData.mouse.press_right)
             {
                 KMSubschema = KMSubschema_Halfauto;
             }
-            //摇摆模式
-            else if(DBUS_CheckPush(KEY_F))
-            {
-                KMSubschema = KMSubschema_Swing;
-            }
             //大符模式
             else if(DBUS_CheckPush(KEY_X))
             {
                 KMSubschema = KMSubschema_Bigsample;
+            }
+#endif
+            //摇摆模式
+            else if(DBUS_CheckPush(KEY_F))
+            {
+                KMSubschema = KMSubschema_Swing;
             }
             //全自动模式
 //            else if(DBUS_CheckPush(KEY_C))

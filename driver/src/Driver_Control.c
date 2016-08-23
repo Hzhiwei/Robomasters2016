@@ -254,7 +254,7 @@ void ControlPID_InitConfig(void)
     
     PitchIPID.P = 40;
     PitchIPID.I = 0;
-    PitchIPID.D = 0;
+    PitchIPID.D = 1;
     PitchIPID.CurrentError = 0;
     PitchIPID.LastError = 0;
     PitchIPID.LastTick = 0;

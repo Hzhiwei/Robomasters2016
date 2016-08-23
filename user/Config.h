@@ -8,7 +8,7 @@
 #define USEESP8266orOLEDorOLED      0           //1 使用ESP8266返回裁判系统数据           0 使用oled显示装态
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
-#define INFANTRY                    1           //1萨摩   2阿拉斯加   3哈士奇    4 金毛（原来叫边牧的，结果傻狗这厮抢了，还不告诉我）  5 狗蛋       6 小英雄       7 基地
+#define INFANTRY                    5           //1萨摩   2阿拉斯加   3哈士奇    4 金毛   5 狗蛋       6 小英雄       7 基地
 
 #if INFANTRY == 1               //萨摩参数↓
 
@@ -54,7 +54,7 @@
 
 #elif INFANTRY == 3               //哈士奇参数↓
 
-    #define FRICMOTORWORKINGSPEED   260         //摩擦轮工作速度(170)
+    #define FRICMOTORWORKINGSPEED   250         //摩擦轮工作速度(170)
     #define POKESTRUCKDEALLINES     400         //拨弹电机卡弹后反转处理线数
     #define CHASSISMAXPOWERRATE     0.82F       //底盘限制极限功率（80W）比例(例如此值为0.9，则实际限制功率为0.9*80=72W）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
@@ -75,7 +75,7 @@
 
 #elif INFANTRY == 4               //金毛
 
-    #define FRICMOTORWORKINGSPEED   310         //摩擦轮工作速度(230)
+    #define FRICMOTORWORKINGSPEED   250         //摩擦轮工作速度(230)
     #define POKESTRUCKDEALLINES     400          //拨弹电机卡弹后反转处理线数
     #define CHASSISMAXPOWERRATE     0.82F       //底盘限制极限功率（80W）比例(例如此值为0.9，则实际限制功率为0.9*80=72W）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）
@@ -88,7 +88,9 @@
     #define CIRCLEMODEOMEGA         300         //圈圈模式角速度
     #define CIRCLEMODEDELAY         10000       //圈圈模式受到伤害旋转时间  
     #define QESPINSPEED             1.0F        //QE自旋速度  
-    #define MOUSESPINSPEED          50.0F       //鼠标自旋速度  
+    #define MOUSESPINSPEED          50.0F       //鼠标自旋速度 
+    #define AUTOSHOTDISTANCE        3.2F        //自动射击距离限幅
+    #define AUTOSHOTANGLE           30          //自动射击角度限幅   
     #define BIGSAMPLEOFFSETXPARAM   0.001       //大符X轴鼠标偏移调节倍率
     #define BIGSAMPLEOFFSETYPARAM   0.001       //大符X轴鼠标偏移调节倍率  
 
@@ -158,6 +160,7 @@
     #define CANPORT                         1           //选择can端口
     #define MOTORTYPE                       1           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
+    #define AUTOSUPPORT                     1           //自动支持（大符/自动射击）                 1 支持        0 不支持    
     
 #elif INFANTRY == 2     //阿拉斯加
     
@@ -168,6 +171,7 @@
     #define CANPORT                         1           //选择can端口
     #define MOTORTYPE                       1           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
+    #define AUTOSUPPORT                     1           //自动支持（大符/自动射击）                 1 支持        0 不支持  
 
 #elif INFANTRY == 3     //哈士奇
     
@@ -178,6 +182,7 @@
     #define CANPORT                         1           //选择can端口
     #define MOTORTYPE                       1           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
+    #define AUTOSUPPORT                     1           //自动支持（大符/自动射击）                 1 支持        0 不支持  
 
 #elif INFANTRY == 4     //金毛
     
@@ -188,6 +193,7 @@
     #define CANPORT                         1           //选择can端口
     #define MOTORTYPE                       0          //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
+    #define AUTOSUPPORT                     0           //自动支持（大符/自动射击）                 1 支持        0 不支持  
 
 #elif INFANTRY == 5     //狗蛋
     
@@ -198,6 +204,7 @@
     #define CANPORT                         1           //选择can端口
     #define MOTORTYPE                       1           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
+    #define AUTOSUPPORT                     1           //自动支持（大符/自动射击）                 1 支持        0 不支持  
 
 
 #elif INFANTRY == 6     //小英雄
@@ -209,6 +216,7 @@
     #define CANPORT                         1           //选择can端口
     #define MOTORTYPE                       0           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        1           //摩擦轮种类                               1 3510        0 普通无刷
+    #define AUTOSUPPORT                     0           //自动支持（大符/自动射击）                 1 支持        0 不支持  
 
 
 #elif INFANTRY == 7     //基地
@@ -220,6 +228,7 @@
     #define CANPORT                         1           //选择can端口
     #define MOTORTYPE                       0           //电机种类                                 1 3510        0 35
     #define FRICTYPE                        0           //摩擦轮种类                               1 3510        0 普通无刷
+    #define AUTOSUPPORT                     0           //自动支持（大符/自动射击）                 1 支持        0 不支持  
 
 #endif
 

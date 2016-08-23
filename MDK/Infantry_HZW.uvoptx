@@ -164,7 +164,6 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -256,6 +255,26 @@
         </Ww>
         <Ww>
           <count>11</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PitchIPID,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>LastBigsampleShotTick,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>13</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PokeMotorParam,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PitchOPID,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
           <WinNumber>1</WinNumber>
           <ItemText>PitchIPID,0x0A</ItemText>
         </Ww>

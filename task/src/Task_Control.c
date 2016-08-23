@@ -28,7 +28,7 @@ static void Control_KMSubschemaNormal(void);
 static void Control_KMSubschemaSupply(void);
 static void Control_KMSubschemaHalfauto(portTickType Tick);
 static void Control_KMSubschemaSwing(void);
-static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag);
+static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType CurrentTick);
 static void Control_KMSubschemaFullauto(void);
 static void Control_KMSubschemaCircle(void);
 #endif
@@ -83,7 +83,7 @@ void Task_Control(void *Parameters)
 /************************  ↑  姿态更新  ↑ ************************/
 /**************************************************************************************************/
 /*********************  ↓  状态机状态更新  ↓ *********************/
-        StatusMachine_Update();
+        StatusMachine_Update(CurrentControlTick);
 /*********************  ↑  状态机状态更新  ↑ *********************/
 /**************************************************************************************************/
 /*********************  ↓  按键按下跳变检测  ↓ *********************/
@@ -165,8 +165,8 @@ void Task_Control(void *Parameters)
 
 //Debug模式下，此处用于debug，普通模式下用于键鼠控制
 #if DEBUGECONTROLRC == 1
-            Control_KMSubschemaHalfauto(CurrentControlTick);
-//            Control_KMSubschemaBigsample(0);
+//            Control_KMSubschemaHalfauto(CurrentControlTick);
+            Control_KMSubschemaBigsample(0, CurrentControlTick);
 #else	
             
 #if INFANTRY == 7
@@ -486,7 +486,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[5] = 1;
         FristEnter[6] = 1;
         
-        Control_KMSubschemaBigsample(FristEnter[4]);
+        Control_KMSubschemaBigsample(FristEnter[4], Tick);
         
         FristEnter[4] = 0;
     }
@@ -885,7 +885,8 @@ static void Control_KMSubschemaSwing(void)
   * @param  void
   * @retval void
   */
-static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag)
+    static portTickType LastBigsampleShotTick = 0;
+static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType Tick)
 {
     AngleF_Struct CurrentAngle;
     static uint16_t LastTimeStamp = 254;
@@ -895,8 +896,16 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag)
     
     static float OffsetX = 0, OffsetY = 0;
     
+    //鼠标偏移
     OffsetX -= DBUS_ReceiveData.mouse.x * BIGSAMPLEOFFSETXPARAM;
     OffsetY -= DBUS_ReceiveData.mouse.y * BIGSAMPLEOFFSETYPARAM;
+    
+    //右键归零所有偏移
+    if(DBUS_ReceiveData.mouse.press_right)
+    {
+        OffsetX = 0;
+        OffsetY = 0;
+    }
     
     //防疯转
     if(FristEnterFlag)
@@ -915,32 +924,40 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag)
     Cloud_Adjust(1);
     
     //新目标出现
-    if(DBUS_ReceiveData.switch_right == 3)
+    if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
     {
+//        if(Tick - LastBigsampleShotTick > 200)
+//        {
 #if FRICTYPE == 1
-        if(TimeStamp != EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp)
-        {
-            Poke_CylinderAdjust(1);
-        }
-        else
-        {
-            Poke_CylinderAdjust(0);
-        }
+            if((LLLLastTimeStamp != LLLastTimeStamp) && 
+                (LLLastTimeStamp == LLastTimeStamp) && 
+                (LLastTimeStamp == LastTimeStamp) && 
+                (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
+            {
+                Poke_CylinderAdjust(1);
+            }
+            else
+            {
+                Poke_CylinderAdjust(0);
+            }
 #else
-        if((LLLLastTimeStamp != LLLastTimeStamp) && 
-            (LLLastTimeStamp == LLastTimeStamp) && 
-            (LLastTimeStamp == LastTimeStamp) && 
-            (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
-        {
-            Poke_MotorStep();
-        }
-        Poke_MotorAdjust(1);
+            if((LLLLastTimeStamp != LLLastTimeStamp) && 
+                (LLLastTimeStamp == LLastTimeStamp) && 
+                (LLastTimeStamp == LastTimeStamp) && 
+                (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
+            {
+                Poke_MotorStep();
+            }
+            Poke_MotorAdjust(1);
 #endif
+//            LastBigsampleShotTick = Tick;
+//        }
+        
         LLLLastTimeStamp = LLLastTimeStamp;
         LLLastTimeStamp = LLastTimeStamp;
         LLastTimeStamp = LastTimeStamp;
         LastTimeStamp = EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp;
-        
+            
     }
 }
 
