@@ -224,12 +224,14 @@ void StatusMachine_Update(portTickType Tick)
             {
                 KMSubschema = KMSubschema_Supply;
             }
-#if AUTOSUPPORT == 1
+#if AUTOSHOOTSUPPORT == 1
             //半自动模式
             else if(DBUS_ReceiveData.mouse.press_right)
             {
                 KMSubschema = KMSubschema_Halfauto;
             }
+#endif
+#if AUTOBIGSAMPLESUPPORT == 1
             //大符模式
             else if(DBUS_CheckPush(KEY_X))
             {

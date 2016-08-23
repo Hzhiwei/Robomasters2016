@@ -885,7 +885,6 @@ static void Control_KMSubschemaSwing(void)
   * @param  void
   * @retval void
   */
-    static portTickType LastBigsampleShotTick = 0;
 static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType Tick)
 {
     AngleF_Struct CurrentAngle;
@@ -893,6 +892,7 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType Ti
     static uint16_t LLastTimeStamp = 255;
     static uint16_t LLLastTimeStamp = 256;
     static uint16_t LLLLastTimeStamp = 257;
+    static portTickType LastBigsampleShotTick = 0;
     
     static float OffsetX = 0, OffsetY = 0;
     
