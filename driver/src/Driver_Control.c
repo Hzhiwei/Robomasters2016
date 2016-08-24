@@ -243,7 +243,7 @@ void ControlPID_InitConfig(void)
     
 #elif INFANTRY == 4     //½ðÃ«
     
-    PitchOPID.P = 18;
+    PitchOPID.P = 15;
     PitchOPID.I = 0;
     PitchOPID.D = 0;
     PitchOPID.CurrentError = 0;
@@ -252,7 +252,7 @@ void ControlPID_InitConfig(void)
     PitchOPID.IMax = 0;
     PitchOPID.PIDMax = 300;
     
-    PitchIPID.P = 40;
+    PitchIPID.P = 30;
     PitchIPID.I = 0;
     PitchIPID.D = 1;
     PitchIPID.CurrentError = 0;
