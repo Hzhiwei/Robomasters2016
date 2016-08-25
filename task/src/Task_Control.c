@@ -19,7 +19,7 @@
 
 #include <math.h>
 
-#define ShootDelay          20
+#define ShootDelay          1
 
 #if INFANTRY == 7
 static void Control_BaseFullAuto(portTickType Tick);
@@ -1104,8 +1104,6 @@ static void Control_KMSubschemaCircle(void)
     Chassis_Adjust(1, 0);
 }
 
-#endif
-
 
 /**
   * @brief  手动大符模式
@@ -1259,6 +1257,10 @@ static void ControlSub_MoveToSample(uint8_t Location[2], float CheckLocaion[2])
     Cloud_PitchAngleSet(TargetABSLocaion[1]);
     Cloud_Adjust(1);
 }
+
+#endif
+
+
 
 
 

@@ -8,7 +8,7 @@
 #define USEESP8266orOLEDorOLED      0           //1 使用ESP8266返回裁判系统数据           0 使用oled显示装态
 
 /***************************************   ↓ 操作手参数  ↓ **********************************************/
-#define INFANTRY                    1           //1萨摩   2阿拉斯加   3哈士奇    4 金毛   5 狗蛋       6 小英雄       7 基地
+#define INFANTRY                    7           //1萨摩   2阿拉斯加   3哈士奇    4 金毛   5 狗蛋       6 小英雄       7 基地
 
 #if INFANTRY == 1               //萨摩参数↓
 
@@ -97,7 +97,7 @@
 
 #elif INFANTRY == 5               //狗蛋
 
-    #define FRICMOTORWORKINGSPEED   260         //摩擦轮工作速度(230)
+    #define FRICMOTORWORKINGSPEED   264         //摩擦轮工作速度(230)
     #define POKESTRUCKDEALLINES     400          //拨弹电机卡弹后反转处理线数
     #define CHASSISMAXPOWERRATE     0.82F       //底盘限制极限功率（80W）比例(例如此值为0.9，则实际限制功率为0.9*80=72W）
     #define POKESTEPSPEED           -250        //拨弹电机步进速度（符号控制方向，不要动）

@@ -95,9 +95,9 @@ void StatusMachine_Update(portTickType Tick)
             OffCounter = 50;
             OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"OFF", INV_OFF, IS);
         }
-        else        //每10s发送颜色切换指令，保证颜色正确
+        else        //每2s发送颜色切换指令，保证颜色正确
         {
-            if(ColorSendCounter >= 2000)
+            if(ColorSendCounter >= 300)
             {
                 if(Color == 'R')
                 {
