@@ -30,7 +30,7 @@ static void Control_KMSubschemaSupply(void);
 static void Control_KMSubschemaHalfauto(portTickType Tick);
 static void Control_KMSubschemaSwing(void);
 static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType CurrentTick);
-static void Control_KMSubschemaFullauto(void);
+static void Control_KMSubschemaFullauto(portTickType Tick);
 static void Control_KMSubschemaCircle(void);
 static void Control_KMSubschemaMannualBigsample(uint8_t FristEnterFlag, portTickType CurrentTick);
 static void ControlSub_MoveToSample(uint8_t Location[2], float CheckLocaion[2]);
@@ -360,7 +360,6 @@ static void Control_BaseFullAuto(portTickType Tick)
     static AngleF_Struct LastAngle[LastParam * 2 + 1];
     static uint8_t LastDataNum = 0;     //此变量用于解决视觉帧率低于控制帧率导致多次在控制函数中调节底盘时由于视觉帧未更新导致角度错误问题
     
-    
      //长时间未出子弹认为子弹用光
      if((SHOOTUSEOFFTICK <= InfantryJudge.ShootFail) && (SHOOTUSEOFFNUM <= InfantryJudge.ShootNum))
      {
@@ -382,13 +381,13 @@ static void Control_BaseFullAuto(portTickType Tick)
         {
             ShootSpeed = 30;
         }
-        else if(distance < 3.5)
+        else if(distance < AUTOSHOTDISTANCE)
         {
             ShootSpeed = -distance * 5.36 + 32.152;
         }
         else
         {
-            ShootSpeed =10;
+            ShootSpeed = 10;
         }
         
         //发射判断
@@ -566,7 +565,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[6] = 1;
         FristEnter[7] = 1;
         
-        Control_KMSubschemaFullauto();
+        Control_KMSubschemaFullauto(Tick);
         
         FristEnter[5] = 0;
     }
@@ -698,21 +697,21 @@ static void Control_KMSubschemaNormal(void)
 static void Control_KMSubschemaSupply(void)
 {
     int8_t Xspeed = 0, Yspeed = 0;
-    float TargetYaw;
+//    float TargetYaw;
     
     //云台控制
-    if(DBUS_CheckPush(KEY_Q))
-    {
-        TargetYaw = CloudParam.Yaw.TargetABSAngle + 0.2F;
-    }
-    else if(DBUS_CheckPush(KEY_E))
-    {
-        TargetYaw = CloudParam.Yaw.TargetABSAngle - 0.2F;
-    }
-    else
-    {
-        TargetYaw = CloudParam.Yaw.TargetABSAngle - MOUSESPINSPEED * DBUS_ReceiveData.mouse.x / 2000.0F;
-    }
+//    if(DBUS_CheckPush(KEY_Q))
+//    {
+//        TargetYaw = CloudParam.Yaw.TargetABSAngle + 0.2F;
+//    }
+//    else if(DBUS_CheckPush(KEY_E))
+//    {
+//        TargetYaw = CloudParam.Yaw.TargetABSAngle - 0.2F;
+//    }
+//    else
+//    {
+//        TargetYaw = CloudParam.Yaw.TargetABSAngle - MOUSESPINSPEED * DBUS_ReceiveData.mouse.x / 2000.0F;
+//    }
     Cloud_YawAngleSet(SuperGyoParam.Angle, AngleMode_ABS);
     Cloud_PitchAngleSet(DEPOTABSPITCH);
     Cloud_Adjust(1);
@@ -1022,43 +1021,6 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType Ti
     LLLastTimeStamp = LLastTimeStamp;
     LLastTimeStamp = LastTimeStamp;
     LastTimeStamp = EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp;
-    
-//    //新目标出现
-//    if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
-//    {
-//        if(Tick - LastBigsampleShotTick > 300)
-//        {
-//#if FRICTYPE == 1
-//            if((LLLLastTimeStamp != LLLastTimeStamp) && 
-//                (LLLastTimeStamp == LLastTimeStamp) && 
-//                (LLastTimeStamp == LastTimeStamp) && 
-//                (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
-//            {
-//                Poke_CylinderAdjust(1);
-//            }
-//            else
-//            {
-//                Poke_CylinderAdjust(0);
-//            }
-//#else
-//            if((LLLLastTimeStamp != LLLastTimeStamp) && 
-//                (LLLastTimeStamp == LLastTimeStamp) && 
-//                (LLastTimeStamp == LastTimeStamp) && 
-//                (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
-//            {
-//                Poke_MotorStep();
-//            }
-//            Poke_MotorAdjust(1);
-//#endif
-//            LastBigsampleShotTick = Tick;
-//        }
-//        
-//        LLLLastTimeStamp = LLLastTimeStamp;
-//        LLLastTimeStamp = LLastTimeStamp;
-//        LLastTimeStamp = LastTimeStamp;
-//        LastTimeStamp = EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp;
-//            
-//    }
 }
 
 
@@ -1067,9 +1029,9 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType Ti
   * @param  void
   * @retval void
   */
-static void Control_KMSubschemaFullauto(void)
+static void Control_KMSubschemaFullauto(portTickType Tick)
 {
-    
+    Control_KMSubschemaHalfauto(Tick);
 }
 
 

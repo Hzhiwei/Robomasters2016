@@ -249,10 +249,10 @@ void StatusMachine_Update(portTickType Tick)
                 KMSubschema = KMSubschema_Swing;
             }
             //全自动模式
-//            else if(DBUS_CheckPush(KEY_C))
-//            {
-//                KMSubschema = KMSubschema_Fullauto;
-//            }
+            else if(DBUS_CheckPush(KEY_C))
+            {
+                KMSubschema = KMSubschema_Fullauto;
+            }
             //圈圈模式
             else if(DBUS_CheckPush(KEY_G))
             {
@@ -316,13 +316,6 @@ void StatusMachine_Update(portTickType Tick)
         }
     
     
-        
-        
-        
-        
-        
-        
-        
         
         //用于半自动回归
         if((KMSubschema == KMSubschema_Halfauto) && (!DBUS_ReceiveData.mouse.press_right))
