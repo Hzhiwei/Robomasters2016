@@ -37,13 +37,14 @@ typedef enum
 //键鼠模式子模式
 typedef enum
 {
-    KMSubschema_Normal,         //正常模式（全手动模式）
-    KMSubschema_Supply,         //补给站模式
-    KMSubschema_Swing,          //底盘摇动模式
-    KMSubschema_Halfauto,       //半自动射击模式
-    KMSubschema_Bigsample,      //大符模式
-    KMSubschema_Fullauto,       //全自动模式
-    KMSubschema_Circle,         //自主转圈
+    KMSubschema_Normal,             //正常模式（全手动模式）
+    KMSubschema_Supply,             //补给站模式
+    KMSubschema_Swing,              //底盘摇动模式
+    KMSubschema_Halfauto,           //半自动射击模式
+    KMSubschema_Bigsample,          //大符模式
+    KMSubschema_Fullauto,           //全自动模式
+    KMSubschema_Circle,             //自主转圈
+    KMSubschema_MannualBigsample,   //手动大符
 }KMSubschema_Enum;
 
 

@@ -76,7 +76,8 @@ void Chassis_TargetDirectionSet(float Target)
 
 /**
   * @brief  底盘调节
-  * @param  void  
+  * @param  1 正常控制          0 底盘停止 
+  * @param  1 后轮释放          0 正常控制  
   * @retval void
   */
 void Chassis_Adjust(uint8_t mode,uint8_t supply)

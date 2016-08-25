@@ -19,6 +19,7 @@
 
 #include <math.h>
 
+#define ShootDelay          20
 
 #if INFANTRY == 7
 static void Control_BaseFullAuto(portTickType Tick);
@@ -31,12 +32,72 @@ static void Control_KMSubschemaSwing(void);
 static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType CurrentTick);
 static void Control_KMSubschemaFullauto(void);
 static void Control_KMSubschemaCircle(void);
+static void Control_KMSubschemaMannualBigsample(uint8_t FristEnterFlag, portTickType CurrentTick);
+static void ControlSub_MoveToSample(uint8_t Location[2], float CheckLocaion[2]);
 #endif
 
 static void Control_RCMode(void);
 static void Control_ProtectMode(void);
 
 
+
+#if INFANTRY == 1
+//九宫格校准点相对中心位置
+static float MannualBigsampleCheckToCentern[2] = {-2.5, 2};
+
+//九宫格相对中心点角度位置
+static float MannualBigsampleLocation[3][3][2] = {{{8.68, 5.04}, {0, 5.04}, {-8.68, 5.04}},
+                                                    {{8.68, 0}, {0, 0}, {-8.68, 0}},
+                                                    {{8.68, -5.04}, {0, -5.04}, {-8.68, -5.04}}};
+
+//九宫格重力偏移角度
+static float MannualBigsampleGravityOffset[3] = {0, 0, 0};
+#elif INFANTRY == 2
+//九宫格校准点相对中心位置
+static float MannualBigsampleCheckToCentern[2] = {-2.5, 2};
+
+//九宫格相对中心点角度位置
+static float MannualBigsampleLocation[3][3][2] = {{{8.68, 5.04}, {0, 5.04}, {-8.68, 5.04}},
+                                                    {{8.68, 0}, {0, 0}, {-8.68, 0}},
+                                                    {{8.68, -5.04}, {0, -5.04}, {-8.68, -5.04}}};
+
+//九宫格重力偏移角度
+static float MannualBigsampleGravityOffset[3] = {0, 0, 0};
+#elif INFANTRY == 3
+//九宫格校准点相对中心位置
+static float MannualBigsampleCheckToCentern[2] = {-2.5, 2};
+
+//九宫格相对中心点角度位置
+static float MannualBigsampleLocation[3][3][2] = {{{8.68, 5.04}, {0, 5.04}, {-8.68, 5.04}},
+                                                    {{8.68, 0}, {0, 0}, {-8.68, 0}},
+                                                    {{8.68, -5.04}, {0, -5.04}, {-8.68, -5.04}}};
+
+//九宫格重力偏移角度
+static float MannualBigsampleGravityOffset[3] = {0, 0, 0};
+#elif INFANTRY == 4
+//九宫格校准点相对中心位置
+static float MannualBigsampleCheckToCentern[2] = {-2.5, 2};
+
+//九宫格相对中心点角度位置
+static float MannualBigsampleLocation[3][3][2] = {{{8.68, 5.04}, {0, 5.04}, {-8.68, 5.04}},
+                                                    {{8.68, 0}, {0, 0}, {-8.68, 0}},
+                                                    {{8.68, -5.04}, {0, -5.04}, {-8.68, -5.04}}};
+
+//九宫格重力偏移角度
+static float MannualBigsampleGravityOffset[3] = {0, 0, 0};
+#elif INFANTRY == 5
+//九宫格校准点相对中心位置
+static float MannualBigsampleCheckToCentern[2] = {-4, 0};
+
+//九宫格相对中心点角度位置
+static float MannualBigsampleLocation[3][3][2] = {{{8.68, 5.04}, {0, 5.04}, {-8.68, 5.04}},
+                                                    {{8.68, 0}, {0, 0}, {-8.68, 0}},
+                                                    {{8.68, -5.04}, {0, -5.04}, {-8.68, -5.04}}};
+
+//九宫格重力偏移角度
+static float MannualBigsampleGravityOffset[3] = {0, 0, 0};
+#endif
+                                                
 
 
 //状态切换标志位
@@ -417,7 +478,7 @@ static void Control_BaseFullAuto(portTickType Tick)
   */
 static void Control_KMMode(portTickType Tick)
 {
-    static uint8_t FristEnter[7] = {1, 1, 1, 1, 1, 1, 1};
+    static uint8_t FristEnter[8] = {1, 1, 1, 1, 1, 1, 1, 1};
     static KMSubschema_Enum LastKMSubschema = KMSubschema_Normal;
     
     if((LastKMSubschema == KMSubschema_Supply) && (KMSubschema != KMSubschema_Supply))
@@ -433,6 +494,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[4] = 1;
         FristEnter[5] = 1;
         FristEnter[6] = 1;
+        FristEnter[7] = 1;
         
         Control_KMSubschemaNormal();
         
@@ -446,6 +508,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[4] = 1;
         FristEnter[5] = 1;
         FristEnter[6] = 1;
+        FristEnter[7] = 1;
         
         Control_KMSubschemaSupply();
         
@@ -459,6 +522,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[4] = 1;
         FristEnter[5] = 1;
         FristEnter[6] = 1;
+        FristEnter[7] = 1;
         
         Control_KMSubschemaHalfauto(Tick);
         
@@ -472,6 +536,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[4] = 1;
         FristEnter[5] = 1;
         FristEnter[6] = 1;
+        FristEnter[7] = 1;
         
         Control_KMSubschemaSwing();
         
@@ -485,6 +550,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[3] = 1;
         FristEnter[5] = 1;
         FristEnter[6] = 1;
+        FristEnter[7] = 1;
         
         Control_KMSubschemaBigsample(FristEnter[4], Tick);
         
@@ -498,6 +564,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[3] = 1;
         FristEnter[4] = 1;
         FristEnter[6] = 1;
+        FristEnter[7] = 1;
         
         Control_KMSubschemaFullauto();
         
@@ -511,10 +578,25 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[3] = 1;
         FristEnter[4] = 1;
         FristEnter[5] = 1;
+        FristEnter[7] = 1;
         
         Control_KMSubschemaCircle();
         
         FristEnter[6] = 0;
+    }
+    else if(KMSubschema_MannualBigsample == KMSubschema)
+    {
+        FristEnter[0] = 1;
+        FristEnter[1] = 1;
+        FristEnter[2] = 1;
+        FristEnter[3] = 1;
+        FristEnter[4] = 1;
+        FristEnter[5] = 1;
+        FristEnter[6] = 1;
+        
+        Control_KMSubschemaMannualBigsample(FristEnter[7], Tick);
+        
+        FristEnter[7] = 0;
     }
     
     LastKMSubschema = KMSubschema;
@@ -665,7 +747,7 @@ static void Control_KMSubschemaSupply(void)
     //补给站模式不进行角度闭环，手动设置角速度
     ChassisParam.TargetOmega = DBUS_ReceiveData.mouse.x * 2;
     Chassis_SpeedSet(SNEAKSPEED * Xspeed, SNEAKSPEED * Yspeed);
-    Chassis_Adjust(1, 1);
+    Chassis_Adjust(1, 0);
 	
     //舵机舱门控制
 	Steering_Control(1);
@@ -918,47 +1000,65 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType Ti
     //角度转换
     CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 1);
     
-    //云台角度设定
-    Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H + OffsetX, AngleMode_ABS);
-    Cloud_PitchAngleSet(CurrentAngle.V + OffsetY);
-    Cloud_Adjust(1);
-    
-    //新目标出现
-    if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+    //云台角度设定及射击
+    if((LLLLastTimeStamp != LLLastTimeStamp) && 
+        (LLLastTimeStamp == LLastTimeStamp) && 
+        (LLastTimeStamp == LastTimeStamp) && 
+        (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
     {
-//        if(Tick - LastBigsampleShotTick > 200)
+        Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H + OffsetX, AngleMode_ABS);
+        Cloud_PitchAngleSet(CurrentAngle.V + OffsetY);
+        
+        //新目标出现
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            Poke_MotorStep();
+        }
+    }
+    Cloud_Adjust(1);
+    Poke_MotorAdjust(1);
+    
+    LLLLastTimeStamp = LLLastTimeStamp;
+    LLLastTimeStamp = LLastTimeStamp;
+    LLastTimeStamp = LastTimeStamp;
+    LastTimeStamp = EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp;
+    
+//    //新目标出现
+//    if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+//    {
+//        if(Tick - LastBigsampleShotTick > 300)
 //        {
-#if FRICTYPE == 1
-            if((LLLLastTimeStamp != LLLastTimeStamp) && 
-                (LLLastTimeStamp == LLastTimeStamp) && 
-                (LLastTimeStamp == LastTimeStamp) && 
-                (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
-            {
-                Poke_CylinderAdjust(1);
-            }
-            else
-            {
-                Poke_CylinderAdjust(0);
-            }
-#else
-            if((LLLLastTimeStamp != LLLastTimeStamp) && 
-                (LLLastTimeStamp == LLastTimeStamp) && 
-                (LLastTimeStamp == LastTimeStamp) && 
-                (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
-            {
-                Poke_MotorStep();
-            }
-            Poke_MotorAdjust(1);
-#endif
+//#if FRICTYPE == 1
+//            if((LLLLastTimeStamp != LLLastTimeStamp) && 
+//                (LLLastTimeStamp == LLastTimeStamp) && 
+//                (LLastTimeStamp == LastTimeStamp) && 
+//                (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
+//            {
+//                Poke_CylinderAdjust(1);
+//            }
+//            else
+//            {
+//                Poke_CylinderAdjust(0);
+//            }
+//#else
+//            if((LLLLastTimeStamp != LLLastTimeStamp) && 
+//                (LLLastTimeStamp == LLastTimeStamp) && 
+//                (LLastTimeStamp == LastTimeStamp) && 
+//                (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
+//            {
+//                Poke_MotorStep();
+//            }
+//            Poke_MotorAdjust(1);
+//#endif
 //            LastBigsampleShotTick = Tick;
 //        }
-        
-        LLLLastTimeStamp = LLLastTimeStamp;
-        LLLastTimeStamp = LLastTimeStamp;
-        LLastTimeStamp = LastTimeStamp;
-        LastTimeStamp = EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp;
-            
-    }
+//        
+//        LLLLastTimeStamp = LLLastTimeStamp;
+//        LLLastTimeStamp = LLastTimeStamp;
+//        LLastTimeStamp = LastTimeStamp;
+//        LastTimeStamp = EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp;
+//            
+//    }
 }
 
 
@@ -1007,8 +1107,158 @@ static void Control_KMSubschemaCircle(void)
 #endif
 
 
+/**
+  * @brief  手动大符模式
+  * @param  1 第一次进入此模式      0 非第一次
+  * @param  系统时间
+  * @retval void
+  */
+static void Control_KMSubschemaMannualBigsample(uint8_t FristEnterFlag, portTickType CurrentTick)
+{
+    static float CheckLocaion[2] = {0, 0};
+    static uint8_t KEYLocation[2] = {1, 1};
+    static int16_t ShootCounter = -1;
+    
+    //获取校准位置
+    if(FristEnterFlag)
+    {
+        CheckLocaion[0] = SuperGyoParam.Angle;
+        CheckLocaion[1] = Position.Euler.Pitch;
+    }
+    
+    //获取键盘位置
+    if(DBUS_CheckJumpKey(KEY_Q))
+    {
+        KEYLocation[0] = 0;
+        KEYLocation[1] = 0;
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            ShootCounter = ShootDelay;
+        }
+    }
+    else if(DBUS_CheckJumpKey(KEY_W))
+    {
+        KEYLocation[0] = 1;
+        KEYLocation[1] = 0;
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            ShootCounter = ShootDelay;
+        }
+    }
+    else if(DBUS_CheckJumpKey(KEY_E))
+    {
+        KEYLocation[0] = 2;
+        KEYLocation[1] = 0;
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            ShootCounter = ShootDelay;
+        }
+    }
+    else if(DBUS_CheckJumpKey(KEY_A))
+    {
+        KEYLocation[0] = 0;
+        KEYLocation[1] = 1;
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            ShootCounter = ShootDelay;
+        }
+    }
+    else if(DBUS_CheckJumpKey(KEY_S))
+    {
+        KEYLocation[0] = 1;
+        KEYLocation[1] = 1;
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            ShootCounter = ShootDelay;
+        }
+    }
+    else if(DBUS_CheckJumpKey(KEY_D))
+    {
+        KEYLocation[0] = 2;
+        KEYLocation[1] = 1;
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            ShootCounter = ShootDelay;
+        }
+    }
+    else if(DBUS_CheckJumpKey(KEY_Z))
+    {
+        KEYLocation[0] = 0;
+        KEYLocation[1] = 2;
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            ShootCounter = ShootDelay;
+        }
+    }
+    else if(DBUS_CheckJumpKey(KEY_X))
+    {
+        KEYLocation[0] = 1;
+        KEYLocation[1] = 2;
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            ShootCounter = ShootDelay;
+        }
+    }
+    else if(DBUS_CheckJumpKey(KEY_C))
+    {
+        KEYLocation[0] = 2;
+        KEYLocation[1] = 2;
+        if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
+        {
+            ShootCounter = ShootDelay;
+        }
+    }
+    
+    if(ShootCounter > 0)
+    {
+        --ShootCounter;
+    }
+    else if(ShootCounter == 0)
+    {
+        --ShootCounter;
+        Poke_MotorStep();
+    }
+    Poke_MotorAdjust(1);
+    
+    //指向指定角度
+    ControlSub_MoveToSample(KEYLocation, CheckLocaion);
+    
+    //底盘锁定
+    Chassis_Adjust(1, 0);
+}
 
 
+/**
+  * @brief  手动大符指向指定符点
+  * @param  符点位置
+  * @param  校准位置
+  * @retval void
+  */
+static void ControlSub_MoveToSample(uint8_t Location[2], float CheckLocaion[2])
+{
+    float TargetABSLocaion[2];
+    static float OffsetX = 0, OffsetY = 0;
+    
+    //鼠标偏移
+    OffsetX -= DBUS_ReceiveData.mouse.x * BIGSAMPLEOFFSETXPARAM;
+    OffsetY -= DBUS_ReceiveData.mouse.y * BIGSAMPLEOFFSETYPARAM;
+    
+    //右键归零所有偏移
+    if(DBUS_ReceiveData.mouse.press_right)
+    {
+        OffsetX = 0;
+        OffsetY = 0;
+    }
+    
+    //获取实际位置
+    TargetABSLocaion[0] = CheckLocaion[0] - MannualBigsampleCheckToCentern[0] + MannualBigsampleLocation[Location[1]][Location[0]][0] + OffsetX;
+    TargetABSLocaion[1] = CheckLocaion[1] - MannualBigsampleCheckToCentern[1] + MannualBigsampleLocation[Location[1]][Location[0]][1] + MannualBigsampleGravityOffset[Location[1]] +OffsetY;
+    
+    //云台位置控制
+    Cloud_YawAngleSet(TargetABSLocaion[0], AngleMode_ABS);
+    Cloud_PitchAngleSet(TargetABSLocaion[1]);
+    Cloud_Adjust(1);
+}
 
 
 

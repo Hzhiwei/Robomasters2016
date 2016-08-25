@@ -232,12 +232,17 @@ void StatusMachine_Update(portTickType Tick)
             }
 #endif
 #if AUTOBIGSAMPLESUPPORT == 1
-            //大符模式
+            //自动大符模式
             else if(DBUS_CheckPush(KEY_X))
             {
                 KMSubschema = KMSubschema_Bigsample;
             }
 #endif
+            //手动大符模式
+            else if(DBUS_CheckPush(KEY_Z))
+            {
+                KMSubschema = KMSubschema_MannualBigsample;
+            }
             //摇摆模式
             else if(DBUS_CheckPush(KEY_F))
             {
