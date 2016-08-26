@@ -19,7 +19,7 @@
 
 #include <math.h>
 
-#define ShootDelay          1
+#define ShootDelay          0
 
 #if INFANTRY == 7
 static void Control_BaseFullAuto(portTickType Tick);
