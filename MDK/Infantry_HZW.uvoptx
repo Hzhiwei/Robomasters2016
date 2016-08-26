@@ -219,6 +219,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>MannualBigsampleLocation,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PCVisionTargetColor,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>

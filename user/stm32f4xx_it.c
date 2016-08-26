@@ -575,6 +575,10 @@ void USART1_IRQHandler(void)
                 Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 18) % PCDATALENGTH];
                 Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 19) % PCDATALENGTH];
                 EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp = Buffer.F;
+                
+#if INFANTRY == 7
+                PCVisionTargetColor = Buffer.F;
+#endif
 
                 Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 20) % PCDATALENGTH];
                 Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 21) % PCDATALENGTH];

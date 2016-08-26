@@ -56,6 +56,10 @@ void StatusMachine_Update(portTickType Tick)
     static uint8_t RedCounter = 0, BlueCounter = 0, OffCounter = 0;
     static uint16_t ColorSendCounter = 0;
     
+#if INFANTRY == 7
+    int8_t LastPCVisionTargetColor;
+#endif
+    
     if(Tick > 8000)
     {
         //按键判断
@@ -136,6 +140,26 @@ void StatusMachine_Update(portTickType Tick)
         
         FricStatus = FricStatus_Working;
         ControlMode = ControlMode_KM;
+        
+#if INFANTRY == 7
+        //主机目标颜色显示
+        if(LastPCVisionTargetColor != PCVisionTargetColor)
+        {
+            LastPCVisionTargetColor = PCVisionTargetColor;
+            if(PCVisionTargetColor == -1)
+            {
+                OLED_Print6x8Str(100, 30, 30, 8, (uint8_t *)" -  ", INV_OFF, IS);
+            }
+            else if(PCVisionTargetColor == 0)
+            {
+                OLED_Print6x8Str(100, 30, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
+            }
+            else if(PCVisionTargetColor == 1)
+            {
+                OLED_Print6x8Str(100, 30, 30, 8, (uint8_t *)"BLUE", INV_OFF, IS);
+            }
+        }
+#endif
     }
     else
     {

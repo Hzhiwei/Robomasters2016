@@ -82,6 +82,8 @@ void Task_SysInitConfig(void *Parameters)
 #if INFANTRY == 7
     OLED_Print6x8Str(80, 00, 42, 8, (uint8_t *)"Target:", INV_OFF, IS);
     OLED_Print6x8Str(100, 10, 30, 8, (uint8_t *)"RED ", INV_OFF, IS);
+    OLED_Print6x8Str(80, 20, 42, 8, (uint8_t *)"PC    :", INV_OFF, IS);
+    OLED_Print6x8Str(100, 30, 30, 8, (uint8_t *)" -  ", INV_OFF, IS);
 #endif
 #endif
     

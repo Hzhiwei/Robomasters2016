@@ -67,6 +67,10 @@ void Vision_InitConfig(void)
     PCDataBufferPoint = 0;
     EnemyDataBufferPoint = 0;
     
+#if INFANTRY == 7
+    PCVisionTargetColor = -1;
+#endif
+    
     EnemyDataBuffer[EnemyDataBufferPoint].ID = 1;
     EnemyDataBuffer[EnemyDataBufferPoint].Time = 0;
     EnemyDataBuffer[EnemyDataBufferPoint].X = 0;

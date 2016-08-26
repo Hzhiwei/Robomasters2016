@@ -86,6 +86,10 @@ __DRIVER_VISION_EXT ForcastControl_Struct ForcastTarget;
 //数据更新标志
 __DRIVER_VISION_EXT uint8_t VisionUpdataFlag;
 
+#if INFANTRY == 7
+//基地主机目标颜色
+__DRIVER_VISION_EXT int8_t PCVisionTargetColor;         //-1 未确认        0 红         1 蓝
+#endif
 
 //帧数统计
 __DRIVER_VISION_EXT int16_t PCFrameCounter;
