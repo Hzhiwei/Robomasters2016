@@ -31,9 +31,10 @@ static void Control_KMSubschemaHalfauto(portTickType Tick);
 static void Control_KMSubschemaSwing(void);
 static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType CurrentTick);
 static void Control_KMSubschemaFullauto(portTickType Tick);
-static void Control_KMSubschemaCircle(void);
+static void Control_KMSubschemaAutoCircle(void);
 static void Control_KMSubschemaMannualBigsample(uint8_t FristEnterFlag, portTickType CurrentTick);
 static void ControlSub_MoveToSample(uint8_t Location[2], float CheckLocaion[2]);
+static void Control_KMSubschemaFullCircle(void);
 #endif
 
 static void Control_RCMode(void);
@@ -103,6 +104,7 @@ static float MannualBigsampleGravityOffset[3] = {0, 0, 0};
 //状态切换标志位
 static uint8_t JumpToRCFlag = 1, JumpToKMFlag = 1, JumpToProtectFlag = 1;
     
+    #define ENCODERTOABSANGLEOFFSETPARAM    0.7375         //由编码器加底盘陀螺仪计算云台绝对角度时会有蜜汁偏差，此参数用于矫正偏差
     
 /**
   * @brief  控制任务（周期5ms）
@@ -134,7 +136,7 @@ void Task_Control(void *Parameters)
         }
         
         //Yaw轴实际绝对角度
-        CloudParam.Yaw.RealABSAngle = SuperGyoParam.Angle + ((int16_t)CloudParam.Yaw.RealEncoderAngle - YawEncoderCenter) * 0.043945F;
+        CloudParam.Yaw.RealABSAngle = SuperGyoParam.Angle + ((int16_t)CloudParam.Yaw.RealEncoderAngle - YawEncoderCenter) * 0.043945F * ENCODERTOABSANGLEOFFSETPARAM;
         //Pitch轴实际绝对角度
         CloudParam.Pitch.RealABSAngle = Position.Euler.Pitch;
 
@@ -361,7 +363,7 @@ static void Control_BaseFullAuto(portTickType Tick)
     static uint8_t LastDataNum = 0;     //此变量用于解决视觉帧率低于控制帧率导致多次在控制函数中调节底盘时由于视觉帧未更新导致角度错误问题
     
      //长时间未出子弹认为子弹用光
-     if((SHOOTUSEOFFTICK <= InfantryJudge.ShootFail) && (SHOOTUSEOFFNUM <= InfantryJudge.ShootNum))
+     if(((SHOOTUSEOFFTICK <= InfantryJudge.ShootFail) && (SHOOTUSEOFFNUM <= InfantryJudge.ShootNum)) || (SHOOTUSEOFFTICK * 2 <= InfantryJudge.ShootFail))
      {
          InfantryJudge.BulletUseUp = 1;
      }
@@ -477,7 +479,7 @@ static void Control_BaseFullAuto(portTickType Tick)
   */
 static void Control_KMMode(portTickType Tick)
 {
-    static uint8_t FristEnter[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+    static uint8_t FristEnter[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     static KMSubschema_Enum LastKMSubschema = KMSubschema_Normal;
     
     if((LastKMSubschema == KMSubschema_Supply) && (KMSubschema != KMSubschema_Supply))
@@ -494,6 +496,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[5] = 1;
         FristEnter[6] = 1;
         FristEnter[7] = 1;
+        FristEnter[8] = 1;
         
         Control_KMSubschemaNormal();
         
@@ -508,6 +511,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[5] = 1;
         FristEnter[6] = 1;
         FristEnter[7] = 1;
+        FristEnter[8] = 1;
         
         Control_KMSubschemaSupply();
         
@@ -522,6 +526,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[5] = 1;
         FristEnter[6] = 1;
         FristEnter[7] = 1;
+        FristEnter[8] = 1;
         
         Control_KMSubschemaHalfauto(Tick);
         
@@ -536,6 +541,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[5] = 1;
         FristEnter[6] = 1;
         FristEnter[7] = 1;
+        FristEnter[8] = 1;
         
         Control_KMSubschemaSwing();
         
@@ -550,6 +556,7 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[5] = 1;
         FristEnter[6] = 1;
         FristEnter[7] = 1;
+        FristEnter[8] = 1;
         
         Control_KMSubschemaBigsample(FristEnter[4], Tick);
         
@@ -564,12 +571,13 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[4] = 1;
         FristEnter[6] = 1;
         FristEnter[7] = 1;
+        FristEnter[8] = 1;
         
         Control_KMSubschemaFullauto(Tick);
         
         FristEnter[5] = 0;
     }
-    else if(KMSubschema_Circle == KMSubschema)
+    else if(KMSubschema_AutoCircle == KMSubschema)
     {
         FristEnter[0] = 1;
         FristEnter[1] = 1;
@@ -578,8 +586,9 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[4] = 1;
         FristEnter[5] = 1;
         FristEnter[7] = 1;
+        FristEnter[8] = 1;
         
-        Control_KMSubschemaCircle();
+        Control_KMSubschemaAutoCircle();
         
         FristEnter[6] = 0;
     }
@@ -592,10 +601,26 @@ static void Control_KMMode(portTickType Tick)
         FristEnter[4] = 1;
         FristEnter[5] = 1;
         FristEnter[6] = 1;
+        FristEnter[8] = 1;
         
         Control_KMSubschemaMannualBigsample(FristEnter[7], Tick);
         
         FristEnter[7] = 0;
+    }
+    else if(KMSubschema_FullCircle == KMSubschema)
+    {
+        FristEnter[0] = 1;
+        FristEnter[1] = 1;
+        FristEnter[2] = 1;
+        FristEnter[3] = 1;
+        FristEnter[4] = 1;
+        FristEnter[5] = 1;
+        FristEnter[6] = 1;
+        FristEnter[7] = 1;
+        
+        Control_KMSubschemaFullCircle();
+        
+        FristEnter[8] = 0;
     }
     
     LastKMSubschema = KMSubschema;
@@ -657,7 +682,15 @@ static void Control_KMSubschemaNormal(void)
     }
     
     Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
-    Chassis_SpeedSet(MAXWORKINGSPEED * Xspeed, MAXWORKINGSPEED * Yspeed);
+    if(DBUS_ReceiveData.mouse.press_right)
+    {
+        //低速模式
+        Chassis_SpeedSet(MAXWORKINGSPEED * Xspeed * 0.2, MAXWORKINGSPEED * Yspeed * 0.2);
+    }
+    else
+    {
+        Chassis_SpeedSet(MAXWORKINGSPEED * Xspeed, MAXWORKINGSPEED * Yspeed);
+    }
     Chassis_Adjust(1, 0);
 	
     //舵机舱门控制
@@ -969,6 +1002,7 @@ static void Control_KMSubschemaSwing(void)
 static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType Tick)
 {
     AngleF_Struct CurrentAngle;
+    static AngleF_Struct UsefulCurrentAngle;
     static uint16_t LastTimeStamp = 254;
     static uint16_t LLastTimeStamp = 255;
     static uint16_t LLLastTimeStamp = 256;
@@ -1000,13 +1034,12 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType Ti
     CurrentAngle = RecToPolar(EnemyDataBuffer[EnemyDataBufferPoint].X, EnemyDataBuffer[EnemyDataBufferPoint].Y, EnemyDataBuffer[EnemyDataBufferPoint].Z, 0, PitchEncoderCenter, 1);
     
     //云台角度设定及射击
-    if((LLLLastTimeStamp != LLLastTimeStamp) && 
-        (LLLastTimeStamp == LLastTimeStamp) && 
-        (LLastTimeStamp == LastTimeStamp) && 
+    if(/*(LLLLastTimeStamp != LLLastTimeStamp) &&
+        (LLLastTimeStamp != LLastTimeStamp) &&  */
+        (LLastTimeStamp != LastTimeStamp) && 
         (LastTimeStamp == EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp))
     {
-        Cloud_YawAngleSet(SuperGyoParam.Angle + CurrentAngle.H + OffsetX, AngleMode_ABS);
-        Cloud_PitchAngleSet(CurrentAngle.V + OffsetY);
+        UsefulCurrentAngle = CurrentAngle;
         
         //新目标出现
         if((DBUS_ReceiveData.switch_right == 3) && (DBUS_ReceiveData.mouse.press_left))
@@ -1014,6 +1047,8 @@ static void Control_KMSubschemaBigsample(uint8_t FristEnterFlag, portTickType Ti
             Poke_MotorStep();
         }
     }
+    Cloud_YawAngleSet(SuperGyoParam.Angle + UsefulCurrentAngle.H + OffsetX, AngleMode_ABS);
+    Cloud_PitchAngleSet(UsefulCurrentAngle.V + OffsetY);
     Cloud_Adjust(1);
     Poke_MotorAdjust(1);
     
@@ -1040,7 +1075,7 @@ static void Control_KMSubschemaFullauto(portTickType Tick)
   * @param  void
   * @retval void
   */
-static void Control_KMSubschemaCircle(void)
+static void Control_KMSubschemaAutoCircle(void)
 {
     static int8_t CircleDir = 1;
     
@@ -1218,6 +1253,35 @@ static void ControlSub_MoveToSample(uint8_t Location[2], float CheckLocaion[2])
     Cloud_YawAngleSet(TargetABSLocaion[0], AngleMode_ABS);
     Cloud_PitchAngleSet(TargetABSLocaion[1]);
     Cloud_Adjust(1);
+}
+
+
+/**
+  * @brief  全速自旋模式
+  * @param  void
+  * @retval void
+  */
+static void Control_KMSubschemaFullCircle(void)
+{
+    static int8_t CircleDir = 1;
+    
+    if(DBUS_CheckPush(KEY_Q | KEY_A))
+    {
+        CircleDir = 1;
+    }
+    else if(DBUS_CheckPush(KEY_E | KEY_D))
+    {
+        CircleDir = -1;
+    }
+    
+    Cloud_YawAngleSet(CloudParam.Yaw.TargetABSAngle + CircleDir * CIRCLEMODEOMEGA / 200.0F, AngleMode_ABS);
+    
+    Cloud_Adjust(1);
+    
+    //底盘控制
+    Chassis_TargetDirectionSet(CloudParam.Yaw.TargetABSAngle);
+    Chassis_SpeedSet(0, 0);
+    Chassis_Adjust(1, 0);
 }
 
 #endif

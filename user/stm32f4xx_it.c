@@ -545,6 +545,58 @@ void USART1_IRQHandler(void)
         {
             PCFrameCounter++;
             
+#if INFANTRY == 7
+            if(PCDataBuffer[(PCDataBufferPoint + 3) % PCDATALENGTH] == 0)       //ID=0
+            {
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 16) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 17) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 18) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 19) % PCDATALENGTH];
+                PCVisionTargetColor = Buffer.F;
+            }
+            else
+            {
+                VisionUpdataFlag = 1;
+                
+                EnemyDataBufferPoint = (EnemyDataBufferPoint + 1) % ENEMYDATABUFFERLENGHT;
+                
+                //½âÂë
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 4) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 5) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 6) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 7) % PCDATALENGTH];
+                EnemyDataBuffer[EnemyDataBufferPoint].X = Buffer.F;
+
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 8) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 9) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 10) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 11) % PCDATALENGTH];
+                EnemyDataBuffer[EnemyDataBufferPoint].Y = Buffer.F;
+
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 12) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 13) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 14) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 15) % PCDATALENGTH];
+                EnemyDataBuffer[EnemyDataBufferPoint].Z = Buffer.F;
+
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 16) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 17) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 18) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 19) % PCDATALENGTH];
+                EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp = Buffer.F;
+                PCVisionTargetColor = Buffer.F;
+
+                Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 20) % PCDATALENGTH];
+                Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 21) % PCDATALENGTH];
+                Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 22) % PCDATALENGTH];
+                Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 23) % PCDATALENGTH];
+                EnemyDataBuffer[EnemyDataBufferPoint].Time = Buffer.I;
+
+                EnemyDataBuffer[EnemyDataBufferPoint].ID = PCDataBuffer[(PCDataBufferPoint + 3) % PCDATALENGTH];
+                
+                EnemyDataBuffer[EnemyDataBufferPoint].Tick = xTaskGetTickCountFromISR();
+            }
+#else
             if(PCDataBuffer[(PCDataBufferPoint + 3) % PCDATALENGTH] != 0)       //ID!=0
             {
                 VisionUpdataFlag = 1;
@@ -575,10 +627,6 @@ void USART1_IRQHandler(void)
                 Buffer.U[1] = PCDataBuffer[(PCDataBufferPoint + 18) % PCDATALENGTH];
                 Buffer.U[0] = PCDataBuffer[(PCDataBufferPoint + 19) % PCDATALENGTH];
                 EnemyDataBuffer[EnemyDataBufferPoint].TimeStamp = Buffer.F;
-                
-#if INFANTRY == 7
-                PCVisionTargetColor = Buffer.F;
-#endif
 
                 Buffer.U[3] = PCDataBuffer[(PCDataBufferPoint + 20) % PCDATALENGTH];
                 Buffer.U[2] = PCDataBuffer[(PCDataBufferPoint + 21) % PCDATALENGTH];
@@ -590,6 +638,7 @@ void USART1_IRQHandler(void)
                 
                 EnemyDataBuffer[EnemyDataBufferPoint].Tick = xTaskGetTickCountFromISR();
             }
+#endif
         }
     }
 }

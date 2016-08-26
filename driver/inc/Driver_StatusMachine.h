@@ -43,8 +43,9 @@ typedef enum
     KMSubschema_Halfauto,           //半自动射击模式
     KMSubschema_Bigsample,          //大符模式
     KMSubschema_Fullauto,           //全自动模式
-    KMSubschema_Circle,             //自主转圈
+    KMSubschema_AutoCircle,         //自主转圈
     KMSubschema_MannualBigsample,   //手动大符
+    KMSubschema_FullCircle,         //全速转圈
 }KMSubschema_Enum;
 
 
