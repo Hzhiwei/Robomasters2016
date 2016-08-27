@@ -39,7 +39,7 @@ void ControlPID_InitConfig(void)
     PitchIPID.IMax = 0;
     PitchIPID.PIDMax = 5000;
     
-    YawOPID.P = 9;
+    YawOPID.P = 14;
     YawOPID.I = 0;
     YawOPID.D = 0;
     YawOPID.CurrentError = 0;
@@ -57,7 +57,7 @@ void ControlPID_InitConfig(void)
     YawIPID.IMax = 0;
     YawIPID.PIDMax = 5000;
     
-    ChassisOPID.P = 25;
+    ChassisOPID.P = 18;
     ChassisOPID.I = 0;
     ChassisOPID.D = 0;
     ChassisOPID.CurrentError = 0;

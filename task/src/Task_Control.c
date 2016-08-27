@@ -104,7 +104,7 @@ static float MannualBigsampleGravityOffset[3] = {0, 0, 0};
 //状态切换标志位
 static uint8_t JumpToRCFlag = 1, JumpToKMFlag = 1, JumpToProtectFlag = 1;
     
-    #define ENCODERTOABSANGLEOFFSETPARAM    0.7375         //由编码器加底盘陀螺仪计算云台绝对角度时会有蜜汁偏差，此参数用于矫正偏差
+    #define ENCODERTOABSANGLEOFFSETPARAM    1         //由编码器加底盘陀螺仪计算云台绝对角度时会有蜜汁偏差，此参数用于矫正偏差
     
 /**
   * @brief  控制任务（周期5ms）

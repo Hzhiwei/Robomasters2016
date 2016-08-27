@@ -164,6 +164,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -232,6 +233,16 @@
           <count>6</count>
           <WinNumber>1</WinNumber>
           <ItemText>PitchIPID,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>YawOPID,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>YawIPID,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
