@@ -441,16 +441,6 @@
               <FileType>5</FileType>
               <FilePath>..\lib\freertos\inc\FreeRTOSConfig.h</FilePath>
             </File>
-            <File>
-              <FileName>note.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\note.txt</FilePath>
-            </File>
-            <File>
-              <FileName>control.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\control.txt</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

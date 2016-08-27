@@ -37,6 +37,7 @@ static void ControlSub_MoveToSample(uint8_t Location[2], float CheckLocaion[2]);
 static void Control_KMSubschemaFullCircle(void);
 #endif
 
+
 static void Control_RCMode(void);
 static void Control_ProtectMode(void);
 
@@ -104,7 +105,6 @@ static float MannualBigsampleGravityOffset[3] = {0, 0, 0};
 //状态切换标志位
 static uint8_t JumpToRCFlag = 1, JumpToKMFlag = 1, JumpToProtectFlag = 1;
     
-    #define ENCODERTOABSANGLEOFFSETPARAM    1         //由编码器加底盘陀螺仪计算云台绝对角度时会有蜜汁偏差，此参数用于矫正偏差
     
 /**
   * @brief  控制任务（周期5ms）
@@ -228,8 +228,8 @@ void Task_Control(void *Parameters)
 
 //Debug模式下，此处用于debug，普通模式下用于键鼠控制
 #if DEBUGECONTROLRC == 1
-//            Control_KMSubschemaHalfauto(CurrentControlTick);
-            Control_KMSubschemaBigsample(0, CurrentControlTick);
+            Control_KMSubschemaHalfauto(CurrentControlTick);
+//            Control_KMSubschemaBigsample(0, CurrentControlTick);
 #else	
             
 #if INFANTRY == 7
@@ -392,26 +392,17 @@ static void Control_BaseFullAuto(portTickType Tick)
             ShootSpeed = 10;
         }
         
-        //发射判断
-    //    if(DBUS_ReceiveData.switch_right == 2)
-    //    {
-            if((EnemyDataBuffer[EnemyDataBufferPoint].Z < AUTOSHOTDISTANCE) &&              //指定距离内
-                (CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE) &&    //指定角度内
-                (Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 30) % ENEMYDATABUFFERLENGHT].Tick < 2000))      //指定时间内
-            {
-                Poke_MotorSpeedAdjust(1, ShootSpeed);
-                InfantryJudge.ShootFail++;      //发射失败时间自增
-            }
-            else
-            {
-                Poke_MotorSpeedAdjust(0, ShootSpeed);
-            }
-    //    }
-    //    else
-    //    {
-    //        Poke_MotorSpeedAdjust(0, ShootSpeed);
-    //    }
-            
+        if((EnemyDataBuffer[EnemyDataBufferPoint].Z < AUTOSHOTDISTANCE) &&              //指定距离内
+            (CurrentAngle.H < AUTOSHOTANGLE) && (CurrentAngle.H > -AUTOSHOTANGLE) &&    //指定角度内
+            (Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 30) % ENEMYDATABUFFERLENGHT].Tick < 2000))      //指定时间内
+        {
+            Poke_MotorSpeedAdjust(1, ShootSpeed);
+            InfantryJudge.ShootFail++;      //发射失败时间自增
+        }
+        else
+        {
+            Poke_MotorSpeedAdjust(0, ShootSpeed);
+        }
         
         //底盘旋转判断
         if(Tick - EnemyDataBuffer[(EnemyDataBufferPoint + ENEMYDATABUFFERLENGHT - 1) % ENEMYDATABUFFERLENGHT].Tick < 250)      //指定时间内
@@ -460,7 +451,7 @@ static void Control_BaseFullAuto(portTickType Tick)
     }
     else
     {
-        Chassis_BaseControl(1, 0);
+        Chassis_BaseControl(3, 0);
         Cloud_YawAngleSet(0, AngleMode_OPP);
         Cloud_PitchAngleSet(0);
         Cloud_Adjust(1);
@@ -685,7 +676,7 @@ static void Control_KMSubschemaNormal(void)
     if(DBUS_ReceiveData.mouse.press_right)
     {
         //低速模式
-        Chassis_SpeedSet(MAXWORKINGSPEED * Xspeed * 0.2, MAXWORKINGSPEED * Yspeed * 0.2);
+        Chassis_SpeedSet(MAXWORKINGSPEED * Xspeed * 0.1, MAXWORKINGSPEED * Yspeed * 0.1);
     }
     else
     {

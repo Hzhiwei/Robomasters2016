@@ -350,7 +350,8 @@ static void MecanumCalculate(float Vx, float Vy, float Omega, int16_t *Speed)
 
 /**
   * @brief  向底盘发送停止数据
-  * @param  void
+  * @param  模式
+  * @param  模式参数
   * @retval void
   */
 void Chassis_BaseControl(uint8_t mode, float Target)
@@ -369,7 +370,7 @@ void Chassis_BaseControl(uint8_t mode, float Target)
     SendData.SendCanTxMsg.RTR   =   CAN_RTR_Data;
     SendData.SendCanTxMsg.StdId =   BASECHASSISCONTROLCANID;
     
-    if(mode == 0)
+    if(mode == 0)               //保持静止
     {
         SendData.SendCanTxMsg.Data[0] = 0;
         SendData.SendCanTxMsg.Data[1] = 0;
@@ -380,7 +381,18 @@ void Chassis_BaseControl(uint8_t mode, float Target)
         SendData.SendCanTxMsg.Data[6] = 0;
         SendData.SendCanTxMsg.Data[7] = 0;
     }
-    else if(mode == 2)
+    else if(mode == 1)          //随机跑，受到伤害转到对应方向    
+    {
+        SendData.SendCanTxMsg.Data[0] = 1;
+        SendData.SendCanTxMsg.Data[1] = 0;
+        SendData.SendCanTxMsg.Data[2] = 0;
+        SendData.SendCanTxMsg.Data[3] = 0;
+        SendData.SendCanTxMsg.Data[4] = 0;
+        SendData.SendCanTxMsg.Data[5] = 0;
+        SendData.SendCanTxMsg.Data[6] = 0;
+        SendData.SendCanTxMsg.Data[7] = 0;
+    }
+    else if(mode == 2)          //转到指定角度
     {
         FT.F = Target;
         
@@ -393,9 +405,11 @@ void Chassis_BaseControl(uint8_t mode, float Target)
         SendData.SendCanTxMsg.Data[6] = 0;
         SendData.SendCanTxMsg.Data[7] = 0;
     }
-    else
+    else if(mode == 3)          //随机跑，受到伤害继续跑
     {
-        SendData.SendCanTxMsg.Data[0] = 1;
+        FT.F = Target;
+        
+        SendData.SendCanTxMsg.Data[0] = 3;
         SendData.SendCanTxMsg.Data[1] = 0;
         SendData.SendCanTxMsg.Data[2] = 0;
         SendData.SendCanTxMsg.Data[3] = 0;
